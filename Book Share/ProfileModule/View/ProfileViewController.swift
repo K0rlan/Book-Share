@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import Griffon_ios_spm
 class ProfileViewController: UIViewController {
     
     lazy var appLabel: UILabel = {
@@ -45,6 +45,15 @@ class ProfileViewController: UIViewController {
         setNavigationBar()
         updateView()
         setupViews()
+        if Utils.isExpDate(){
+            authViaGriffon()
+        }
+    }
+    
+    private func authViaGriffon(){
+        let vc = SignInViewController()
+        vc.delegate = self
+        self.present(vc, animated: true)
     }
     
     private func setupViews(){
@@ -77,4 +86,13 @@ class ProfileViewController: UIViewController {
         navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: notificationButton), UIBarButtonItem(customView: separatorViewForNavBar),UIBarButtonItem(customView: nightButton)]
     }
 
+}
+extension ProfileViewController: SignInViewControllerDelegate {
+    func successfullSignIn(_ ctrl: SignInViewController) {
+        self.dismiss(animated: true)
+    }
+    
+    func successfullSignUp(_ ctrl: SignInViewController) {
+        self.dismiss(animated: true)
+    }
 }
