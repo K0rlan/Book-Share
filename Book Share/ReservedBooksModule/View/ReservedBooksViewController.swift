@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import Griffon_ios_spm
 class ReservedBooksViewController: UIViewController {
     lazy var appLabel: UILabel = {
         let label = UILabel()
@@ -55,9 +55,17 @@ class ReservedBooksViewController: UIViewController {
 //        }else{
 //            overrideUserInterfaceStyle = .dark
 //        }
-//
+        if Utils.isExpDate(){
+            authViaGriffon()
+        }
     }
-
+    
+    private func authViaGriffon(){
+        let vc = SignInViewController()
+        vc.delegate = self
+        self.present(vc, animated: true)
+    }
+    
     private func updateView(){
         reservedBooksViewModel.updateViewData = { [weak self] reservedBooksData in
             self?.reservedBooksView.reservedBooksData = reservedBooksData
@@ -118,4 +126,13 @@ class ReservedBooksViewController: UIViewController {
 
     
 
+}
+extension ReservedBooksViewController: SignInViewControllerDelegate {
+    func successfullSignIn(_ ctrl: SignInViewController) {
+        self.dismiss(animated: true)
+    }
+    
+    func successfullSignUp(_ ctrl: SignInViewController) {
+        self.dismiss(animated: true)
+    }
 }

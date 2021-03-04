@@ -7,6 +7,8 @@
 
 import UIKit
 import AVFoundation
+import Griffon_ios_spm
+
 class SearchByCodeController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
@@ -29,6 +31,10 @@ class SearchByCodeController: UIViewController, AVCaptureMetadataOutputObjectsDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if Utils.isExpDate(){
+            authViaGriffon()
+        }
 
         view.backgroundColor = UIColor.black
         captureSession = AVCaptureSession()
@@ -67,6 +73,12 @@ class SearchByCodeController: UIViewController, AVCaptureMetadataOutputObjectsDe
         view.layer.addSublayer(previewLayer)
         setupViews()
         captureSession.startRunning()
+    }
+    
+    private func authViaGriffon(){
+        let vc = SignInViewController()
+        vc.delegate = self
+        self.present(vc, animated: true)
     }
     
     private func setupViews() {
@@ -132,5 +144,14 @@ class SearchByCodeController: UIViewController, AVCaptureMetadataOutputObjectsDe
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
+    }
+}
+extension SearchByCodeController: SignInViewControllerDelegate {
+    func successfullSignIn(_ ctrl: SignInViewController) {
+        self.dismiss(animated: true)
+    }
+    
+    func successfullSignUp(_ ctrl: SignInViewController) {
+        self.dismiss(animated: true)
     }
 }
