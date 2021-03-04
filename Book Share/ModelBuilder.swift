@@ -14,10 +14,16 @@ protocol Builder {
     static func createReservedBooks() -> UIViewController
     static func createBookDetails(id: Int) -> UIViewController
     static func createMoreBooks(books: [ViewData.Data]) -> UIViewController
+    static func createSearch() -> UIViewController
 }
 
 
 class ModelBuilder: Builder {
+    static func createSearch() -> UIViewController {
+        let view = SearchByCodeController()
+        return view
+    }
+    
     
     static func createMain() -> UIViewController {
         let view = MainViewController()
