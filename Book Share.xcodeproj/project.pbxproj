@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		E40D308425F0DAC100BEB939 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40D308325F0DAC100BEB939 /* APIService.swift */; };
 		E45CD7E325F0C30200AB5FFE /* SearchByCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E45CD7E225F0C30200AB5FFE /* SearchByCodeController.swift */; };
+		E496E48725F128FE00786C93 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E496E48625F128FE00786C93 /* Utils.swift */; };
+		E496E48B25F1305F00786C93 /* TabBarGuest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E496E48A25F1305F00786C93 /* TabBarGuest.swift */; };
 		E4D590E925F07FDF0082D681 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D590E825F07FDF0082D681 /* AppDelegate.swift */; };
 		E4D590EB25F07FDF0082D681 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D590EA25F07FDF0082D681 /* SceneDelegate.swift */; };
 		E4D590F225F07FE00082D681 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4D590F125F07FE00082D681 /* Assets.xcassets */; };
@@ -49,6 +51,8 @@
 /* Begin PBXFileReference section */
 		E40D308325F0DAC100BEB939 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		E45CD7E225F0C30200AB5FFE /* SearchByCodeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchByCodeController.swift; sourceTree = "<group>"; };
+		E496E48625F128FE00786C93 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		E496E48A25F1305F00786C93 /* TabBarGuest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarGuest.swift; sourceTree = "<group>"; };
 		E4D590E525F07FDF0082D681 /* Book Share.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Book Share.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4D590E825F07FDF0082D681 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E4D590EA25F07FDF0082D681 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -146,6 +150,8 @@
 				E4D5912025F0827B0082D681 /* Constants.swift */,
 				E4D5912325F082910082D681 /* ModelBuilder.swift */,
 				E4D5912625F082A10082D681 /* TabBar.swift */,
+				E496E48A25F1305F00786C93 /* TabBarGuest.swift */,
+				E496E48625F128FE00786C93 /* Utils.swift */,
 				E4D5911325F080610082D681 /* SupportingFIles */,
 				E4D590F625F07FE00082D681 /* Info.plist */,
 			);
@@ -429,6 +435,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E496E48B25F1305F00786C93 /* TabBarGuest.swift in Sources */,
 				E4D5914525F083990082D681 /* ViewData.swift in Sources */,
 				E4D5918225F084E70082D681 /* ProfileView.swift in Sources */,
 				E4D5917925F084A50082D681 /* ReservedBooksViewData.swift in Sources */,
@@ -450,6 +457,7 @@
 				E4D5918525F084F40082D681 /* UserProfile.swift in Sources */,
 				E4D5917C25F084B80082D681 /* ProfileViewModel.swift in Sources */,
 				E4D5916725F084580082D681 /* DetailsView.swift in Sources */,
+				E496E48725F128FE00786C93 /* Utils.swift in Sources */,
 				E4D5912125F0827B0082D681 /* Constants.swift in Sources */,
 				E4D5912725F082A10082D681 /* TabBar.swift in Sources */,
 				E4D5914125F083820082D681 /* MainViewModel.swift in Sources */,
