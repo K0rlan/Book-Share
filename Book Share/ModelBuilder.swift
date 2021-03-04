@@ -13,7 +13,7 @@ protocol Builder {
     static func createProfile() -> UIViewController
     static func createReservedBooks() -> UIViewController
     static func createBookDetails(id: Int) -> UIViewController
-    static func createMoreBooks(books: [ViewData.Data]) -> UIViewController
+    static func createMoreBooks(books: [ViewData.BooksData]) -> UIViewController
     static func createSearch() -> UIViewController
 }
 
@@ -45,8 +45,8 @@ class ModelBuilder: Builder {
         view.detailsViewModel = viewModel
         return view
     }
-    
-    static func createMoreBooks(books: [ViewData.Data]) -> UIViewController {
+
+    static func createMoreBooks(books: [ViewData.BooksData]) -> UIViewController {
         let view = MoreViewController()
         let viewModel = MoreViewModel(books: books)
         view.moreViewModel = viewModel

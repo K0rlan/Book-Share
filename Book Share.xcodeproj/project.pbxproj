@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E40D308425F0DAC100BEB939 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40D308325F0DAC100BEB939 /* APIService.swift */; };
 		E45CD7E325F0C30200AB5FFE /* SearchByCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E45CD7E225F0C30200AB5FFE /* SearchByCodeController.swift */; };
 		E4D590E925F07FDF0082D681 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D590E825F07FDF0082D681 /* AppDelegate.swift */; };
 		E4D590EB25F07FDF0082D681 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D590EA25F07FDF0082D681 /* SceneDelegate.swift */; };
@@ -46,6 +47,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E40D308325F0DAC100BEB939 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		E45CD7E225F0C30200AB5FFE /* SearchByCodeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchByCodeController.swift; sourceTree = "<group>"; };
 		E4D590E525F07FDF0082D681 /* Book Share.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Book Share.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4D590E825F07FDF0082D681 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -222,6 +224,7 @@
 			isa = PBXGroup;
 			children = (
 				E4D5914425F083990082D681 /* ViewData.swift */,
+				E40D308325F0DAC100BEB939 /* APIService.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -442,6 +445,7 @@
 				E4D5916425F0844C0082D681 /* DetailsViewController.swift in Sources */,
 				E45CD7E325F0C30200AB5FFE /* SearchByCodeController.swift in Sources */,
 				E4D5917325F0848C0082D681 /* ReservedBooksView.swift in Sources */,
+				E40D308425F0DAC100BEB939 /* APIService.swift in Sources */,
 				E4D5915B25F0841B0082D681 /* MoreView.swift in Sources */,
 				E4D5918525F084F40082D681 /* UserProfile.swift in Sources */,
 				E4D5917C25F084B80082D681 /* ProfileViewModel.swift in Sources */,

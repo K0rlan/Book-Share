@@ -14,14 +14,14 @@ protocol MoreViewModelProtocol {
 
 final class MoreViewModel: MoreViewModelProtocol{
     var updateViewData: ((ViewData) -> ())?
-    var books = [ViewData.Data]()
+    var books = [ViewData.BooksData]()
     
     
     init() {
         updateViewData?(.initial)
     }
     
-    init(books: [ViewData.Data]) {
+    init(books: [ViewData.BooksData]) {
         updateViewData?(.initial)
         self.books = books
     }
@@ -31,12 +31,12 @@ final class MoreViewModel: MoreViewModelProtocol{
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
             guard let booksData = self?.books else { return }
-            self?.updateViewData?(.success(booksData))
+            self?.updateViewData?(.successBooks(booksData))
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 6) { [weak self] in
-            self?.updateViewData?(.failure)
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 6) { [weak self] in
+//            self?.updateViewData?(.failure)
+//        }
         
         
     }

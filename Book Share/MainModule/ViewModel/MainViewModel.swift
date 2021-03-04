@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Moya
 
 protocol MainViewModelProtocol {
     var updateViewData: ((ViewData)->())? { get set }
@@ -14,14 +15,8 @@ protocol MainViewModelProtocol {
 
 final class MainViewModel: MainViewModelProtocol{
     var updateViewData: ((ViewData) -> ())?
+    let provider = MoyaProvider<APIService>()
 
-
-    var books = [ ViewData.Data(id: 2, image: Constants.book!, title: "Fantasy", author: "Jane Austin", publishDate: "23.22.1923", genre: "Fantasy"), ViewData.Data(id: 3, image: Constants.book!, title: "Lol", author: "Jane Austin", publishDate: "23.22.1923", genre: "Scince Fiction"), ViewData.Data(id: 4, image: Constants.book!, title: "Fantasy", author: "Jane Austin", publishDate: "23.22.1923", genre: "Fantasy"), ViewData.Data(id: 5, image: Constants.book!, title: "Pride and Prejudice", author: "Jane Austin", publishDate: "23.22.1923", genre: "Classic"), ViewData.Data(id: 6, image: Constants.book!, title: "Pride and Prejudice", author: "Jane Austin", publishDate: "23.22.1923", genre: "Adventure"), ViewData.Data(id: 7, image: Constants.book!, title: "Koko", author: "Jane Austin", publishDate: "23.22.1923", genre: "Scince Fiction"), ViewData.Data(id: 8, image: Constants.book!, title: "Pride and Prejudice", author: "Jane Austin", publishDate: "23.22.1923", genre: "Classic"), ViewData.Data(id: 9, image: Constants.book!, title: "Fantasy", author: "Jane Austin", publishDate: "23.22.1923", genre: "Fantasy"), ViewData.Data(id: 10, image: Constants.book!, title: "Koko", author: "Jane Austin", publishDate: "23.22.1923", genre: "Scince Fiction")]
-
-
-    var genres = ["Classic", "Scince Fiction", "Fantasy", "Adventure"]
-
-    var filteredByGenre = [String : [ViewData.Data]]()
 
     init() {
         updateViewData?(.initial)
@@ -29,18 +24,48 @@ final class MainViewModel: MainViewModelProtocol{
 
     func startFetch() {
         updateViewData?(.loading)
-        var filteredArr = [ViewData.Data]()
-        for i in genres{
-            filteredArr = books.filter { $0.genre == i }
-            filteredByGenre[i] = filteredArr
+        
+        fetchBooks()
+        fetchGenres()
+    }
+    
+    func fetchBooks(){
+        provider.request(.getBooks) { [weak self] (result) in
+            switch result{
+            case .success(let response):
+                do {
+                    let booksResponse = try JSONDecoder().decode([ViewData.BooksData].self, from: response.data)
+                    self?.updateViewData?(.successBooks(booksResponse))
+                } catch let error {
+                    print("Error in parsing: \(error)")
+                    self?.updateViewData?(.failure(error))
+                }
+            case .failure(let error):
+                let requestError = (error as NSError)
+                print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
+                self?.updateViewData?(.failure(error))
+            }
         }
-        filteredByGenre["All Books"] = books
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-            guard let booksData = self?.filteredByGenre else { return }
-            self?.updateViewData?(.successWithGenres(booksData))
+    }
+    
+    func fetchGenres(){
+        provider.request(.getGenres) { [weak self] (result) in
+            switch result{
+            case .success(let response):
+                do {
+                    let genresResponse = try JSONDecoder().decode([ViewData.GenresData].self, from: response.data)
+                    self?.updateViewData?(.successGenres(genresResponse))
+//                    self?.addBook()
+//                    self?.addImage()
+                } catch let error {
+                    print("Error in parsing: \(error)")
+                    self?.updateViewData?(.failure(error))
+                }
+            case .failure(let error):
+                let requestError = (error as NSError)
+                print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
+                self?.updateViewData?(.failure(error))
+            }
         }
-        print(filteredByGenre)
-
-
     }
 }

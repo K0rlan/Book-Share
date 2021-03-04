@@ -11,17 +11,25 @@ import UIKit
 enum ViewData {
     case initial
     case loading
-    case successWithGenres([String:[Data]])
-    case success([Data])
-    case failure
+    case successGenres([GenresData])
+    case successBooks([BooksData])
+    case failure(Error)
 
-    struct Data {
+    struct BooksData: Decodable {
         let id: Int
-        let image: UIImage?
+        let isbn: String
         let title: String
         let author: String
-        let publishDate: String
-        let genre: String
+        let image: String?
+        let publish_date: String
+        let genre_id: Int?
+    }
+    
+    struct GenresData: Decodable {
+        let id: Int
+        let title: String
+        let sort: Int
+        let enabled: Bool?
     }
 }
 
