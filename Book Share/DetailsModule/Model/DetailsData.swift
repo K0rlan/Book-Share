@@ -12,12 +12,12 @@ enum DetailsData {
     case initial
     case loading
     case success(Data)
-    case failure
+    case failure(Error)
 
-    struct Data {
+    struct Data: Decodable {
         let id: Int
         let isbn: String
-        let image: UIImage?
+        let image: String?
         let title: String
         let author: String
         let publish_date: String

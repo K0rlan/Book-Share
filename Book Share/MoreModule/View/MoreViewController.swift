@@ -51,7 +51,7 @@ class MoreViewController: UIViewController {
 //        }else{
 //            overrideUserInterfaceStyle = .dark
 //        }
-        
+//        
     }
 
     private func updateView(){

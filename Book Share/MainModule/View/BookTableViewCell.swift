@@ -9,7 +9,7 @@ import UIKit
 
 protocol BookTableViewCellDelegate{
     func showDetails(id: Int)
-    func moreBooks(books: [ViewData.Data])
+    func moreBooks(books: [ViewData.BooksData])
 }
 
 
@@ -47,7 +47,7 @@ class BookTableViewCell: UITableViewCell {
         return collectionView
     }()
     
-    var books = [ViewData.Data]()
+    var books = [ViewData.BooksData]()
     
     var delegate: BookTableViewCellDelegate!
     
@@ -62,7 +62,7 @@ class BookTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    public func updateCV(books: [ViewData.Data]){
+    public func updateCV(books: [ViewData.BooksData]){
         self.books = books
         collectionView.reloadData()
     }
@@ -101,7 +101,7 @@ extension BookTableViewCell: UICollectionViewDelegate, UICollectionViewDataSourc
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! BooksCollectionViewCell
         let book = books[indexPath.row]
-        cell.bookImage.image = book.image
+        cell.bookImage.image = UIImage(contentsOfFile: book.image ?? "")
         cell.titleLabel.text = book.title
         cell.authorLabel.text = book.author
         

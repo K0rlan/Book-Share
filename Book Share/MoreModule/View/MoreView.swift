@@ -65,8 +65,8 @@ class MoreView: UIView{
         }
     }
     
-    var filteredData: [ViewData.Data] = []
-    var books: [ViewData.Data] = []
+    var filteredData: [ViewData.BooksData] = []
+    var books: [ViewData.BooksData] = []
     
     var delegate: MoreViewProtocol!
     
@@ -89,15 +89,16 @@ class MoreView: UIView{
         case .loading:
             tableView.isHidden = true
             activityIndicator.isHidden = false
-        case .success(let success):
+        case .successBooks(let success):
             tableView.isHidden = false
             activityIndicator.isHidden = true
             books = success
             filteredData = books
             tableView.reloadData()
-        case .successWithGenres:
+        case.successGenres:
+//        case .successWithGenres:
             activityIndicator.isHidden = true
-            tableView.reloadData()
+//            tableView.reloadData()
         case .failure:
             tableView.isHidden = false
             activityIndicator.isHidden = true
@@ -133,8 +134,8 @@ class MoreView: UIView{
 extension MoreView: UISearchBarDelegate{
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        filteredData = searchText.isEmpty ? books : books.filter({(books: ViewData.Data) -> Bool in
-            return books.title.range(of: searchText, options: .caseInsensitive) != nil || books.author.range(of: searchText, options: .caseInsensitive) != nil || books.genre.range(of: searchText, options: .caseInsensitive) != nil
+        filteredData = searchText.isEmpty ? books : books.filter({(books: ViewData.BooksData) -> Bool in
+            return books.title.range(of: searchText, options: .caseInsensitive) != nil || books.author.range(of: searchText, options: .caseInsensitive) != nil
         })
         tableView.reloadData()
     }
@@ -155,11 +156,11 @@ extension MoreView: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "books", for: indexPath) as! MoreTableViewCell
             let book = filteredData[indexPath.row]
             cell.backgroundColor = Constants.gray
-            cell.bookImage.image = book.image
+            cell.bookImage.image = UIImage(contentsOfFile: book.image ?? "")
             cell.titleLabel.text = book.title
-            cell.genreLabel.text = book.genre
+//            cell.genreLabel.text = book.genre
             cell.authorLabel.text = book.author
-            cell.publishDateLabel.text = book.publishDate
+            cell.publishDateLabel.text = book.publish_date
             cell.selectionStyle = .none
             cell.contentView.isUserInteractionEnabled = true
        

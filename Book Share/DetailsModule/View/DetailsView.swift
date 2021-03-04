@@ -139,7 +139,7 @@ class DetailsView: UIView {
     
     private func update(viewData: DetailsData.Data?){
         guard let data = viewData  else { return }
-        bookImage.image = data.image
+        bookImage.image = UIImage(contentsOfFile: data.image ?? "")
         titleLabel.text = data.title
         authorLabel.text = data.author
         publishDateLabel.text = data.publish_date

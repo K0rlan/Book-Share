@@ -9,7 +9,7 @@ import UIKit
 
 protocol BooksViewProtocol {
     func getBooksID(id: Int)
-    func moreBooks(books: [ViewData.Data])
+    func moreBooks(books: [ViewData.BooksData])
 }
 
 class BooksView: UIView{
@@ -41,7 +41,8 @@ class BooksView: UIView{
         }
     }
     
-    var books = [String : [ViewData.Data]]()
+    var books = [ViewData.BooksData]()
+    var genres = [ViewData.GenresData]()
     var keysArray = [String]()
     var delegateBooksViewProtocol: BooksViewProtocol!
     
@@ -64,16 +65,14 @@ class BooksView: UIView{
         case .loading:
             tableView.isHidden = true
             activityIndicator.isHidden = false
-        case .successWithGenres(let success):
-            books = success
-            keysArray = Array(books.keys)
-            keysArray.sort()
-            let element = keysArray.remove(at: 1)
-            keysArray.insert(element, at: 0)
+        case .successGenres(let success):
+            genres = success
             tableView.isHidden = false
             activityIndicator.isHidden = true
             tableView.reloadData()
-        case .success:
+        case .successBooks(let success):
+            books = success
+            tableView.isHidden = false
             activityIndicator.isHidden = true
             tableView.reloadData()
         case .failure:
@@ -102,15 +101,16 @@ class BooksView: UIView{
 
 extension BooksView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return books.count
+        return genres.count
     }
    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "books", for: indexPath) as! BookTableViewCell
         cell.backgroundColor = Constants.gray
-        let key = keysArray[indexPath.row]
-        cell.titleLabel.text = key
-        cell.updateCV(books: books[key]!)
+        let genreID = genres[indexPath.row].id
+        let filteresArray = books.filter { $0.genre_id == genreID }
+        cell.titleLabel.text = genres[indexPath.row].title ?? ""
+        cell.updateCV(books: filteresArray)
         cell.contentView.isUserInteractionEnabled = false
         cell.delegate = self
         cell.selectionStyle = .none
@@ -121,7 +121,7 @@ extension BooksView: UITableViewDelegate, UITableViewDataSource {
     }
 }
 extension BooksView: BookTableViewCellDelegate{
-    func moreBooks(books: [ViewData.Data]) {
+    func moreBooks(books: [ViewData.BooksData]) {
         delegateBooksViewProtocol.moreBooks(books: books)
     }
     

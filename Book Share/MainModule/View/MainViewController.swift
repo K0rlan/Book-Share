@@ -114,7 +114,7 @@ class MainViewController: UIViewController {
 
 }
 extension MainViewController: BooksViewProtocol{
-    func moreBooks(books: [ViewData.Data]) {
+    func moreBooks(books: [ViewData.BooksData]) {
         let moreVC = ModelBuilder.createMoreBooks(books: books)
         self.navigationController?.pushViewController(moreVC, animated: true)
     }
