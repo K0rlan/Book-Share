@@ -43,7 +43,7 @@ class BooksView: UIView{
     
     var books = [String : [ViewData.Data]]()
     var keysArray = [String]()
-    var delegate: BooksViewProtocol!
+    var delegateBooksViewProtocol: BooksViewProtocol!
     
     override init(frame: CGRect  = .zero) {
         super .init(frame: frame)
@@ -122,10 +122,10 @@ extension BooksView: UITableViewDelegate, UITableViewDataSource {
 }
 extension BooksView: BookTableViewCellDelegate{
     func moreBooks(books: [ViewData.Data]) {
-        delegate.moreBooks(books: books)
+        delegateBooksViewProtocol.moreBooks(books: books)
     }
     
     func showDetails(id: Int) {
-        delegate.getBooksID(id: id)
+        delegateBooksViewProtocol.getBooksID(id: id)
     }
 }
