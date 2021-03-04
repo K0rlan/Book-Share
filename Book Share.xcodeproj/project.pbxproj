@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E45CD7E325F0C30200AB5FFE /* SearchByCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E45CD7E225F0C30200AB5FFE /* SearchByCodeController.swift */; };
 		E4D590E925F07FDF0082D681 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D590E825F07FDF0082D681 /* AppDelegate.swift */; };
 		E4D590EB25F07FDF0082D681 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D590EA25F07FDF0082D681 /* SceneDelegate.swift */; };
 		E4D590F225F07FE00082D681 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4D590F125F07FE00082D681 /* Assets.xcassets */; };
@@ -45,6 +46,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E45CD7E225F0C30200AB5FFE /* SearchByCodeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchByCodeController.swift; sourceTree = "<group>"; };
 		E4D590E525F07FDF0082D681 /* Book Share.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Book Share.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4D590E825F07FDF0082D681 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E4D590EA25F07FDF0082D681 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -96,6 +98,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E45CD7E025F0C2DC00AB5FFE /* SearchByCode */ = {
+			isa = PBXGroup;
+			children = (
+				E45CD7E125F0C2EA00AB5FFE /* View */,
+			);
+			path = SearchByCode;
+			sourceTree = "<group>";
+		};
+		E45CD7E125F0C2EA00AB5FFE /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E45CD7E225F0C30200AB5FFE /* SearchByCodeController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		E4D590DC25F07FDF0082D681 = {
 			isa = PBXGroup;
 			children = (
@@ -117,6 +135,7 @@
 		E4D590E725F07FDF0082D681 /* Book Share */ = {
 			isa = PBXGroup;
 			children = (
+				E45CD7E025F0C2DC00AB5FFE /* SearchByCode */,
 				E4D5913025F083100082D681 /* ProfileModule */,
 				E4D5912F25F082FF0082D681 /* ReservedBooksModule */,
 				E4D5912C25F082D60082D681 /* DetailsModule */,
@@ -421,6 +440,7 @@
 				E4D5917F25F084DD0082D681 /* ProfileViewController.swift in Sources */,
 				E4D5916D25F084770082D681 /* ReservedBooksViewModel.swift in Sources */,
 				E4D5916425F0844C0082D681 /* DetailsViewController.swift in Sources */,
+				E45CD7E325F0C30200AB5FFE /* SearchByCodeController.swift in Sources */,
 				E4D5917325F0848C0082D681 /* ReservedBooksView.swift in Sources */,
 				E4D5915B25F0841B0082D681 /* MoreView.swift in Sources */,
 				E4D5918525F084F40082D681 /* UserProfile.swift in Sources */,
