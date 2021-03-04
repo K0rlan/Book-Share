@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Griffon_ios_spm
 
 class MainViewController: UIViewController {
 
@@ -46,11 +47,13 @@ class MainViewController: UIViewController {
 
     private var viewModel = MainViewModel()
 
+    var bookID = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = Constants.gray
         bookView.backgroundColor = Constants.gray
-        bookView.delegate = self
+        bookView.delegateBooksViewProtocol = self
         setNavigationBar()
         viewModel.startFetch()
         updateView()
@@ -117,7 +120,24 @@ extension MainViewController: BooksViewProtocol{
     }
     
     func getBooksID(id: Int) {
-        let detailsVC = ModelBuilder.createBookDetails(id: id)
+        self.bookID = id
+        let vc = SignInViewController()
+        vc.delegate = self
+        self.present(vc, animated: true)
+    }
+}
+extension MainViewController: SignInViewControllerDelegate {
+    func successfullSignIn(_ ctrl: SignInViewController) {
+        self.dismiss(animated: true)
+        let detailsVC = ModelBuilder.createBookDetails(id: bookID)
         self.navigationController?.pushViewController(detailsVC, animated: true)
     }
+    
+    func successfullSignUp(_ ctrl: SignInViewController) {
+        self.dismiss(animated: true)
+        let detailsVC = ModelBuilder.createBookDetails(id: bookID)
+        self.navigationController?.pushViewController(detailsVC, animated: true)
+    }
+    
+    
 }

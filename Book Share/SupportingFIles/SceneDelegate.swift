@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Griffon_ios_spm
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -21,6 +22,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
     }
 
+    private func setGriffonConfig() {
+        let griffon = Griffon.shared
+        let config = GriffonConfigurations(clientId: "bba272c2-6a07-4bd1-9bc9-aab174a90a51",
+                                           brand: "c481873c-ae55-48bb-ada9-aec89c5b76e2",
+                                           bucket: "2881a298-4951-4a6e-855d-ff4184349fdd",
+                                           clientSecret: "EWBh1XuiJjSCu9uG0Jmq4xGkOdLKFKg5nURpDq0IBKmqHcP3WsyaSjRXa-dOfLoy", url: "https://griffon.dar-dev.zone/api/v1")
+        griffon.config = config
+        NetworkManager.instance.config = config
+    }
+    
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.
