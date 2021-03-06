@@ -127,9 +127,9 @@ class MainViewController: UIViewController {
     
 }
 extension MainViewController: BooksViewProtocol{
-    func moreBooks(books: [Books]) {
+    func moreBooks(id: Int) {
         if Griffon.shared.idToken != nil{
-            let moreVC = ModelBuilder.createMoreBooks(books: books)
+            let moreVC = ModelBuilder.createMoreBooks(id: id)
             self.navigationController?.pushViewController(moreVC, animated: true)
         }else {
             authViaGriffon()
@@ -150,7 +150,7 @@ extension MainViewController: BooksViewProtocol{
 extension MainViewController: SignInViewControllerDelegate {
     func successfullSignIn(_ ctrl: SignInViewController) {
         self.dismiss(animated: true)
-        if let arrayOfTabBarItems = self.tabBarController!.tabBar.items as! AnyObject as? NSArray {
+        if let arrayOfTabBarItems = self.tabBarController!.tabBar.items as AnyObject as? NSArray {
             for i in 1..<arrayOfTabBarItems.count{
                 let item = arrayOfTabBarItems[i] as? UITabBarItem
                 item?.isEnabled = true
@@ -160,7 +160,7 @@ extension MainViewController: SignInViewControllerDelegate {
     
     func successfullSignUp(_ ctrl: SignInViewController) {
         self.dismiss(animated: true)
-        if let arrayOfTabBarItems = self.tabBarController!.tabBar.items as! AnyObject as? NSArray {
+        if let arrayOfTabBarItems = self.tabBarController!.tabBar.items as AnyObject as? NSArray {
             for i in 1..<arrayOfTabBarItems.count{
                 let item = arrayOfTabBarItems[i] as? UITabBarItem
                 item?.isEnabled = true

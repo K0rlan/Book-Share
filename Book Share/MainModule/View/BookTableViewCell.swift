@@ -9,7 +9,7 @@ import UIKit
 
 protocol BookTableViewCellDelegate{
     func showDetails(id: Int)
-    func moreBooks(books: [Books])
+    func moreBooks(id: Int)
 }
 
 
@@ -49,6 +49,7 @@ class BookTableViewCell: UITableViewCell {
     
     var books = [Books]()
     
+    var id: Int!
     var delegate: BookTableViewCellDelegate!
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -62,9 +63,10 @@ class BookTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    public func updateCV(books: [Books]){
+    public func updateCV(books: [Books], id: Int){
         self.books = books
         collectionView.reloadData()
+        self.id = id
     }
     
     private  func setupViews() {
@@ -90,7 +92,7 @@ class BookTableViewCell: UITableViewCell {
     @objc func moreButtonPressed(){
 //        let moreVC = ModelBuilder.createRegistration()
 //        self.navigationController?.pushViewController(moreVC, animated: true)
-        delegate.moreBooks(books: self.books)
+        delegate.moreBooks(id: id)
     }
 }
 extension BookTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {

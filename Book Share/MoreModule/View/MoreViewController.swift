@@ -35,7 +35,7 @@ class MoreViewController: UIViewController {
     
     var moreView = MoreView()
 
-    var moreViewModel = MoreViewModel()
+    var moreViewModel: MoreViewModel!
     
     override func viewDidLoad() {
         super.viewDidLoad()

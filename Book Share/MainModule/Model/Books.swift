@@ -30,6 +30,9 @@ extension Books: Codable, FetchableRecord, MutablePersistableRecord {
         static let genre_id = Column(CodingKeys.genre_id)
 
     }
+    static func filterByGenre(id: Int) -> QueryInterfaceRequest<Books> {
+            return Books.filter(Columns.genre_id == id)
+    }
 
 
 }

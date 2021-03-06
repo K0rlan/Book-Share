@@ -14,25 +14,26 @@ protocol MoreViewModelProtocol {
 
 final class MoreViewModel: MoreViewModelProtocol{
     var updateViewData: ((ViewData) -> ())?
-    var books = [Books]()
+    var bookID: Int
     
-    
-    init() {
+    init(id: Int) {
         updateViewData?(.initial)
-    }
-    
-    init(books: [Books]) {
-        updateViewData?(.initial)
-        self.books = books
+        self.bookID = id
     }
     
     func startFetch() {
         updateViewData?(.loading)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-            guard let booksData = self?.books else { return }
-            self?.updateViewData?(.successBooks(booksData))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1){ [weak self] in
+        do {
+            try dbQueue.read { db in
+                print(self?.bookID)
+                let draft = try Books.filterByGenre(id: self!.bookID).fetchAll(db)
+                print(draft)
+                self?.updateViewData?(.successBooks(draft))
+            }
+        } catch {
+            print("\(error)")
         }
-        
+    }
     }
 }

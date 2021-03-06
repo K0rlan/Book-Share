@@ -9,7 +9,7 @@ import UIKit
 
 protocol BooksViewProtocol {
     func getBooksID(id: Int)
-    func moreBooks(books: [Books])
+    func moreBooks(id: Int)
 }
 
 class BooksView: UIView{
@@ -109,8 +109,8 @@ extension BooksView: UITableViewDelegate, UITableViewDataSource {
         cell.backgroundColor = Constants.gray
         let genreID = genres[indexPath.row].id
         let filteresArray = books.filter { $0.genre_id == genreID }
-        cell.titleLabel.text = genres[indexPath.row].title ?? ""
-        cell.updateCV(books: filteresArray)
+        cell.titleLabel.text = genres[indexPath.row].title 
+        cell.updateCV(books: filteresArray, id: genres[indexPath.row].id)
         cell.contentView.isUserInteractionEnabled = false
         cell.delegate = self
         cell.selectionStyle = .none
@@ -121,8 +121,8 @@ extension BooksView: UITableViewDelegate, UITableViewDataSource {
     }
 }
 extension BooksView: BookTableViewCellDelegate{
-    func moreBooks(books: [Books]) {
-        delegateBooksViewProtocol.moreBooks(books: books)
+    func moreBooks(id: Int) {
+        delegateBooksViewProtocol.moreBooks(id: id)
     }
     
     func showDetails(id: Int) {
