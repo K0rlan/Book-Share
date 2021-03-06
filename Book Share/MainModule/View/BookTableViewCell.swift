@@ -92,7 +92,7 @@ class BookTableViewCell: UITableViewCell {
     @objc func moreButtonPressed(){
 //        let moreVC = ModelBuilder.createRegistration()
 //        self.navigationController?.pushViewController(moreVC, animated: true)
-        delegate.moreBooks(id: id)
+        delegate.moreBooks(id: self.id)
     }
 }
 extension BookTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {

@@ -111,7 +111,25 @@ final class MainViewModel: MainViewModelProtocol{
        
     }
     
+    func insertIntoDBAll(){
+        do {
+            try dbQueue.write { db in
+                var genres = Genres(
+                    id: 0,
+                    title: "All Books",
+                    sort: 0,
+                    enabled: false
+                )
+                
+                try! genres.insert(db)
+            }
+        } catch {
+            print("\(error)")
+        }
+    }
+    
     func insertIntoDBGenres(genres: [ViewData.GenresData]){
+        insertIntoDBAll()
         for genre in genres{
             do {
                 try dbQueue.write { db in

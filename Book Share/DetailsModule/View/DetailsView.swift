@@ -143,7 +143,7 @@ class DetailsView: UIView {
         titleLabel.text = data.title
         authorLabel.text = data.author
         publishDateLabel.text = data.publish_date
-        genreLabel.text = String(data.genre_id)
+//        genreLabel.text = String(data.genre_id ?? "")
         
     }
     

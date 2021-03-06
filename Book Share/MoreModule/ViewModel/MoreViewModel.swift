@@ -27,9 +27,14 @@ final class MoreViewModel: MoreViewModelProtocol{
         do {
             try dbQueue.read { db in
                 print(self?.bookID)
+                if self?.bookID == 0{
+                    let draft = try Books.fetchAll(db)
+                    self?.updateViewData?(.successBooks(draft))
+                }else{
                 let draft = try Books.filterByGenre(id: self!.bookID).fetchAll(db)
                 print(draft)
                 self?.updateViewData?(.successBooks(draft))
+                }
             }
         } catch {
             print("\(error)")

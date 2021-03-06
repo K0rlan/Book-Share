@@ -23,7 +23,6 @@ class BooksView: UIView{
         tableView.register(BookTableViewCell.self, forCellReuseIdentifier: "books")
         tableView.layer.cornerRadius = 14
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
-//        tableView.allowsSelection = false
         return tableView
     }()
     
@@ -108,12 +107,17 @@ extension BooksView: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "books", for: indexPath) as! BookTableViewCell
         cell.backgroundColor = Constants.gray
         let genreID = genres[indexPath.row].id
-        let filteresArray = books.filter { $0.genre_id == genreID }
+        var filteresArray = books.filter { $0.genre_id == genreID }
+        if genreID == 0 {
+            filteresArray.append(contentsOf: books)
+        }
         cell.titleLabel.text = genres[indexPath.row].title 
         cell.updateCV(books: filteresArray, id: genres[indexPath.row].id)
         cell.contentView.isUserInteractionEnabled = false
         cell.delegate = self
         cell.selectionStyle = .none
+//        let indexPath = NSIndexPath(row: 4, section: 0)
+//        tableView.scrollToRow(at: indexPath as IndexPath, at: .top, animated: true)
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -129,3 +133,4 @@ extension BooksView: BookTableViewCellDelegate{
         delegateBooksViewProtocol.getBooksID(id: id)
     }
 }
+

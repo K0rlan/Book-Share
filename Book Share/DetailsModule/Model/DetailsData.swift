@@ -21,6 +21,6 @@ enum DetailsData {
         let title: String
         let author: String
         let publish_date: String
-        let genre_id: Int
+        let genre_id: Int?
     }
 }

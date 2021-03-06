@@ -27,25 +27,25 @@ class DatabaseManager {
         var migrator = DatabaseMigrator()
         
         migrator.registerMigration("createBooks") { db in
-//            try db.create(table: "books") { t in
-//                t.column("id", .integer).notNull()
-//                t.column("isbn", .text).notNull()
-//                t.column("title", .text).notNull()
-//                t.column("author", .text).notNull()
-//                t.column("image", .text)
-//                t.column("publish_date", .text).notNull()
-//                t.column("genre_id", .integer)
-//            }
+            try db.create(table: "books") { t in
+                t.column("id", .integer).notNull()
+                t.column("isbn", .text).notNull()
+                t.column("title", .text).notNull()
+                t.column("author", .text).notNull()
+                t.column("image", .text)
+                t.column("publish_date", .text).notNull()
+                t.column("genre_id", .integer)
+            }
         }
         
         migrator.registerMigration("createGenres") { db in
-//            try db.create(table: "genres") { t in
-//                t.column("id", .integer).notNull()
-//                t.column("title", .text).notNull()
-//                t.column("sort", .integer).notNull()
-//                t.column("enabled", .boolean)
-//            }
-//            try db.drop(table: "genres")
+            try db.create(table: "genres") { t in
+                t.column("id", .integer).notNull()
+                t.column("title", .text).notNull()
+                t.column("sort", .integer).notNull()
+                t.column("enabled", .boolean)
+            }
+            try db.drop(table: "genres")
 
         }
 
