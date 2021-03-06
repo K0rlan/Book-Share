@@ -65,8 +65,8 @@ class MoreView: UIView{
         }
     }
     
-    var filteredData: [ViewData.BooksData] = []
-    var books: [ViewData.BooksData] = []
+    var filteredData: [Books] = []
+    var books: [Books] = []
     
     var delegate: MoreViewProtocol!
     
@@ -134,7 +134,7 @@ class MoreView: UIView{
 extension MoreView: UISearchBarDelegate{
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        filteredData = searchText.isEmpty ? books : books.filter({(books: ViewData.BooksData) -> Bool in
+        filteredData = searchText.isEmpty ? books : books.filter({(books: Books) -> Bool in
             return books.title.range(of: searchText, options: .caseInsensitive) != nil || books.author.range(of: searchText, options: .caseInsensitive) != nil
         })
         tableView.reloadData()

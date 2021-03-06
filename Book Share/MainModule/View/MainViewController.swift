@@ -61,6 +61,12 @@ class MainViewController: UIViewController {
         if Utils.isExpDate() {
             authViaGriffon()
         }
+        if let arrayOfTabBarItems = self.tabBarController!.tabBar.items as AnyObject as? NSArray {
+            for i in 1..<arrayOfTabBarItems.count{
+                let item = arrayOfTabBarItems[i] as? UITabBarItem
+                item?.isEnabled = false
+            }
+        }
     }
     
     private func updateView(){
@@ -121,7 +127,7 @@ class MainViewController: UIViewController {
     
 }
 extension MainViewController: BooksViewProtocol{
-    func moreBooks(books: [ViewData.BooksData]) {
+    func moreBooks(books: [Books]) {
         if Griffon.shared.idToken != nil{
             let moreVC = ModelBuilder.createMoreBooks(books: books)
             self.navigationController?.pushViewController(moreVC, animated: true)
@@ -144,19 +150,22 @@ extension MainViewController: BooksViewProtocol{
 extension MainViewController: SignInViewControllerDelegate {
     func successfullSignIn(_ ctrl: SignInViewController) {
         self.dismiss(animated: true)
-        let tab = TabBar()
-        self.view.window?.rootViewController = tab
-        self.view.window?.makeKeyAndVisible()
-        viewModel.startFetch()
+        if let arrayOfTabBarItems = self.tabBarController!.tabBar.items as! AnyObject as? NSArray {
+            for i in 1..<arrayOfTabBarItems.count{
+                let item = arrayOfTabBarItems[i] as? UITabBarItem
+                item?.isEnabled = true
+            }
+        }
     }
     
     func successfullSignUp(_ ctrl: SignInViewController) {
         self.dismiss(animated: true)
-        let tab = TabBar()
-        self.view.window?.rootViewController = tab
-        self.view.window?.makeKeyAndVisible()
-        viewModel.startFetch()
+        if let arrayOfTabBarItems = self.tabBarController!.tabBar.items as! AnyObject as? NSArray {
+            for i in 1..<arrayOfTabBarItems.count{
+                let item = arrayOfTabBarItems[i] as? UITabBarItem
+                item?.isEnabled = true
+            }
+        }
     }
-    
-    
 }
+

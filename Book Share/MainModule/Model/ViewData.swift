@@ -11,8 +11,8 @@ import UIKit
 enum ViewData {
     case initial
     case loading
-    case successGenres([GenresData])
-    case successBooks([BooksData])
+    case successGenres([Genres])
+    case successBooks([Books])
     case failure(Error)
 
     struct BooksData: Decodable {

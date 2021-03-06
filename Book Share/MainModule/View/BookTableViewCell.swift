@@ -9,7 +9,7 @@ import UIKit
 
 protocol BookTableViewCellDelegate{
     func showDetails(id: Int)
-    func moreBooks(books: [ViewData.BooksData])
+    func moreBooks(books: [Books])
 }
 
 
@@ -47,7 +47,7 @@ class BookTableViewCell: UITableViewCell {
         return collectionView
     }()
     
-    var books = [ViewData.BooksData]()
+    var books = [Books]()
     
     var delegate: BookTableViewCellDelegate!
     
@@ -62,7 +62,7 @@ class BookTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    public func updateCV(books: [ViewData.BooksData]){
+    public func updateCV(books: [Books]){
         self.books = books
         collectionView.reloadData()
     }

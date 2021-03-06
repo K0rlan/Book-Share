@@ -9,7 +9,7 @@ import UIKit
 
 protocol BooksViewProtocol {
     func getBooksID(id: Int)
-    func moreBooks(books: [ViewData.BooksData])
+    func moreBooks(books: [Books])
 }
 
 class BooksView: UIView{
@@ -41,8 +41,8 @@ class BooksView: UIView{
         }
     }
     
-    var books = [ViewData.BooksData]()
-    var genres = [ViewData.GenresData]()
+    var books = [Books]()
+    var genres = [Genres]()
     var keysArray = [String]()
     var delegateBooksViewProtocol: BooksViewProtocol!
     
@@ -121,7 +121,7 @@ extension BooksView: UITableViewDelegate, UITableViewDataSource {
     }
 }
 extension BooksView: BookTableViewCellDelegate{
-    func moreBooks(books: [ViewData.BooksData]) {
+    func moreBooks(books: [Books]) {
         delegateBooksViewProtocol.moreBooks(books: books)
     }
     
