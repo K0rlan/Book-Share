@@ -52,23 +52,23 @@ class BookTableViewCell: UITableViewCell {
     var id: Int!
     var images: [ViewData.BooksImages] = []
     var delegate: BookTableViewCellDelegate!
+    var rents = [ViewData.RentsData]()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.backgroundColor = Constants.gray
         setupViews()
-        //        print(books)
-        //        collectionView.reloadData()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    public func updateCV(books: [Books], id: Int, images: [ViewData.BooksImages]){
+    public func updateCV(books: [Books], id: Int, images: [ViewData.BooksImages], rents: [ViewData.RentsData]){
         self.books = books
         collectionView.reloadData()
         self.id = id
         self.images = images
+        self.rents = rents
     }
     
     
@@ -93,8 +93,6 @@ class BookTableViewCell: UITableViewCell {
     }
     
     @objc func moreButtonPressed(){
-        //        let moreVC = ModelBuilder.createRegistration()
-        //        self.navigationController?.pushViewController(moreVC, animated: true)
         delegate.moreBooks(id: self.id)
     }
 }
@@ -124,7 +122,7 @@ extension BookTableViewCell: UICollectionViewDelegate, UICollectionViewDataSourc
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 150, height: 260)
+        return CGSize(width: 150, height: 280)
     }
     
 }

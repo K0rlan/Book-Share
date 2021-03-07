@@ -14,6 +14,7 @@ enum ViewData {
     case successGenres([Genres])
     case successBooks([Books])
     case successImage(BooksImages)
+    case successRent([RentsData])
     case failure(Error)
 
     struct BooksData: Decodable {
@@ -38,8 +39,15 @@ enum ViewData {
         var image: Data?
     }
     
-    struct RentData: Decodable {
+    struct RentsData: Decodable {
         let id: Int
+        let user_id: String
+        let book_id: Int
+        let start_date: String
+        let end_date: String?
+    }
+    
+    struct RentData: Decodable {
         let user_id: String
         let book_id: Int
         let start_date: String

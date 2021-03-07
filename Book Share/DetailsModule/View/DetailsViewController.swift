@@ -42,6 +42,7 @@ class DetailsViewController: UIViewController {
         self.view.backgroundColor = Constants.gray
         setNavigationBar()
         detailsViewModel.startFetch()
+        detailsView.delegate = self
         setupViews()
         updateView()
     }
@@ -94,6 +95,13 @@ class DetailsViewController: UIViewController {
         navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: notificationButton), UIBarButtonItem(customView: separatorViewForNavBar),UIBarButtonItem(customView: nightButton)]
     }
     
+    
+    
+}
+extension DetailsViewController: DetailsViewProtocol {
+    func addRentButtonPressed() {
+        detailsViewModel.addRent()
+    }
     
     
 }

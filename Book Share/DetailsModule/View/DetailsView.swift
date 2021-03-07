@@ -8,6 +8,10 @@
 import Foundation
 import UIKit
 
+protocol DetailsViewProtocol {
+    func addRentButtonPressed()
+}
+
 class DetailsView: UIView {
     
     lazy var bookImage: UIImageView = {
@@ -29,7 +33,6 @@ class DetailsView: UIView {
         label.font = .boldSystemFont(ofSize: 20)
         label.textColor = Constants.dark
         label.numberOfLines = 0
-        
         return label
     }()
     
@@ -68,6 +71,7 @@ class DetailsView: UIView {
         button.setTitle("Take a book", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.alpha = 0
+        button.addTarget(self, action: #selector(reserveBookButtonPressed), for: .touchUpInside)
         return button
     }()
     
@@ -95,6 +99,8 @@ class DetailsView: UIView {
         }
     }
     
+    var delegate: DetailsViewProtocol!
+    
     override init(frame: CGRect  = .zero) {
         super .init(frame: frame)
         setStyles()
@@ -116,6 +122,10 @@ class DetailsView: UIView {
         self.layer.shadowRadius = 2
         self.layer.shadowOpacity = 0.1
         
+    }
+    
+    @objc func reserveBookButtonPressed(){
+        delegate?.addRentButtonPressed()
     }
     
     override func layoutSubviews() {
@@ -181,7 +191,7 @@ class DetailsView: UIView {
         reserveBookButton.leadingAnchor.constraint(equalTo: bookImage.trailingAnchor, constant: 20).isActive = true
         reserveBookButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
-        descriptionLabel.topAnchor.constraint(equalTo: reserveBookButton.bottomAnchor, constant: 30).isActive = true
+        descriptionLabel.topAnchor.constraint(equalTo: reserveBookButton.bottomAnchor, constant: 50).isActive = true
         descriptionLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
         descriptionLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         

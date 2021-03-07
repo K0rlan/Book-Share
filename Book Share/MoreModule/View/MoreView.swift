@@ -103,6 +103,8 @@ class MoreView: UIView{
         case .failure:
             tableView.isHidden = false
             activityIndicator.isHidden = true
+        case .successRent(let success):
+            print(success)
         }
     }
     

@@ -12,12 +12,12 @@ import UIKit
 var dbQueue: DatabaseQueue!
 
 class DatabaseManager {
-
+    
     static func setup(for application: UIApplication) throws {
         let databaseURL = try FileManager.default
             .url(for: .applicationDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
             .appendingPathComponent("db.sqlite")
-
+        
         dbQueue = try DatabaseQueue(path: databaseURL.path)
         dbQueue.releaseMemory()
         try migrator.migrate(dbQueue)
@@ -38,6 +38,16 @@ class DatabaseManager {
             }
         }
         
+        migrator.registerMigration("createBooking") { db in
+            try db.create(table: "booking") { t in
+                t.column("id", .integer).notNull()
+                t.column("user_id", .text).notNull()
+                t.column("book_id", .integer).notNull()
+                t.column("start_date", .text).notNull()
+                t.column("end_date", .text)
+            }
+        }
+        
         migrator.registerMigration("createGenres") { db in
             try db.create(table: "genres") { t in
                 t.column("id", .integer).notNull()
@@ -46,9 +56,10 @@ class DatabaseManager {
                 t.column("enabled", .boolean)
             }
         }
-    
+
+        
         return migrator
     }
-
-
+    
+    
 }

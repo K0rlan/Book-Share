@@ -15,6 +15,7 @@ enum APIService {
     case getBook(bookID: Int)
     case getImage(imageName: String)
     case postBook(book: ViewData.BooksData)
+    case postRent(rent: ViewData.RentData)
 }
 
 extension APIService: TargetType {
@@ -31,7 +32,7 @@ extension APIService: TargetType {
             return "api/genres"
         case .getBook(let id):
             return "api/books/\(id)"
-        case .getRent:
+        case .getRent, .postRent:
             return "api/rent"
         case .getImage(let imageName):
             return "\(imageName)"
@@ -42,7 +43,7 @@ extension APIService: TargetType {
         switch self {
         case .getBooks, .getGenres, .getBook, .getRent, .getImage:
             return .get
-        case .postBook:
+        case .postBook, .postRent:
             return .post
         }
     }
@@ -64,6 +65,15 @@ extension APIService: TargetType {
                 "image" : book.image ?? nil,
                 "publish_date" : book.publish_date,
                 "genre_id" : book.genre_id ?? nil,
+                
+            ]
+            return .requestParameters(parameters: params, encoding: JSONEncoding.default)
+        case .postRent(let rent):
+            let params: [String : Any] = [
+                "user_id" : rent.user_id,
+                "book_id" : rent.book_id,
+                "start_date" : rent.start_date,
+                "end_date" : rent.end_date ?? nil,
                 
             ]
             return .requestParameters(parameters: params, encoding: JSONEncoding.default)

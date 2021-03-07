@@ -68,7 +68,6 @@ class MainViewController: UIViewController {
             }
         }
         
-        
     }
     
     private func updateView(){
