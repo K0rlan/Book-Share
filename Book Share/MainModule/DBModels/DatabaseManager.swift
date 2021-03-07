@@ -45,10 +45,8 @@ class DatabaseManager {
                 t.column("sort", .integer).notNull()
                 t.column("enabled", .boolean)
             }
-            try db.drop(table: "genres")
-
         }
-        
+    
         return migrator
     }
 

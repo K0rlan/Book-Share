@@ -19,7 +19,7 @@ class BookTableViewCell: UITableViewCell {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 22)
         label.textColor = Constants.dark
-//        label.text = "All Books"
+        //        label.text = "All Books"
         return label
     }()
     
@@ -50,26 +50,27 @@ class BookTableViewCell: UITableViewCell {
     var books = [Books]()
     
     var id: Int!
-    var images: [UIImage]!
+    var images: [ViewData.BooksImages] = []
     var delegate: BookTableViewCellDelegate!
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.backgroundColor = Constants.gray
         setupViews()
-//        print(books)
-//        collectionView.reloadData()
+        //        print(books)
+        //        collectionView.reloadData()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    public func updateCV(books: [Books], id: Int, image: [UIImage]?){
+    public func updateCV(books: [Books], id: Int, images: [ViewData.BooksImages]){
         self.books = books
         collectionView.reloadData()
         self.id = id
-        self.images = image
+        self.images = images
     }
+    
     
     private  func setupViews() {
         [collectionView, moreButton, titleLabel].forEach {
@@ -92,8 +93,8 @@ class BookTableViewCell: UITableViewCell {
     }
     
     @objc func moreButtonPressed(){
-//        let moreVC = ModelBuilder.createRegistration()
-//        self.navigationController?.pushViewController(moreVC, animated: true)
+        //        let moreVC = ModelBuilder.createRegistration()
+        //        self.navigationController?.pushViewController(moreVC, animated: true)
         delegate.moreBooks(id: self.id)
     }
 }
@@ -108,10 +109,14 @@ extension BookTableViewCell: UICollectionViewDelegate, UICollectionViewDataSourc
         cell.bookImage.image = UIImage(contentsOfFile: book.image ?? "")
         cell.titleLabel.text = book.title
         cell.authorLabel.text = book.author
-//        cell.bookImage.image = images[indexPath.row]
+        for image in images{
+            if book.id == image.id{
+                cell.bookImage.image = UIImage(data: image.image!)
+            }
+        }
         return cell
     }
-     
+    
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let bookID = books[indexPath.row].id

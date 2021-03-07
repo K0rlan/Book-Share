@@ -60,7 +60,7 @@ class BooksView: UIView{
     var genres = [Genres]()
     var keysArray = [String]()
     var delegateBooksViewProtocol: BooksViewProtocol!
-    var image: [UIImage]!
+    var images = [ViewData.BooksImages]()
     override init(frame: CGRect  = .zero) {
         super .init(frame: frame)
         setupViews()
@@ -86,19 +86,17 @@ class BooksView: UIView{
             activityIndicator.isHidden = false
         case .successGenres(let success):
             genres = success
-            collectionView.isHidden = false
-            tableView.isHidden = false
-            activityIndicator.isHidden = true
             collectionView.reloadData()
             tableView.reloadData()
         case .successBooks(let success):
             books = success
-            tableView.isHidden = false
-            collectionView.isHidden = false
-            activityIndicator.isHidden = true
             tableView.reloadData()
         case .successImage(let success):
-            image = success
+            images.append(success)
+            tableView.reloadData()
+            collectionView.isHidden = false
+            tableView.isHidden = false
+            activityIndicator.isHidden = true
         case .failure:
             tableView.isHidden = false
             collectionView.isHidden = false
@@ -143,7 +141,7 @@ extension BooksView: UITableViewDelegate, UITableViewDataSource {
             filteresArray.append(contentsOf: books)
         }
         cell.titleLabel.text = genres[indexPath.row].title 
-        cell.updateCV(books: filteresArray, id: genres[indexPath.row].id, image: image)
+        cell.updateCV(books: filteresArray, id: genres[indexPath.row].id, images: images)
         cell.contentView.isUserInteractionEnabled = false
         cell.delegate = self
         cell.selectionStyle = .none

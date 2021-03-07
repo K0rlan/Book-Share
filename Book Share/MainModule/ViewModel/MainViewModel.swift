@@ -18,7 +18,7 @@ final class MainViewModel: MainViewModelProtocol{
     var updateViewData: ((ViewData) -> ())?
     let provider = MoyaProvider<APIService>()
     
-    var arrImages = [Int : UIImage]()
+    var images = [ViewData.BooksImages]()
     
     let provide = MoyaProvider<APIImage>()
     init() {
@@ -30,7 +30,6 @@ final class MainViewModel: MainViewModelProtocol{
         updateViewData?(.loading)
         fetchBooks()
         fetchGenres()
-//        fetchRent()
     }
     
     func fetchBooks(){
@@ -40,6 +39,7 @@ final class MainViewModel: MainViewModelProtocol{
                 do {
                     let booksResponse = try JSONDecoder().decode([ViewData.BooksData].self, from: response.data)
                     self?.insertIntoDBBooks(books: booksResponse)
+                    self?.fetchImages(books: booksResponse)
                 } catch let error {
                     print("Error in parsing: \(error)")
                     self?.updateViewData?(.failure(error))
@@ -52,25 +52,6 @@ final class MainViewModel: MainViewModelProtocol{
         }
     }
     
-//    func fetchImage(image: String, id: Int){
-//        provide.request(.getImage(imageName: image)) { [weak self] (result) in
-//            switch result{
-//            case .success(let response):
-//                do {
-//                    let response = try response.mapImage()
-//
-////                    self?.updateViewData?(.successImage(response))
-//                } catch let error {
-//                    print("Error in parsing: \(error)")
-//                    self?.updateViewData?(.failure(error))
-//                }
-//            case .failure(let error):
-//                let requestError = (error as NSError)
-//                print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
-//                self?.updateViewData?(.failure(error))
-//            }
-//        }
-//    }
     
     func fetchGenres(){
         provider.request(.getGenres) { [weak self] (result) in
@@ -91,30 +72,36 @@ final class MainViewModel: MainViewModelProtocol{
         }
     }
     
-//    func fetchRent(){
-//        provider.request(.getRent) { [weak self] (result) in
-//            switch result{
-//            case .success(let response):
-//                do {
-//                    let rentResponse = try JSONDecoder().decode([ViewData.RentData].self, from: response.data)
-////                    self?.insertIntoDBRent(rents: rentResponse)
-//                } catch let error {
-//                    print("Error in parsing: \(error)")
-//                    self?.updateViewData?(.failure(error))
-//                }
-//            case .failure(let error):
-//                let requestError = (error as NSError)
-//                print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
-//                self?.updateViewData?(.failure(error))
-//            }
-//        }
-//    }
+    func fetchImages(books: [ViewData.BooksData]){
+        for book in books{
+            if let img = book.image{
+                provide.request(.getImage(imageName: img)) { [weak self] (result) in
+                    switch result{
+                    case .success(let response):
+                        do {
+                            let img = try response.mapImage().jpegData(compressionQuality: 1)
+                            let book = ViewData.BooksImages(id: book.id, image: img)
+                            self?.updateViewData?(.successImage(book))
+                        } catch let error {
+                            print("Error in parsing: \(error)")
+                            self?.updateViewData?(.failure(error))
+                        }
+                    case .failure(let error):
+                        let requestError = (error as NSError)
+                        print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
+                        self?.updateViewData?(.failure(error))
+                    }
+                }
+            }
+        }
+    }
     
     func refreshTables(){
         do {
             try dbQueue.write { db in
                 try db.execute(sql: "DELETE FROM genres ")
                 try db.execute(sql: "DELETE FROM books ")
+                try db.execute(sql: "DELETE FROM booksImages ")
             }
         } catch {
             print("\(error)")
@@ -123,11 +110,8 @@ final class MainViewModel: MainViewModelProtocol{
     
     func insertIntoDBBooks(books: [ViewData.BooksData]){
         for book in books{
+            
             do {
-//                if let image = book.image {
-//                    fetchImage(image: image, id: book.id)
-//                }
-               
                 try dbQueue.write { db in
                     var books = Books(
                         id: book.id,
@@ -144,7 +128,7 @@ final class MainViewModel: MainViewModelProtocol{
                 print("\(error)")
             }
         }
-//        updateViewData?(.successImage(arrImages))
+        
         do {
             try dbQueue.read { db in
                 let draft = try Books.fetchAll(db)
@@ -153,35 +137,12 @@ final class MainViewModel: MainViewModelProtocol{
         } catch {
             print("\(error)")
         }
-       
+        
+        
     }
     
-//    func insertIntoDBRent(rents: [ViewData.RentData]){
-//        for rent in rents{
-//            do {
-//                try dbQueue.write { db in
-//                    var rents = Rents(
-//                        id: rent.id,
-//                        user_id: rent.user_id,
-//                        book_id: rent.book_id,
-//                        start_date: rent.start_date,
-//                        end_date: rent.end_date
-//                    )
-//                    try! rents.insert(db)
-//                }
-//            } catch {
-//                print("\(error)")
-//            }
-//        }
-//        do {
-//            try dbQueue.read { db in
-//                let draft = try Rents.fetchAll(db)
-//                print("kokoko\(draft)")
-//            }
-//        } catch {
-//            print("\(error)")
-//        }
-//    }
+    
+    
     
     func insertIntoDBAll(){
         do {
@@ -192,7 +153,6 @@ final class MainViewModel: MainViewModelProtocol{
                     sort: 0,
                     enabled: false
                 )
-                
                 try! genres.insert(db)
             }
         } catch {
@@ -211,7 +171,7 @@ final class MainViewModel: MainViewModelProtocol{
                         sort: genre.sort,
                         enabled: genre.enabled
                     )
-
+                    
                     try! genres.insert(db)
                 }
             } catch {

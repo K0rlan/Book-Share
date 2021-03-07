@@ -67,7 +67,7 @@ class MoreView: UIView{
     
     var filteredData: [Books] = []
     var books: [Books] = []
-    var image: [UIImage]!
+    var images = [ViewData.BooksImages]()
     var delegate: MoreViewProtocol!
     
     override init(frame: CGRect  = .zero) {
@@ -90,17 +90,16 @@ class MoreView: UIView{
             tableView.isHidden = true
             activityIndicator.isHidden = false
         case .successBooks(let success):
-            tableView.isHidden = false
-            activityIndicator.isHidden = true
             books = success
             filteredData = books
             tableView.reloadData()
         case.successGenres:
-//        case .successWithGenres:
             activityIndicator.isHidden = true
-//            tableView.reloadData()
         case .successImage(let success):
-            image = success
+            tableView.isHidden = false
+            activityIndicator.isHidden = true
+            images.append(success)
+            tableView.reloadData()
         case .failure:
             tableView.isHidden = false
             activityIndicator.isHidden = true
@@ -158,13 +157,17 @@ extension MoreView: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "books", for: indexPath) as! MoreTableViewCell
             let book = filteredData[indexPath.row]
             cell.backgroundColor = Constants.gray
-//        cell.bookImage.image = self.image[indexPath.row]
             cell.titleLabel.text = book.title
 //            cell.genreLabel.text = book.genre
             cell.authorLabel.text = book.author
             cell.publishDateLabel.text = book.publish_date
             cell.selectionStyle = .none
             cell.contentView.isUserInteractionEnabled = true
+        for image in images{
+            if book.id == image.id{
+                cell.bookImage.image = UIImage(data: image.image!)
+            }
+        }
        
             return cell
     }
@@ -172,7 +175,6 @@ extension MoreView: UITableViewDelegate, UITableViewDataSource {
         160
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("tapped")
         let bookID = books[indexPath.row].id
         delegate.getBooksID(id: bookID)
     }

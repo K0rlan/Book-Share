@@ -12,6 +12,7 @@ enum DetailsData {
     case initial
     case loading
     case success(Data)
+    case successImage(UIImage)
     case failure(Error)
 
     struct Data: Decodable {

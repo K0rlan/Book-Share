@@ -127,10 +127,15 @@ class DetailsView: UIView {
         case .loading:
             activityIndicator.isHidden = false
         case .success(let success):
+            reserveBookButton.alpha = 1
+            descriptionLabel.alpha = 1
+            activityIndicator.isHidden = true
+            self.update(viewData: success)
+        case .successImage(let success):
             bookImage.alpha = 1
             reserveBookButton.alpha = 1
             descriptionLabel.alpha = 1
-            self.update(viewData: success)
+            self.updateImage(image: success)
             activityIndicator.isHidden = true
         case .failure:
             activityIndicator.isHidden = true
@@ -139,12 +144,14 @@ class DetailsView: UIView {
     
     private func update(viewData: DetailsData.Data?){
         guard let data = viewData  else { return }
-        bookImage.image = UIImage(contentsOfFile: data.image ?? "")
         titleLabel.text = data.title
         authorLabel.text = data.author
         publishDateLabel.text = data.publish_date
 //        genreLabel.text = String(data.genre_id ?? "")
         
+    }
+    private func updateImage(image: UIImage){
+        bookImage.image = image
     }
     
     private func setupViews() {
