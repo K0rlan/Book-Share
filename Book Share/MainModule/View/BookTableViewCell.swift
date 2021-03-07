@@ -50,6 +50,7 @@ class BookTableViewCell: UITableViewCell {
     var books = [Books]()
     
     var id: Int!
+    var images: [UIImage]!
     var delegate: BookTableViewCellDelegate!
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -63,10 +64,11 @@ class BookTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    public func updateCV(books: [Books], id: Int){
+    public func updateCV(books: [Books], id: Int, image: [UIImage]?){
         self.books = books
         collectionView.reloadData()
         self.id = id
+        self.images = image
     }
     
     private  func setupViews() {
@@ -106,7 +108,7 @@ extension BookTableViewCell: UICollectionViewDelegate, UICollectionViewDataSourc
         cell.bookImage.image = UIImage(contentsOfFile: book.image ?? "")
         cell.titleLabel.text = book.title
         cell.authorLabel.text = book.author
-        
+//        cell.bookImage.image = images[indexPath.row]
         return cell
     }
      

@@ -48,7 +48,7 @@ class DatabaseManager {
             try db.drop(table: "genres")
 
         }
-
+        
         return migrator
     }
 

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		E40D308425F0DAC100BEB939 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40D308325F0DAC100BEB939 /* APIService.swift */; };
 		E45CD7E325F0C30200AB5FFE /* SearchByCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E45CD7E225F0C30200AB5FFE /* SearchByCodeController.swift */; };
+		E472970825F4FA87004F45DE /* Rents.swift in Sources */ = {isa = PBXBuildFile; fileRef = E472970725F4FA87004F45DE /* Rents.swift */; };
+		E472970C25F51743004F45DE /* APIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E472970B25F51743004F45DE /* APIImage.swift */; };
 		E48604C225F3A029002709AE /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48604C125F3A029002709AE /* DatabaseManager.swift */; };
 		E48604C525F3A0B0002709AE /* Books.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48604C425F3A0B0002709AE /* Books.swift */; };
 		E48604C825F3A64E002709AE /* Genres.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48604C725F3A64E002709AE /* Genres.swift */; };
@@ -54,6 +56,8 @@
 /* Begin PBXFileReference section */
 		E40D308325F0DAC100BEB939 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		E45CD7E225F0C30200AB5FFE /* SearchByCodeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchByCodeController.swift; sourceTree = "<group>"; };
+		E472970725F4FA87004F45DE /* Rents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rents.swift; sourceTree = "<group>"; };
+		E472970B25F51743004F45DE /* APIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIImage.swift; sourceTree = "<group>"; };
 		E48604C125F3A029002709AE /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		E48604C425F3A0B0002709AE /* Books.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Books.swift; sourceTree = "<group>"; };
 		E48604C725F3A64E002709AE /* Genres.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Genres.swift; sourceTree = "<group>"; };
@@ -126,6 +130,17 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		E472970625F4F4B5004F45DE /* DBModels */ = {
+			isa = PBXGroup;
+			children = (
+				E48604C125F3A029002709AE /* DatabaseManager.swift */,
+				E48604C725F3A64E002709AE /* Genres.swift */,
+				E48604C425F3A0B0002709AE /* Books.swift */,
+				E472970725F4FA87004F45DE /* Rents.swift */,
+			);
+			path = DBModels;
+			sourceTree = "<group>";
+		};
 		E4D590DC25F07FDF0082D681 = {
 			isa = PBXGroup;
 			children = (
@@ -185,8 +200,9 @@
 			isa = PBXGroup;
 			children = (
 				E4D5913325F083220082D681 /* ViewModel */,
-				E4D5913225F0831D0082D681 /* View */,
 				E4D5913125F083170082D681 /* Model */,
+				E4D5913225F0831D0082D681 /* View */,
+				E472970625F4F4B5004F45DE /* DBModels */,
 			);
 			path = MainModule;
 			sourceTree = "<group>";
@@ -236,9 +252,7 @@
 			children = (
 				E4D5914425F083990082D681 /* ViewData.swift */,
 				E40D308325F0DAC100BEB939 /* APIService.swift */,
-				E48604C125F3A029002709AE /* DatabaseManager.swift */,
-				E48604C425F3A0B0002709AE /* Books.swift */,
-				E48604C725F3A64E002709AE /* Genres.swift */,
+				E472970B25F51743004F45DE /* APIImage.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -454,6 +468,7 @@
 				E4D590E925F07FDF0082D681 /* AppDelegate.swift in Sources */,
 				E4D5915225F083E00082D681 /* BooksCollectionViewCell.swift in Sources */,
 				E4D5912425F082910082D681 /* ModelBuilder.swift in Sources */,
+				E472970825F4FA87004F45DE /* Rents.swift in Sources */,
 				E4D590EB25F07FDF0082D681 /* SceneDelegate.swift in Sources */,
 				E4D5917F25F084DD0082D681 /* ProfileViewController.swift in Sources */,
 				E4D5916D25F084770082D681 /* ReservedBooksViewModel.swift in Sources */,
@@ -476,6 +491,7 @@
 				E48604C525F3A0B0002709AE /* Books.swift in Sources */,
 				E4D5915525F084010082D681 /* MoreViewModel.swift in Sources */,
 				E4D5917625F084970082D681 /* ReservedBooksTableViewCell.swift in Sources */,
+				E472970C25F51743004F45DE /* APIImage.swift in Sources */,
 				E4D5914F25F083D80082D681 /* BookTableViewCell.swift in Sources */,
 				E4D5917025F084820082D681 /* ReservedBooksViewController.swift in Sources */,
 				E4D5914825F083A60082D681 /* MainViewController.swift in Sources */,

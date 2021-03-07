@@ -60,7 +60,7 @@ class BooksView: UIView{
     var genres = [Genres]()
     var keysArray = [String]()
     var delegateBooksViewProtocol: BooksViewProtocol!
-    
+    var image: [UIImage]!
     override init(frame: CGRect  = .zero) {
         super .init(frame: frame)
         setupViews()
@@ -97,6 +97,8 @@ class BooksView: UIView{
             collectionView.isHidden = false
             activityIndicator.isHidden = true
             tableView.reloadData()
+        case .successImage(let success):
+            image = success
         case .failure:
             tableView.isHidden = false
             collectionView.isHidden = false
@@ -141,13 +143,10 @@ extension BooksView: UITableViewDelegate, UITableViewDataSource {
             filteresArray.append(contentsOf: books)
         }
         cell.titleLabel.text = genres[indexPath.row].title 
-        cell.updateCV(books: filteresArray, id: genres[indexPath.row].id)
+        cell.updateCV(books: filteresArray, id: genres[indexPath.row].id, image: image)
         cell.contentView.isUserInteractionEnabled = false
         cell.delegate = self
-        
         cell.selectionStyle = .none
-//        let indexPath = NSIndexPath(row: 4, section: 0)
-//        tableView.scrollToRow(at: indexPath as IndexPath, at: .top, animated: true)
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -171,9 +170,9 @@ extension BooksView: UICollectionViewDelegate, UICollectionViewDataSource, UICol
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! FilterCollectionViewCell
         cell.setText(text: genres[indexPath.row].title)
-        if indexPath.row == 0 {
-            cell.isSelected = true
-        }
+//        if indexPath.row == 0 {
+//            cell.isSelected = true
+//        }
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -185,10 +184,10 @@ extension BooksView: UICollectionViewDelegate, UICollectionViewDataSource, UICol
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let indexPath = NSIndexPath(row: indexPath.row, section: 0)
         tableView.scrollToRow(at: indexPath as IndexPath, at: .top, animated: true)
-        let koko = NSIndexPath(row: 0, section: 0)
-        if let cell = collectionView.cellForItem(at: koko as IndexPath)  {
-            cell.isSelected = false
-        }
+//        let koko = NSIndexPath(row: 0, section: 0)
+//        if let cell = collectionView.cellForItem(at: koko as IndexPath)  {
+//            cell.isSelected = false
+//        }
     }
     
     

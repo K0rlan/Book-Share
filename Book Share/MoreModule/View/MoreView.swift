@@ -67,7 +67,7 @@ class MoreView: UIView{
     
     var filteredData: [Books] = []
     var books: [Books] = []
-    
+    var image: [UIImage]!
     var delegate: MoreViewProtocol!
     
     override init(frame: CGRect  = .zero) {
@@ -99,6 +99,8 @@ class MoreView: UIView{
 //        case .successWithGenres:
             activityIndicator.isHidden = true
 //            tableView.reloadData()
+        case .successImage(let success):
+            image = success
         case .failure:
             tableView.isHidden = false
             activityIndicator.isHidden = true
@@ -156,7 +158,7 @@ extension MoreView: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "books", for: indexPath) as! MoreTableViewCell
             let book = filteredData[indexPath.row]
             cell.backgroundColor = Constants.gray
-            cell.bookImage.image = UIImage(contentsOfFile: book.image ?? "")
+//        cell.bookImage.image = self.image[indexPath.row]
             cell.titleLabel.text = book.title
 //            cell.genreLabel.text = book.genre
             cell.authorLabel.text = book.author

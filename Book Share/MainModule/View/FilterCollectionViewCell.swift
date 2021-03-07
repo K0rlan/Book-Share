@@ -24,14 +24,12 @@ class FilterCollectionViewCell: UICollectionViewCell {
             if self.isSelected {
                 UIView.animate(withDuration: 0.3) { 
                     self.backgroundColor = Constants.orange
-                    self.layer.borderColor = Constants.orange.cgColor
                     self.textLabel.textColor = .white
                 }
             }
             else {
                 UIView.animate(withDuration: 0.3) {
                     self.backgroundColor = Constants.gray
-                    self.layer.borderColor = Constants.gray?.cgColor
                     self.textLabel.textColor = Constants.orange
                 }
             }
@@ -48,7 +46,8 @@ class FilterCollectionViewCell: UICollectionViewCell {
     private func setStyles(){
         self.layer.cornerRadius = 8
         self.layer.borderWidth = 1
-        self.layer.borderColor = Constants.gray?.cgColor
+        self.layer.borderColor = Constants.orange.cgColor
+        
     }
  
     required init?(coder: NSCoder) {

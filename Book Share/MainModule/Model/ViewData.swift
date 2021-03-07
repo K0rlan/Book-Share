@@ -13,6 +13,7 @@ enum ViewData {
     case loading
     case successGenres([Genres])
     case successBooks([Books])
+    case successImage([UIImage])
     case failure(Error)
 
     struct BooksData: Decodable {
@@ -30,6 +31,14 @@ enum ViewData {
         let title: String
         let sort: Int
         let enabled: Bool?
+    }
+    
+    struct RentData: Decodable {
+        let id: Int
+        let user_id: String
+        let book_id: Int
+        let start_date: String
+        let end_date: String?
     }
 }
 
