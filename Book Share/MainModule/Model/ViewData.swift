@@ -12,7 +12,7 @@ enum ViewData {
     case initial
     case loading
     case successGenres([Genres])
-    case successBooks([Books])
+    case successBooks([BooksData])
     case successImage(BooksImages)
     case successRent([RentsData])
     case failure(Error)

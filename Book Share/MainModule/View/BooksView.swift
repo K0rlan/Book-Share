@@ -56,7 +56,7 @@ class BooksView: UIView{
         }
     }
     
-    var books = [Books]()
+    var books = [ViewData.BooksData]()
     var genres = [Genres]()
     var keysArray = [String]()
     var delegateBooksViewProtocol: BooksViewProtocol!
@@ -65,10 +65,7 @@ class BooksView: UIView{
     
     override init(frame: CGRect  = .zero) {
         super .init(frame: frame)
-        setupViews()
-        
-        
-        
+        setupViews()     
     }
     
     required init?(coder: NSCoder) {
@@ -93,6 +90,7 @@ class BooksView: UIView{
         case .successBooks(let success):
             books = success
             tableView.reloadData()
+            collectionView.reloadData()
         case .successImage(let success):
             images.append(success)
             tableView.reloadData()
@@ -106,6 +104,8 @@ class BooksView: UIView{
             activityIndicator.isHidden = true
         case .successRent(let success):
             rents = success
+            tableView.reloadData()
+            collectionView.reloadData()
         }
     }
     

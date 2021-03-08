@@ -39,6 +39,7 @@ final class MainViewModel: MainViewModelProtocol{
                 do {
                     let booksResponse = try JSONDecoder().decode([ViewData.BooksData].self, from: response.data)
                     self?.insertIntoDBBooks(books: booksResponse)
+                    self?.updateViewData?(.successBooks(booksResponse))
                     self?.fetchImages(books: booksResponse)
                 } catch let error {
                     print("Error in parsing: \(error)")
@@ -142,16 +143,6 @@ final class MainViewModel: MainViewModelProtocol{
                         genre_id: book.genre_id
                     )
                     try! books.insert(db)
-                }
-            } catch {
-                print("\(error)")
-            }
-        }
-        DispatchQueue.main.async { [weak self] in
-            do {
-                try dbQueue.read { db in
-                    let draft = try Books.fetchAll(db)
-                    self?.updateViewData?(.successBooks(draft))
                 }
             } catch {
                 print("\(error)")

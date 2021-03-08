@@ -47,7 +47,7 @@ class BookTableViewCell: UITableViewCell {
         return collectionView
     }()
     
-    var books = [Books]()
+    var books = [ViewData.BooksData]()
     
     var id: Int!
     var images: [ViewData.BooksImages] = []
@@ -63,7 +63,7 @@ class BookTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    public func updateCV(books: [Books], id: Int, images: [ViewData.BooksImages], rents: [ViewData.RentsData]){
+    public func updateCV(books: [ViewData.BooksData], id: Int, images: [ViewData.BooksImages], rents: [ViewData.RentsData]){
         self.books = books
         collectionView.reloadData()
         self.id = id
