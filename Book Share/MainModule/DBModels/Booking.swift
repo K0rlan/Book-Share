@@ -24,6 +24,12 @@ extension Booking: Codable, FetchableRecord, MutablePersistableRecord {
         static let book_id = Column(CodingKeys.book_id)
         static let start_date = Column(CodingKeys.start_date)
         static let end_date = Column(CodingKeys.end_date)
+      
+
     }
+    static func filterByBookID(id: Int) -> QueryInterfaceRequest<Booking> {
+            return Booking.filter(Columns.book_id == id)
+    }
+
 
 }

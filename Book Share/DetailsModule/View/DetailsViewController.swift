@@ -8,24 +8,24 @@
 import UIKit
 
 class DetailsViewController: UIViewController {
-
+    
     lazy var notificationButton: UIButton = {
         let button = UIButton()
         button.setImage(Constants.notification, for: .normal)
         return button
     }()
-
+    
     lazy var nightButton: UIButton = {
         let button = UIButton()
         button.setImage(Constants.moon, for: .normal)
         return button
     }()
-
+    
     lazy var separatorViewForNavBar: UIView = {
         let view = UIView()
         return view
     }()
-
+    
     
     
     lazy var separatorView: UIView = {
@@ -58,20 +58,20 @@ class DetailsViewController: UIViewController {
             self.view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
-
+        
         notificationButton.widthAnchor.constraint(equalToConstant: 34).isActive = true
         notificationButton.heightAnchor.constraint(equalToConstant: 34).isActive = true
-
+        
         nightButton.widthAnchor.constraint(equalToConstant: 34).isActive = true
         nightButton.heightAnchor.constraint(equalToConstant: 34).isActive = true
-
+        
         separatorViewForNavBar.widthAnchor.constraint(equalToConstant: 7).isActive = true
         separatorViewForNavBar.heightAnchor.constraint(equalToConstant: 7).isActive = true
-
+        
         detailsView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
         detailsView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         detailsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
-
+        
         separatorView.topAnchor.constraint(equalTo: detailsView.bottomAnchor).isActive = true
         separatorView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         separatorView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.12).isActive = true
@@ -80,18 +80,18 @@ class DetailsViewController: UIViewController {
     private func setNavigationBar(){
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
-
+        
         navigationController?.navigationBar.backgroundColor = Constants.gray
         navigationController?.navigationBar.barTintColor = .orange
-
-//        navigationController?.navigationBar.isHidden = false
+        
+        //        navigationController?.navigationBar.isHidden = false
         let backButton = UIBarButtonItem()
         backButton.title = "Back"
         self.navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
-   
-       navigationController?.navigationBar.tintColor = Constants.orange
-
-//        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: appLabel)
+        
+        navigationController?.navigationBar.tintColor = Constants.orange
+        
+        //        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: appLabel)
         navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: notificationButton), UIBarButtonItem(customView: separatorViewForNavBar),UIBarButtonItem(customView: nightButton)]
     }
     
@@ -99,6 +99,10 @@ class DetailsViewController: UIViewController {
     
 }
 extension DetailsViewController: DetailsViewProtocol {
+    func deleteRentButtonPressed() {
+        detailsViewModel.deleteRent()
+    }
+    
     func addRentButtonPressed() {
         detailsViewModel.addRent()
     }

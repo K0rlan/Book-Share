@@ -101,7 +101,6 @@ final class MainViewModel: MainViewModelProtocol{
             case .success(let response):
                 do {
                     let rentsResponse = try JSONDecoder().decode([ViewData.RentsData].self, from: response.data)
-                    print("koko\(rentsResponse)")
                     self?.updateViewData?(.successRent(rentsResponse))
                     self?.insertIntoDBRents(rents: rentsResponse)
                 } catch let error {
@@ -148,18 +147,18 @@ final class MainViewModel: MainViewModelProtocol{
                 print("\(error)")
             }
         }
-        
+        DispatchQueue.main.async { [weak self] in
         do {
             try dbQueue.read { db in
                 let draft = try Books.fetchAll(db)
-                DispatchQueue.main.async { [weak self] in
+              
                     self?.updateViewData?(.successBooks(draft))
-                }
+                
             }
         } catch {
             print("\(error)")
         }
-        
+        }
         
     }
     
@@ -180,16 +179,6 @@ final class MainViewModel: MainViewModelProtocol{
             } catch {
                 print("\(error)")
             }
-        }
-        
-        do {
-            try dbQueue.read { db in
-                let draft = try Booking.fetchAll(db)
-                print("kokoko\(draft)")
-//                updateViewData?(.successBooks(draft))
-            }
-        } catch {
-            print("\(error)")
         }
     }
     
@@ -229,17 +218,17 @@ final class MainViewModel: MainViewModelProtocol{
                 print("\(error)")
             }
         }
-        
+        DispatchQueue.main.async { [weak self] in
         do {
             try dbQueue.read { db in
                 let draft = try Genres.fetchAll(db)
-                DispatchQueue.main.async { [weak self] in
-                    self?.updateViewData?(.successGenres(draft))
-                }
+                self?.updateViewData?(.successGenres(draft))
+                
             }
         } catch {
             print("\(error)")
         }
+    }
     }
     
 }

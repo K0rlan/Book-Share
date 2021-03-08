@@ -59,7 +59,7 @@ class MoreView: UIView{
         return activityIndicator
     }()
     
-    var booksData: ViewData = .initial{
+    var booksData: MoreModel = .initial{
         didSet{
             setNeedsLayout()
         }
@@ -67,7 +67,7 @@ class MoreView: UIView{
     
     var filteredData: [Books] = []
     var books: [Books] = []
-    var images = [ViewData.BooksImages]()
+    var images = [MoreModel.BooksImages]()
     var delegate: MoreViewProtocol!
     
     override init(frame: CGRect  = .zero) {
@@ -93,8 +93,6 @@ class MoreView: UIView{
             books = success
             filteredData = books
             tableView.reloadData()
-        case.successGenres:
-            activityIndicator.isHidden = true
         case .successImage(let success):
             tableView.isHidden = false
             activityIndicator.isHidden = true

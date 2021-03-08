@@ -8,12 +8,12 @@
 import Foundation
 import Moya
 protocol MoreViewModelProtocol {
-    var updateViewData: ((ViewData)->())? { get set }
+    var updateViewData: ((MoreModel)->())? { get set }
     func startFetch()
 }
 
 final class MoreViewModel: MoreViewModelProtocol{
-    var updateViewData: ((ViewData) -> ())?
+    var updateViewData: ((MoreModel) -> ())?
     var bookID: Int
     let provide = MoyaProvider<APIImage>()
     
@@ -53,7 +53,7 @@ final class MoreViewModel: MoreViewModelProtocol{
                     case .success(let response):
                         do {
                             let img = try response.mapImage().jpegData(compressionQuality: 1)
-                            let book = ViewData.BooksImages(id: book.id, image: img)
+                            let book = MoreModel.BooksImages(id: book.id, image: img)
                             self?.updateViewData?(.successImage(book))
                         } catch let error {
                             print("Error in parsing: \(error)")
