@@ -96,6 +96,7 @@ class BooksView: UIView{
         case .successImage(let success):
             images.append(success)
             tableView.reloadData()
+            collectionView.reloadData()
             collectionView.isHidden = false
             tableView.isHidden = false
             activityIndicator.isHidden = true

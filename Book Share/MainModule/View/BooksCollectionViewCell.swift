@@ -34,7 +34,6 @@ class BooksCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 16)
         label.textColor = Constants.orange
-        label.numberOfLines = 0
         return label
     }()
     

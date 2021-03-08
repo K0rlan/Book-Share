@@ -195,9 +195,6 @@ class DetailsView: UIView {
         do {
             try dbQueue.read { db in
                 let draft = try Booking.filterByBookID(id: data.id).fetchAll(db)
-                let drafts = try Booking.fetchAll(db)
-                print(draft)
-                print(drafts)
                 if draft.isEmpty{
                     returnBookButton.isHidden = true
                     bringSubviewToFront(reserveBookButton)

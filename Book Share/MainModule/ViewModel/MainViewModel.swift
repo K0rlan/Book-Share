@@ -25,8 +25,8 @@ final class MainViewModel: MainViewModelProtocol{
     }
     
     func startFetch() {
-        refreshTables()
         updateViewData?(.loading)
+        refreshTables()
         fetchBooks()
         fetchRents()
         fetchGenres()
@@ -148,23 +148,21 @@ final class MainViewModel: MainViewModelProtocol{
             }
         }
         DispatchQueue.main.async { [weak self] in
-        do {
-            try dbQueue.read { db in
-                let draft = try Books.fetchAll(db)
-              
+            do {
+                try dbQueue.read { db in
+                    let draft = try Books.fetchAll(db)
                     self?.updateViewData?(.successBooks(draft))
-                
+                }
+            } catch {
+                print("\(error)")
             }
-        } catch {
-            print("\(error)")
-        }
         }
         
     }
     
     func insertIntoDBRents(rents: [ViewData.RentsData]){
         for rent in rents{
-        
+            
             do {
                 try dbQueue.write { db in
                     var rents = Booking(
@@ -181,9 +179,6 @@ final class MainViewModel: MainViewModelProtocol{
             }
         }
     }
-    
-    
-    
     func insertIntoDBAll(){
         do {
             try dbQueue.write { db in
@@ -219,16 +214,15 @@ final class MainViewModel: MainViewModelProtocol{
             }
         }
         DispatchQueue.main.async { [weak self] in
-        do {
-            try dbQueue.read { db in
-                let draft = try Genres.fetchAll(db)
-                self?.updateViewData?(.successGenres(draft))
-                
+            do {
+                try dbQueue.read { db in
+                    let draft = try Genres.fetchAll(db)
+                    self?.updateViewData?(.successGenres(draft))
+                }
+            } catch {
+                print("\(error)")
             }
-        } catch {
-            print("\(error)")
         }
-    }
     }
     
 }

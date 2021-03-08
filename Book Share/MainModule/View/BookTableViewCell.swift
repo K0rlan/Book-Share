@@ -112,6 +112,7 @@ extension BookTableViewCell: UICollectionViewDelegate, UICollectionViewDataSourc
                 cell.bookImage.image = UIImage(data: image.image!)
             }
         }
+        
         return cell
     }
     

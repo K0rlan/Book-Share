@@ -90,6 +90,7 @@ class DetailsViewModel: DetailsViewModelProtocol{
         }
         refreshTables()
         fetchRents()
+        putBook(id: bookID, enabled: false)
     }
     
     func refreshTables(){
@@ -139,6 +140,7 @@ class DetailsViewModel: DetailsViewModelProtocol{
         } catch {
             print("\(error)")
         }
+        putBook(id: bookID, enabled: true)
     }
     func fetchRents(){
         provider.request(.getRent) { [weak self] (result) in
@@ -178,5 +180,19 @@ class DetailsViewModel: DetailsViewModelProtocol{
             }
         }
     }
+    func putBook(id: Int, enabled: Bool){
+        provider.request(.updateRent(id: id, enabled: enabled)) { [weak self] (result) in
+                switch result{
+                case .success(let response):
+                 
+                    print(response)
+                   
+                case .failure(let error):
+                    let requestError = (error as NSError)
+                    print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
+                    
+                }
+            }
+        }
     
 }

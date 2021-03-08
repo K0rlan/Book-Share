@@ -17,6 +17,7 @@ enum APIService {
     case postBook(book: ViewData.BooksData)
     case postRent(rent: ViewData.RentData)
     case deleteRent(rentId: Int)
+    case updateRent(id: Int, enabled: Bool)
 }
 
 extension APIService: TargetType {
@@ -32,6 +33,8 @@ extension APIService: TargetType {
         case .getGenres:
             return "api/genres"
         case .getBook(let id):
+            return "api/books/\(id)"
+        case .updateRent(let id, let _):
             return "api/books/\(id)"
         case .getRent, .postRent:
             return "api/rent"
@@ -50,6 +53,8 @@ extension APIService: TargetType {
             return .post
         case .deleteRent:
             return .delete
+        case .updateRent:
+            return .put
         }
     }
     
@@ -82,7 +87,12 @@ extension APIService: TargetType {
                 
             ]
             return .requestParameters(parameters: params, encoding: JSONEncoding.default)
-
+        
+        case .updateRent(let _, let enabled):
+            let params: [String : Any] = [
+                "enabled" : enabled
+            ]
+            return .requestParameters(parameters: params, encoding: JSONEncoding.default)
         }
     }
     
