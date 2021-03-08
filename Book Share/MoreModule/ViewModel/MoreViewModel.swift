@@ -6,38 +6,66 @@
 //
 
 import Foundation
-
+import Moya
 protocol MoreViewModelProtocol {
-    var updateViewData: ((ViewData)->())? { get set }
+    var updateViewData: ((MoreModel)->())? { get set }
     func startFetch()
 }
 
 final class MoreViewModel: MoreViewModelProtocol{
-    var updateViewData: ((ViewData) -> ())?
-    var books = [ViewData.BooksData]()
+    var updateViewData: ((MoreModel) -> ())?
+    var bookID: Int
+    let provide = MoyaProvider<APIImage>()
     
-    
-    init() {
+    init(id: Int) {
         updateViewData?(.initial)
-    }
-    
-    init(books: [ViewData.BooksData]) {
-        updateViewData?(.initial)
-        self.books = books
+        self.bookID = id
     }
     
     func startFetch() {
         updateViewData?(.loading)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-            guard let booksData = self?.books else { return }
-            self?.updateViewData?(.successBooks(booksData))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1){ [weak self] in
+            do {
+                try dbQueue.read { db in
+                    print(self?.bookID)
+                    if self?.bookID == 0{
+                        let draft = try Books.fetchAll(db)
+                        self?.updateViewData?(.successBooks(draft))
+                        self?.fetchImages(books: draft)
+                    }else{
+                        let draft = try Books.filterByGenre(id: self!.bookID).fetchAll(db)
+                        print(draft)
+                        self?.updateViewData?(.successBooks(draft))
+                        self?.fetchImages(books: draft)
+                    }
+                }
+            } catch {
+                print("\(error)")
+            }
         }
-        
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 6) { [weak self] in
-//            self?.updateViewData?(.failure)
-//        }
-        
-        
+    }
+    
+    func fetchImages(books: [Books]){
+        for book in books{
+            if let img = book.image{
+                provide.request(.getImage(imageName: img)) { [weak self] (result) in
+                    switch result{
+                    case .success(let response):
+                        do {
+                            let img = try response.mapImage().jpegData(compressionQuality: 1)
+                            let book = MoreModel.BooksImages(id: book.id, image: img)
+                            self?.updateViewData?(.successImage(book))
+                        } catch let error {
+                            print("Error in parsing: \(error)")
+                            self?.updateViewData?(.failure(error))
+                        }
+                    case .failure(let error):
+                        let requestError = (error as NSError)
+                        print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
+                        self?.updateViewData?(.failure(error))
+                    }
+                }
+            }
+        }
     }
 }

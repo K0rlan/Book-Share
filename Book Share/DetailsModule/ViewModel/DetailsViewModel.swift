@@ -7,6 +7,8 @@
 
 import Foundation
 import Moya
+import Griffon_ios_spm
+
 protocol DetailsViewModelProtocol {
     var updateViewData: ((DetailsData)->())? { get set }
     func startFetch()
@@ -16,23 +18,41 @@ class DetailsViewModel: DetailsViewModelProtocol{
     var updateViewData: ((DetailsData) -> ())?
     let bookID: Int
     let provider = MoyaProvider<APIService>()
-    
+    let provide = MoyaProvider<APIImage>()
     init(bookID: Int) {
         updateViewData?(.initial)
         self.bookID = bookID
     }
     
-
+    func fetchImages(image: String?){
+        if let img = image{
+            provide.request(.getImage(imageName: img)) { [weak self] (result) in
+                switch result{
+                case .success(let response):
+                    do {
+                        let img = try response.mapImage()
+                        self?.updateViewData?(.successImage(img))
+                    } catch let error {
+                        print("Error in parsing: \(error)")
+                        self?.updateViewData?(.failure(error))
+                    }
+                case .failure(let error):
+                    let requestError = (error as NSError)
+                    print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
+                    self?.updateViewData?(.failure(error))
+                }
+            }
+        }
+    }
     
     func startFetch() {
-        var book: DetailsData.Data!
-        
         provider.request(.getBook(bookID: bookID)) { [weak self] (result) in
             switch result{
             case .success(let response):
                 do {
                     let bookResponse = try JSONDecoder().decode(DetailsData.Data.self, from: response.data)
                     self?.updateViewData?(.success(bookResponse))
+                    self?.fetchImages(image: bookResponse.image)
                     print(bookResponse.author)
                 } catch let error {
                     print("Error in parsing: \(error)")
@@ -45,4 +65,134 @@ class DetailsViewModel: DetailsViewModelProtocol{
             }
         }
     }
+    
+    func addRent(){
+        let calendar = Calendar.current
+        let addTwoWeekToCurrentDate = calendar.date(byAdding: .weekOfYear, value: 2, to: Date())
+        let rent = ViewData.RentData(user_id: Griffon.shared.getUserProfiles()!.id, book_id: bookID, start_date: "\(Date())", end_date: "\(addTwoWeekToCurrentDate!)")
+        provider.request(.postRent(rent: rent)) { [weak self] (result) in
+            switch result{
+            case .success(let response):
+                do {
+                    if let jsonResponse = try JSONSerialization.jsonObject(with: response.data, options: []) as? [String: String]{
+                        print(jsonResponse)
+                    }
+                    
+                } catch let error {
+                    print("Error in parsing: \(error)")
+                    self?.updateViewData?(.failure(error))
+                }
+            case .failure(let error):
+                let requestError = (error as NSError)
+                print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
+                self?.updateViewData?(.failure(error))
+            }
+        }
+        refreshTables()
+        fetchRents()
+        putBook(id: bookID, enabled: false)
+    }
+    
+    func refreshTables(){
+        do {
+            try dbQueue.write { db in
+                try db.execute(sql: "DELETE FROM booking")
+            }
+        } catch {
+            print("\(error)")
+        }
+    }
+    
+    func deleteRent(){
+        var rentID = Int()
+        do {
+            try dbQueue.read { db in
+                let draft = try Booking.filterByBookID(id: self.bookID).fetchAll(db)
+                if !draft.isEmpty{
+                rentID = draft.first!.id
+                    print(rentID)}
+            }
+        } catch {
+            print("\(error)")
+        }
+        provider.request(.deleteRent(rentId: rentID)) { [weak self] (result) in
+            switch result{
+            case .success(let response):
+                do {
+                    if let jsonResponse = try JSONSerialization.jsonObject(with: response.data, options: []) as? [String: String]{
+                        print(jsonResponse)
+                    }
+
+                } catch let error {
+                    print("Error in parsing: \(error)")
+                    self?.updateViewData?(.failure(error))
+                }
+            case .failure(let error):
+                let requestError = (error as NSError)
+                print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
+                self?.updateViewData?(.failure(error))
+            }
+        }
+        do {
+            try dbQueue.write { db in
+                try db.execute(sql: "DELETE FROM booking WHERE id = \(rentID)")
+            }
+        } catch {
+            print("\(error)")
+        }
+        putBook(id: bookID, enabled: true)
+    }
+    func fetchRents(){
+        provider.request(.getRent) { [weak self] (result) in
+            switch result{
+            case .success(let response):
+                do {
+                    let rentsResponse = try JSONDecoder().decode([ViewData.RentsData].self, from: response.data)
+                    self?.insertIntoDBRents(rents: rentsResponse)
+                } catch let error {
+                    print("Error in parsing: \(error)")
+                    self?.updateViewData?(.failure(error))
+                }
+            case .failure(let error):
+                let requestError = (error as NSError)
+                print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
+                self?.updateViewData?(.failure(error))
+            }
+        }
+    }
+    
+    func insertIntoDBRents(rents: [ViewData.RentsData]){
+        for rent in rents{
+        
+            do {
+                try dbQueue.write { db in
+                    var rents = Booking(
+                        id: rent.id,
+                        user_id: rent.user_id,
+                        book_id: rent.book_id,
+                        start_date: rent.start_date,
+                        end_date: rent.end_date
+                    )
+                    try! rents.insert(db)
+                }
+            } catch {
+                print("\(error)")
+            }
+        }
+    }
+    func putBook(id: Int, enabled: Bool){
+        provider.request(.updateRent(id: id, enabled: enabled)) { [weak self] (result) in
+                switch result{
+                case .success(let response):
+                 
+                    print(response)
+                   
+                case .failure(let error):
+                    let requestError = (error as NSError)
+                    print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
+                    
+                }
+            }
+        }
+    
 }

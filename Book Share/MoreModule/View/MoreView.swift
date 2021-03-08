@@ -59,15 +59,15 @@ class MoreView: UIView{
         return activityIndicator
     }()
     
-    var booksData: ViewData = .initial{
+    var booksData: MoreModel = .initial{
         didSet{
             setNeedsLayout()
         }
     }
     
-    var filteredData: [ViewData.BooksData] = []
-    var books: [ViewData.BooksData] = []
-    
+    var filteredData: [Books] = []
+    var books: [Books] = []
+    var images = [MoreModel.BooksImages]()
     var delegate: MoreViewProtocol!
     
     override init(frame: CGRect  = .zero) {
@@ -90,18 +90,19 @@ class MoreView: UIView{
             tableView.isHidden = true
             activityIndicator.isHidden = false
         case .successBooks(let success):
-            tableView.isHidden = false
-            activityIndicator.isHidden = true
             books = success
             filteredData = books
             tableView.reloadData()
-        case.successGenres:
-//        case .successWithGenres:
+        case .successImage(let success):
+            tableView.isHidden = false
             activityIndicator.isHidden = true
-//            tableView.reloadData()
+            images.append(success)
+            tableView.reloadData()
         case .failure:
             tableView.isHidden = false
             activityIndicator.isHidden = true
+        case .successRent(let success):
+            print(success)
         }
     }
     
@@ -134,7 +135,7 @@ class MoreView: UIView{
 extension MoreView: UISearchBarDelegate{
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        filteredData = searchText.isEmpty ? books : books.filter({(books: ViewData.BooksData) -> Bool in
+        filteredData = searchText.isEmpty ? books : books.filter({(books: Books) -> Bool in
             return books.title.range(of: searchText, options: .caseInsensitive) != nil || books.author.range(of: searchText, options: .caseInsensitive) != nil
         })
         tableView.reloadData()
@@ -156,13 +157,17 @@ extension MoreView: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "books", for: indexPath) as! MoreTableViewCell
             let book = filteredData[indexPath.row]
             cell.backgroundColor = Constants.gray
-            cell.bookImage.image = UIImage(contentsOfFile: book.image ?? "")
             cell.titleLabel.text = book.title
 //            cell.genreLabel.text = book.genre
             cell.authorLabel.text = book.author
             cell.publishDateLabel.text = book.publish_date
             cell.selectionStyle = .none
             cell.contentView.isUserInteractionEnabled = true
+        for image in images{
+            if book.id == image.id{
+                cell.bookImage.image = UIImage(data: image.image!)
+            }
+        }
        
             return cell
     }
@@ -170,7 +175,6 @@ extension MoreView: UITableViewDelegate, UITableViewDataSource {
         160
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("tapped")
         let bookID = books[indexPath.row].id
         delegate.getBooksID(id: bookID)
     }

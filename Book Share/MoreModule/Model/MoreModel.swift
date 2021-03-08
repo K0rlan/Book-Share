@@ -1,18 +1,17 @@
 //
-//  ViewData.swift
-//  Dar Library
+//  MoreModel.swift
+//  Book Share
 //
-//  Created by Korlan Omarova on 26.02.2021.
+//  Created by Korlan Omarova on 08.03.2021.
 //
 
 import Foundation
 import UIKit
 
-enum ViewData {
+enum MoreModel {
     case initial
     case loading
-    case successGenres([Genres])
-    case successBooks([BooksData])
+    case successBooks([Books])
     case successImage(BooksImages)
     case successRent([RentsData])
     case failure(Error)

@@ -11,8 +11,13 @@ import Moya
 enum APIService {
     case getBooks
     case getGenres
+    case getRent
     case getBook(bookID: Int)
+    case getImage(imageName: String)
     case postBook(book: ViewData.BooksData)
+    case postRent(rent: ViewData.RentData)
+    case deleteRent(rentId: Int)
+    case updateRent(id: Int, enabled: Bool)
 }
 
 extension APIService: TargetType {
@@ -29,15 +34,27 @@ extension APIService: TargetType {
             return "api/genres"
         case .getBook(let id):
             return "api/books/\(id)"
+        case .updateRent(let id, let _):
+            return "api/books/\(id)"
+        case .getRent, .postRent:
+            return "api/rent"
+        case .getImage(let imageName):
+            return "\(imageName)"
+        case .deleteRent(let rentId):
+            return "api/rent/\(rentId)"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .getBooks, .getGenres, .getBook:
+        case .getBooks, .getGenres, .getBook, .getRent, .getImage:
             return .get
-        case .postBook:
+        case .postBook, .postRent:
             return .post
+        case .deleteRent:
+            return .delete
+        case .updateRent:
+            return .put
         }
     }
     
@@ -47,7 +64,7 @@ extension APIService: TargetType {
     
     var task: Task {
         switch self {
-        case .getBooks, .getGenres, .getBook:
+        case .getBooks, .getGenres, .getBook, .getRent, .getImage, .deleteRent:
             return .requestPlain
         case .postBook(let book):
             let params: [String : Any] = [
@@ -61,7 +78,21 @@ extension APIService: TargetType {
                 
             ]
             return .requestParameters(parameters: params, encoding: JSONEncoding.default)
-
+        case .postRent(let rent):
+            let params: [String : Any] = [
+                "user_id" : rent.user_id,
+                "book_id" : rent.book_id,
+                "start_date" : rent.start_date,
+                "end_date" : rent.end_date ?? nil,
+                
+            ]
+            return .requestParameters(parameters: params, encoding: JSONEncoding.default)
+        
+        case .updateRent(let _, let enabled):
+            let params: [String : Any] = [
+                "enabled" : enabled
+            ]
+            return .requestParameters(parameters: params, encoding: JSONEncoding.default)
         }
     }
     

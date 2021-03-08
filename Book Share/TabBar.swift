@@ -7,12 +7,12 @@
 
 import Foundation
 import UIKit
-
+import Griffon_ios_spm
 class TabBar: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
- 
+
         setupVCs()
         setStyles()
     }
@@ -28,9 +28,6 @@ class TabBar: UITabBarController {
 
         layer.masksToBounds = false
         layer.fillColor = Constants.elements?.cgColor
-        
-        
-        
         tabBar.shadowImage = UIImage()
         tabBar.backgroundImage = UIImage()
 
@@ -44,15 +41,12 @@ class TabBar: UITabBarController {
         self.tabBar.itemSpacing = tabBar.bounds.width / 50
         
         tabBar.tintColor = Constants.orange
-//        tabBar.barTintColor = .blue
-       
-        
     }
     
-    func setupVCs() {
+    public func setupVCs() {
         viewControllers = [
             createNavController(for: ModelBuilder.createMain(), title: NSLocalizedString("", comment: ""), image: Constants.home!),
-            createNavController(for: ModelBuilder.createReservedBooks(), title: NSLocalizedString("", comment: ""), image: Constants.reserved!),
+//            createNavController(for: ModelBuilder.createReservedBooks(), title: NSLocalizedString("", comment: ""), image: Constants.reserved!),
             createNavController(for: ModelBuilder.createProfile(), title: NSLocalizedString("", comment: ""), image: Constants.profile!),
             createNavController(for: ModelBuilder.createSearch(), title: NSLocalizedString("", comment: ""), image: Constants.search!)
         ]

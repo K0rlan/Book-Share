@@ -12,6 +12,7 @@ class MoreTableViewCell: UITableViewCell {
     lazy var bookImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
+        imageView.image = Constants.back
         return imageView
     }()
     

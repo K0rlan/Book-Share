@@ -20,6 +20,11 @@ class Utils {
             }
             let payloadData = Data(base64Encoded: payload64,
                                    options:.ignoreUnknownCharacters)!
+            let payload = String(data: payloadData, encoding: .utf8)!
+//            print("lol\(payload)")
+            print("lol\(Griffon.shared.getUserProfiles())")
+            
+//            print("lol\(Griffon.shared.getIdTokenFromKeyChain())")
             let json = try! JSONSerialization.jsonObject(with: payloadData, options: []) as! [String:Any]
             let exp = json["exp"] as! Int
             let expDate = Date(timeIntervalSince1970: TimeInterval(exp))
@@ -30,6 +35,6 @@ class Utils {
             
         }
         return false
-        
     }
+
 }

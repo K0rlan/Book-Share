@@ -8,6 +8,11 @@
 import Foundation
 import UIKit
 
+protocol DetailsViewProtocol {
+    func addRentButtonPressed()
+    func deleteRentButtonPressed()
+}
+
 class DetailsView: UIView {
     
     lazy var bookImage: UIImageView = {
@@ -29,7 +34,6 @@ class DetailsView: UIView {
         label.font = .boldSystemFont(ofSize: 20)
         label.textColor = Constants.dark
         label.numberOfLines = 0
-        
         return label
     }()
     
@@ -60,6 +64,7 @@ class DetailsView: UIView {
         button.backgroundColor = Constants.orange
         button.layer.cornerRadius = 8
         button.layer.borderWidth = 1
+        button.alpha = 0
         button.layer.borderColor = Constants.orange.cgColor
         button.layer.shadowColor = UIColor.black.cgColor
         button.layer.shadowOffset = CGSize(width: 3, height: 4)
@@ -67,7 +72,24 @@ class DetailsView: UIView {
         button.layer.shadowOpacity = 0.1
         button.setTitle("Take a book", for: .normal)
         button.setTitleColor(.white, for: .normal)
+        button.addTarget(self, action: #selector(reserveBookButtonPressed), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy var returnBookButton: UIButton = {
+        let button = UIButton()
         button.alpha = 0
+        button.backgroundColor = Constants.dark
+        button.layer.cornerRadius = 8
+        button.layer.borderWidth = 1
+        button.layer.borderColor = Constants.dark.cgColor
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = CGSize(width: 3, height: 4)
+        button.layer.shadowRadius = 2
+        button.layer.shadowOpacity = 0.1
+        button.setTitle("Return a book", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.addTarget(self, action: #selector(returnBookButtonPressed), for: .touchUpInside)
         return button
     }()
     
@@ -95,6 +117,8 @@ class DetailsView: UIView {
         }
     }
     
+    var delegate: DetailsViewProtocol!
+    
     override init(frame: CGRect  = .zero) {
         super .init(frame: frame)
         setStyles()
@@ -118,6 +142,24 @@ class DetailsView: UIView {
         
     }
     
+    @objc func reserveBookButtonPressed(sender: UIButton){
+        delegate?.addRentButtonPressed()
+        sender.isHidden = true
+        returnBookButton.isHidden = false
+        returnBookButton.isEnabled = true
+        sender.isEnabled = false
+        
+    }
+    
+    @objc func returnBookButtonPressed(sender: UIButton){
+        delegate?.deleteRentButtonPressed()
+        sender.isHidden = true
+        reserveBookButton.isHidden = false
+        reserveBookButton.isEnabled = true
+        sender.isEnabled = false
+    }
+    
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -127,10 +169,17 @@ class DetailsView: UIView {
         case .loading:
             activityIndicator.isHidden = false
         case .success(let success):
+            reserveBookButton.alpha = 1
+            returnBookButton.alpha = 1
+            descriptionLabel.alpha = 1
+            activityIndicator.isHidden = true
+            self.update(viewData: success)
+        case .successImage(let success):
             bookImage.alpha = 1
+            returnBookButton.alpha = 1
             reserveBookButton.alpha = 1
             descriptionLabel.alpha = 1
-            self.update(viewData: success)
+            self.updateImage(image: success)
             activityIndicator.isHidden = true
         case .failure:
             activityIndicator.isHidden = true
@@ -139,16 +188,39 @@ class DetailsView: UIView {
     
     private func update(viewData: DetailsData.Data?){
         guard let data = viewData  else { return }
-        bookImage.image = UIImage(contentsOfFile: data.image ?? "")
         titleLabel.text = data.title
         authorLabel.text = data.author
         publishDateLabel.text = data.publish_date
-        genreLabel.text = String(data.genre_id)
         
+        do {
+            try dbQueue.read { db in
+                let draft = try Booking.filterByBookID(id: data.id).fetchAll(db)
+                if draft.isEmpty{
+                    returnBookButton.isHidden = true
+                    bringSubviewToFront(reserveBookButton)
+                    reserveBookButton.isHidden = false
+                    reserveBookButton.isEnabled = true
+                    returnBookButton.isEnabled = false
+                }else {
+                    reserveBookButton.isHidden = true
+                    bringSubviewToFront(returnBookButton)
+                    returnBookButton.isHidden = false
+                    returnBookButton.isEnabled = true
+                    reserveBookButton.isEnabled = false
+                }
+               
+            }
+        } catch {
+            print("\(error)")
+        }
+        
+    }
+    private func updateImage(image: UIImage){
+        bookImage.image = image
     }
     
     private func setupViews() {
-        [bookImage, authorLabel, publishDateLabel, genreLabel, titleLabel, activityIndicator, descriptionLabel, reserveBookButton].forEach {
+        [bookImage, authorLabel, publishDateLabel, genreLabel, titleLabel, activityIndicator, descriptionLabel, reserveBookButton, returnBookButton].forEach {
             self.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -174,7 +246,11 @@ class DetailsView: UIView {
         reserveBookButton.leadingAnchor.constraint(equalTo: bookImage.trailingAnchor, constant: 20).isActive = true
         reserveBookButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
-        descriptionLabel.topAnchor.constraint(equalTo: reserveBookButton.bottomAnchor, constant: 30).isActive = true
+        returnBookButton.topAnchor.constraint(equalTo: publishDateLabel.bottomAnchor, constant: 10).isActive = true
+        returnBookButton.leadingAnchor.constraint(equalTo: bookImage.trailingAnchor, constant: 20).isActive = true
+        returnBookButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        
+        descriptionLabel.topAnchor.constraint(equalTo: bookImage.bottomAnchor, constant: 50).isActive = true
         descriptionLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
         descriptionLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         

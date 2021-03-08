@@ -9,7 +9,7 @@ import UIKit
 
 protocol BookTableViewCellDelegate{
     func showDetails(id: Int)
-    func moreBooks(books: [ViewData.BooksData])
+    func moreBooks(id: Int)
 }
 
 
@@ -19,7 +19,7 @@ class BookTableViewCell: UITableViewCell {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 22)
         label.textColor = Constants.dark
-//        label.text = "All Books"
+        //        label.text = "All Books"
         return label
     }()
     
@@ -49,23 +49,28 @@ class BookTableViewCell: UITableViewCell {
     
     var books = [ViewData.BooksData]()
     
+    var id: Int!
+    var images: [ViewData.BooksImages] = []
     var delegate: BookTableViewCellDelegate!
+    var rents = [ViewData.RentsData]()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.backgroundColor = Constants.gray
         setupViews()
-//        print(books)
-//        collectionView.reloadData()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    public func updateCV(books: [ViewData.BooksData]){
+    public func updateCV(books: [ViewData.BooksData], id: Int, images: [ViewData.BooksImages], rents: [ViewData.RentsData]){
         self.books = books
         collectionView.reloadData()
+        self.id = id
+        self.images = images
+        self.rents = rents
     }
+    
     
     private  func setupViews() {
         [collectionView, moreButton, titleLabel].forEach {
@@ -88,9 +93,7 @@ class BookTableViewCell: UITableViewCell {
     }
     
     @objc func moreButtonPressed(){
-//        let moreVC = ModelBuilder.createRegistration()
-//        self.navigationController?.pushViewController(moreVC, animated: true)
-        delegate.moreBooks(books: self.books)
+        delegate.moreBooks(id: self.id)
     }
 }
 extension BookTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -104,10 +107,15 @@ extension BookTableViewCell: UICollectionViewDelegate, UICollectionViewDataSourc
         cell.bookImage.image = UIImage(contentsOfFile: book.image ?? "")
         cell.titleLabel.text = book.title
         cell.authorLabel.text = book.author
+        for image in images{
+            if book.id == image.id{
+                cell.bookImage.image = UIImage(data: image.image!)
+            }
+        }
         
         return cell
     }
-     
+    
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let bookID = books[indexPath.row].id
@@ -115,7 +123,7 @@ extension BookTableViewCell: UICollectionViewDelegate, UICollectionViewDataSourc
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 150, height: 260)
+        return CGSize(width: 150, height: 280)
     }
     
 }
