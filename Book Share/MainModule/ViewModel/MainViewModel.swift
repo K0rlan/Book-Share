@@ -11,21 +11,25 @@ import UIKit
 
 protocol MainViewModelProtocol {
     var updateViewData: ((ViewData)->())? { get set }
+    var updateImages: ((ViewImages)->())? { get set }
     func startFetch()
 }
 
 final class MainViewModel: MainViewModelProtocol{
     var updateViewData: ((ViewData) -> ())?
+    var updateImages: ((ViewImages)->())?
     let provider = MoyaProvider<APIService>()
-    var images = [ViewData.BooksImages]()
+    var images = [ViewImages.BooksImages]()
     
     let provide = MoyaProvider<APIImage>()
     init() {
         updateViewData?(.initial)
+        updateImages?(.initial)
     }
     
     func startFetch() {
         updateViewData?(.loading)
+        updateImages?(.loading)
         refreshTables()
         fetchBooks()
         fetchRents()
@@ -38,9 +42,9 @@ final class MainViewModel: MainViewModelProtocol{
             case .success(let response):
                 do {
                     let booksResponse = try JSONDecoder().decode([ViewData.BooksData].self, from: response.data)
+                    self?.fetchImages(books: booksResponse)
                     self?.insertIntoDBBooks(books: booksResponse)
                     self?.updateViewData?(.successBooks(booksResponse))
-                    self?.fetchImages(books: booksResponse)
                 } catch let error {
                     print("Error in parsing: \(error)")
                     self?.updateViewData?(.failure(error))
@@ -81,8 +85,9 @@ final class MainViewModel: MainViewModelProtocol{
                     case .success(let response):
                         do {
                             let img = try response.mapImage().jpegData(compressionQuality: 1)
-                            let book = ViewData.BooksImages(id: book.id, image: img)
-                            self?.updateViewData?(.successImage(book))
+                            let book = ViewImages.BooksImages(id: book.id, image: img)
+                            self?.images.append(book)
+                            self?.updateImages?(.successImage(self!.images))
                         } catch let error {
                             print("Error in parsing: \(error)")
                             self?.updateViewData?(.failure(error))
