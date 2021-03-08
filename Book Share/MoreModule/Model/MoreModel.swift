@@ -12,7 +12,7 @@ enum MoreModel {
     case initial
     case loading
     case successBooks([Books])
-    case successImage(BooksImages)
+    case successImage([BooksImages])
     case successRent([RentsData])
     case failure(Error)
 

@@ -74,6 +74,9 @@ class MainViewController: UIViewController {
         viewModel.updateViewData = { [weak self] viewData in
             self?.bookView.booksData = viewData
         }
+        viewModel.updateImages = { [weak self] viewData in
+            self?.bookView.bookImage = viewData
+        }
     }
     
     private func setupViews(){

@@ -24,21 +24,7 @@ class MoreView: UIView{
         searchBar.delegate = self
         return searchBar
     }()
-    
-    lazy var koko: UISearchBar = {
-        let searchBar = UISearchBar()
-        searchBar.backgroundColor = Constants.gray
-        searchBar.placeholder = "Search..."
-        searchBar.barTintColor = Constants.gray
-        searchBar.backgroundImage = UIImage()
-        searchBar.tintColor = Constants.orange
-        searchBar.searchTextField.leftView?.tintColor = Constants.dark
-        searchBar.searchTextField.backgroundColor = Constants.elements
-        searchBar.delegate = self
-        searchBar.isHidden = true
-        return searchBar
-    }()
-    
+
     lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.delegate = self
@@ -74,7 +60,7 @@ class MoreView: UIView{
         super .init(frame: frame)
         setupViews()
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -96,7 +82,7 @@ class MoreView: UIView{
         case .successImage(let success):
             tableView.isHidden = false
             activityIndicator.isHidden = true
-            images.append(success)
+            images = success
             tableView.reloadData()
         case .failure:
             tableView.isHidden = false
@@ -128,7 +114,7 @@ class MoreView: UIView{
         
         activityIndicator.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         activityIndicator.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-    
+        
     }
 }
 
@@ -140,36 +126,36 @@ extension MoreView: UISearchBarDelegate{
         })
         tableView.reloadData()
     }
-
+    
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
         searchBar.resignFirstResponder()
         tableView.reloadData()
     }
-   
+    
 }
 
 extension MoreView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return filteredData.count
+        return filteredData.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "books", for: indexPath) as! MoreTableViewCell
-            let book = filteredData[indexPath.row]
-            cell.backgroundColor = Constants.gray
-            cell.titleLabel.text = book.title
-//            cell.genreLabel.text = book.genre
-            cell.authorLabel.text = book.author
-            cell.publishDateLabel.text = book.publish_date
-            cell.selectionStyle = .none
-            cell.contentView.isUserInteractionEnabled = true
+        let cell = tableView.dequeueReusableCell(withIdentifier: "books", for: indexPath) as! MoreTableViewCell
+        let book = filteredData[indexPath.row]
+        cell.backgroundColor = Constants.gray
+        cell.titleLabel.text = book.title
+        cell.authorLabel.text = book.author
+        cell.publishDateLabel.text = book.publish_date
+        cell.selectionStyle = .none
+        cell.contentView.isUserInteractionEnabled = true
+        cell.bookImage.image = .none
         for image in images{
             if book.id == image.id{
                 cell.bookImage.image = UIImage(data: image.image!)
             }
         }
-       
-            return cell
+        
+        return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         160

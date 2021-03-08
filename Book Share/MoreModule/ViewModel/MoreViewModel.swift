@@ -17,6 +17,8 @@ final class MoreViewModel: MoreViewModelProtocol{
     var bookID: Int
     let provide = MoyaProvider<APIImage>()
     
+    var images = [MoreModel.BooksImages]()
+    
     init(id: Int) {
         updateViewData?(.initial)
         self.bookID = id
@@ -27,14 +29,12 @@ final class MoreViewModel: MoreViewModelProtocol{
         DispatchQueue.main.asyncAfter(deadline: .now() + 1){ [weak self] in
             do {
                 try dbQueue.read { db in
-                    print(self?.bookID)
                     if self?.bookID == 0{
                         let draft = try Books.fetchAll(db)
                         self?.updateViewData?(.successBooks(draft))
                         self?.fetchImages(books: draft)
                     }else{
                         let draft = try Books.filterByGenre(id: self!.bookID).fetchAll(db)
-                        print(draft)
                         self?.updateViewData?(.successBooks(draft))
                         self?.fetchImages(books: draft)
                     }
@@ -54,7 +54,8 @@ final class MoreViewModel: MoreViewModelProtocol{
                         do {
                             let img = try response.mapImage().jpegData(compressionQuality: 1)
                             let book = MoreModel.BooksImages(id: book.id, image: img)
-                            self?.updateViewData?(.successImage(book))
+                            self?.images.append(book)
+                            self?.updateViewData?(.successImage(self!.images))
                         } catch let error {
                             print("Error in parsing: \(error)")
                             self?.updateViewData?(.failure(error))

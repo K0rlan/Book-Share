@@ -50,7 +50,7 @@ class BookTableViewCell: UITableViewCell {
     var books = [ViewData.BooksData]()
     
     var id: Int!
-    var images: [ViewData.BooksImages] = []
+    var images: [ViewImages.BooksImages] = []
     var delegate: BookTableViewCellDelegate!
     var rents = [ViewData.RentsData]()
     
@@ -63,7 +63,7 @@ class BookTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    public func updateCV(books: [ViewData.BooksData], id: Int, images: [ViewData.BooksImages], rents: [ViewData.RentsData]){
+    public func updateCV(books: [ViewData.BooksData], id: Int, images: [ViewImages.BooksImages], rents: [ViewData.RentsData]){
         self.books = books
         collectionView.reloadData()
         self.id = id

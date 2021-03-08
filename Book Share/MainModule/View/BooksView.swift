@@ -56,12 +56,20 @@ class BooksView: UIView{
         }
     }
     
+    var bookImage: ViewImages = .initial{
+        didSet{
+            setNeedsLayout()
+        }
+    }
+    
     var books = [ViewData.BooksData]()
     var genres = [Genres]()
     var keysArray = [String]()
     var delegateBooksViewProtocol: BooksViewProtocol!
     var images = [ViewData.BooksImages]()
     var rents = [ViewData.RentsData]()
+    
+    var arr = [ViewImages.BooksImages]()
     
     override init(frame: CGRect  = .zero) {
         super .init(frame: frame)
@@ -92,9 +100,9 @@ class BooksView: UIView{
             tableView.reloadData()
             collectionView.reloadData()
         case .successImage(let success):
-            images.append(success)
-            tableView.reloadData()
-            collectionView.reloadData()
+            images.append( success)
+//            tableView.reloadData()
+//            collectionView.reloadData()
             collectionView.isHidden = false
             tableView.isHidden = false
             activityIndicator.isHidden = true
@@ -105,7 +113,25 @@ class BooksView: UIView{
         case .successRent(let success):
             rents = success
             tableView.reloadData()
+//            collectionView.reloadData()
+        }
+        
+        switch bookImage {
+        case .initial:
+            activityIndicator.isHidden = false
+        case .loading:
+            activityIndicator.isHidden = false
+        case .successImage(let success):
+            arr = success
+            tableView.reloadData()
             collectionView.reloadData()
+            collectionView.isHidden = false
+            tableView.isHidden = false
+            activityIndicator.isHidden = true
+        case .failure:
+            tableView.isHidden = false
+            collectionView.isHidden = false
+            activityIndicator.isHidden = true
         }
     }
     
@@ -146,7 +172,7 @@ extension BooksView: UITableViewDelegate, UITableViewDataSource {
             filteresArray.append(contentsOf: books)
         }
         cell.titleLabel.text = genres[indexPath.row].title 
-        cell.updateCV(books: filteresArray, id: genres[indexPath.row].id, images: images, rents: rents)
+        cell.updateCV(books: filteresArray, id: genres[indexPath.row].id, images: arr, rents: rents)
         cell.contentView.isUserInteractionEnabled = false
         cell.delegate = self
         cell.selectionStyle = .none
