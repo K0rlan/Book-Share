@@ -15,11 +15,12 @@ class DatabaseManager {
     
     static func setup(for application: UIApplication) throws {
         let databaseURL = try FileManager.default
-            .url(for: .applicationDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            .url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
             .appendingPathComponent("db.sqlite")
         
         dbQueue = try DatabaseQueue(path: databaseURL.path)
         dbQueue.releaseMemory()
+//        dbQueue.setupMemoryManagement(in: application)
         try migrator.migrate(dbQueue)
     }
     

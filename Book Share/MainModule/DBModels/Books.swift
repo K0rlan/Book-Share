@@ -34,5 +34,8 @@ extension Books: Codable, FetchableRecord, MutablePersistableRecord {
             return Books.filter(Columns.genre_id == id)
     }
 
+    static func filterByIsbn(isbn: String) -> QueryInterfaceRequest<Books> {
+            return Books.filter(Columns.isbn == isbn)
+    }
 
 }

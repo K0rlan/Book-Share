@@ -29,6 +29,8 @@ class SearchByCodeController: UIViewController, AVCaptureMetadataOutputObjectsDe
         return view
     }()
     
+    private var viewModel = SearchByCodeViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -135,6 +137,9 @@ class SearchByCodeController: UIViewController, AVCaptureMetadataOutputObjectsDe
     }
 
     func found(code: String) {
+//        let bookID = viewModel.startFetch(isbn: code)
+//        let detailsVC = ModelBuilder.createBookDetails(id: bookID)
+//        self.navigationController?.pushViewController(detailsVC, animated: true)
         print(code)
     }
 

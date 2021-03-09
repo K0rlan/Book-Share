@@ -109,7 +109,7 @@ class DetailsViewModel: DetailsViewModelProtocol{
             try dbQueue.read { db in
                 let draft = try Booking.filterByBookID(id: self.bookID).fetchAll(db)
                 if !draft.isEmpty{
-                rentID = draft.first!.id
+                    rentID = draft.first!.id
                     print(rentID)}
             }
         } catch {
@@ -122,7 +122,7 @@ class DetailsViewModel: DetailsViewModelProtocol{
                     if let jsonResponse = try JSONSerialization.jsonObject(with: response.data, options: []) as? [String: String]{
                         print(jsonResponse)
                     }
-
+                    
                 } catch let error {
                     print("Error in parsing: \(error)")
                     self?.updateViewData?(.failure(error))
@@ -163,7 +163,7 @@ class DetailsViewModel: DetailsViewModelProtocol{
     
     func insertIntoDBRents(rents: [ViewData.RentsData]){
         for rent in rents{
-        
+            
             do {
                 try dbQueue.write { db in
                     var rents = Booking(
@@ -182,17 +182,18 @@ class DetailsViewModel: DetailsViewModelProtocol{
     }
     func putBook(id: Int, enabled: Bool){
         provider.request(.updateRent(id: id, enabled: enabled)) { [weak self] (result) in
-                switch result{
-                case .success(let response):
-                 
-                    print(response)
-                   
-                case .failure(let error):
-                    let requestError = (error as NSError)
-                    print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
-                    
-                }
+            switch result{
+            case .success(let response):
+                
+                print(response)
+                
+            case .failure(let error):
+                let requestError = (error as NSError)
+                print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
+                
             }
         }
+    }
+    
     
 }

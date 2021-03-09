@@ -13,7 +13,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+//        do {
         try! DatabaseManager.setup(for: application)
+//        }catch{
+//            print(error)
+//        }
         return true
     }
     // MARK: UISceneSession Lifecycle
