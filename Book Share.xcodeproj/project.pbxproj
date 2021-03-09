@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E40D308425F0DAC100BEB939 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40D308325F0DAC100BEB939 /* APIService.swift */; };
+		E449395B25F7A03800A869A9 /* SearchByCodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E449395A25F7A03800A869A9 /* SearchByCodeViewModel.swift */; };
 		E45CD7E325F0C30200AB5FFE /* SearchByCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E45CD7E225F0C30200AB5FFE /* SearchByCodeController.swift */; };
 		E472970C25F51743004F45DE /* APIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E472970B25F51743004F45DE /* APIImage.swift */; };
 		E472971C25F590AA004F45DE /* MoreModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E472971B25F590AA004F45DE /* MoreModel.swift */; };
@@ -57,6 +58,7 @@
 
 /* Begin PBXFileReference section */
 		E40D308325F0DAC100BEB939 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		E449395A25F7A03800A869A9 /* SearchByCodeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchByCodeViewModel.swift; sourceTree = "<group>"; };
 		E45CD7E225F0C30200AB5FFE /* SearchByCodeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchByCodeController.swift; sourceTree = "<group>"; };
 		E472970B25F51743004F45DE /* APIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIImage.swift; sourceTree = "<group>"; };
 		E472971B25F590AA004F45DE /* MoreModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreModel.swift; sourceTree = "<group>"; };
@@ -118,9 +120,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E449395925F7A02100A869A9 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				E449395A25F7A03800A869A9 /* SearchByCodeViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		E45CD7E025F0C2DC00AB5FFE /* SearchByCode */ = {
 			isa = PBXGroup;
 			children = (
+				E449395925F7A02100A869A9 /* ViewModel */,
 				E45CD7E125F0C2EA00AB5FFE /* View */,
 			);
 			path = SearchByCode;
@@ -470,6 +481,7 @@
 				E4D5915E25F084250082D681 /* MoreTableViewCell.swift in Sources */,
 				E4D5915825F0840F0082D681 /* MoreViewController.swift in Sources */,
 				E4D5916125F0843C0082D681 /* DetailsViewModel.swift in Sources */,
+				E449395B25F7A03800A869A9 /* SearchByCodeViewModel.swift in Sources */,
 				E4D5914B25F083B60082D681 /* BooksView.swift in Sources */,
 				E472972025F5A7EE004F45DE /* Booking.swift in Sources */,
 				E4D590E925F07FDF0082D681 /* AppDelegate.swift in Sources */,
@@ -571,7 +583,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -626,7 +638,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

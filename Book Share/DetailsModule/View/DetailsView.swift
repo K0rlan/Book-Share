@@ -76,6 +76,22 @@ class DetailsView: UIView {
         return button
     }()
     
+    lazy var notAvailableButton: UIButton = {
+        let button = UIButton()
+        button.alpha = 0
+        button.backgroundColor = Constants.dark
+        button.layer.cornerRadius = 8
+        button.layer.borderWidth = 1
+        button.layer.borderColor = Constants.dark.cgColor
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = CGSize(width: 3, height: 4)
+        button.layer.shadowRadius = 2
+        button.layer.shadowOpacity = 0.1
+        button.setTitle("Not available", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+    
     lazy var returnBookButton: UIButton = {
         let button = UIButton()
         button.alpha = 0
@@ -208,12 +224,24 @@ class DetailsView: UIView {
                     returnBookButton.isEnabled = true
                     reserveBookButton.isEnabled = false
                 }
-               
+
             }
         } catch {
             print("\(error)")
         }
-        
+//        if data.enabled{
+//            returnBookButton.isHidden = true
+//            bringSubviewToFront(reserveBookButton)
+//            reserveBookButton.isHidden = false
+//            reserveBookButton.isEnabled = true
+//            returnBookButton.isEnabled = false
+//        }else {
+//            reserveBookButton.isHidden = true
+//            bringSubviewToFront(returnBookButton)
+//            returnBookButton.isHidden = false
+//            returnBookButton.isEnabled = true
+//            reserveBookButton.isEnabled = false
+//        }
     }
     private func updateImage(image: UIImage){
         bookImage.image = image
