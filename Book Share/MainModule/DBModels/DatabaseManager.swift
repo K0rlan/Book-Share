@@ -20,7 +20,6 @@ class DatabaseManager {
         
         dbQueue = try DatabaseQueue(path: databaseURL.path)
         dbQueue.releaseMemory()
-//        dbQueue.setupMemoryManagement(in: application)
         try migrator.migrate(dbQueue)
     }
     
