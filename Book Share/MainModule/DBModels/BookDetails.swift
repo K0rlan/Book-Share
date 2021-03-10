@@ -1,14 +1,14 @@
 //
-//  Books.swift
+//  BookDetails.swift
 //  Book Share
 //
-//  Created by Korlan Omarova on 06.03.2021.
+//  Created by Korlan Omarova on 10.03.2021.
 //
 
 import Foundation
 import GRDB
 
-struct Books {
+struct BookDetails {
     var id: Int
     var isbn: String
     var title: String
@@ -16,9 +16,10 @@ struct Books {
     var image: String?
     var publish_date: String
     var genre_id: Int?
+    var enabled: Bool
 }
 
-extension Books: Codable, FetchableRecord, MutablePersistableRecord {
+extension BookDetails: Codable, FetchableRecord, MutablePersistableRecord {
 
     private enum Columns {
         static let id = Column(CodingKeys.id)
@@ -28,17 +29,8 @@ extension Books: Codable, FetchableRecord, MutablePersistableRecord {
         static let image = Column(CodingKeys.image)
         static let publish_date = Column(CodingKeys.publish_date)
         static let genre_id = Column(CodingKeys.genre_id)
+        static let enabled = Column(CodingKeys.enabled)
 
-    }
-    static func filterById(id: Int) -> QueryInterfaceRequest<Books> {
-            return Books.filter(Columns.id == id)
-    }
-    static func filterByGenre(id: Int) -> QueryInterfaceRequest<Books> {
-            return Books.filter(Columns.genre_id == id)
-    }
-
-    static func filterByIsbn(isbn: String) -> QueryInterfaceRequest<Books> {
-            return Books.filter(Columns.isbn == isbn)
     }
 
 }

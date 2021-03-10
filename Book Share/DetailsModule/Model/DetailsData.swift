@@ -18,9 +18,9 @@ enum DetailsData {
     struct Data: Decodable {
         let id: Int
         let isbn: String
-        let image: String?
         let title: String
         let author: String
+        let image: String?
         let publish_date: String
         let genre_id: Int?
         let enabled: Bool

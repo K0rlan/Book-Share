@@ -99,13 +99,6 @@ class BooksView: UIView{
             books = success
             tableView.reloadData()
             collectionView.reloadData()
-        case .successImage(let success):
-            images.append( success)
-//            tableView.reloadData()
-//            collectionView.reloadData()
-            collectionView.isHidden = false
-            tableView.isHidden = false
-            activityIndicator.isHidden = true
         case .failure:
             tableView.isHidden = false
             collectionView.isHidden = false
