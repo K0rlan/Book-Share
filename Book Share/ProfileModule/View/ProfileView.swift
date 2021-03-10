@@ -66,9 +66,15 @@ class ProfileView: UIView {
         }
     }
     
+    var bookImage: ViewImages = .initial{
+        didSet{
+            setNeedsLayout()
+        }
+    }
+    
     var readingBooks: [UserProfile.RentsData] = []
     var delegate: ProfileViewProtocol!
-    var images = [UserProfile.BooksImages]()
+    var images = [ViewImages.BooksImages]()
     
     let activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView(style: .large)
@@ -80,7 +86,6 @@ class ProfileView: UIView {
     
     override init(frame: CGRect  = .zero) {
         super .init(frame: frame)
-        tableView.reloadData()
         setupViews()
     }
 
@@ -135,20 +140,31 @@ class ProfileView: UIView {
             surnameLabel.text = success.surname
             emailLabel.text = success.email
             phoneLabel.text = String(success.phone)
-            tableView.reloadData()
         case .successReading(let success):
             activityIndicator.isHidden = true
             readingBooks = success
             tableView.isHidden = false
-            tableView.reloadData()
-        case .successImages(let success):
-            images = success
-            tableView.reloadData()
+            
         case .failure:
             activityIndicator.isHidden = true
             tableView.isHidden = true
        
     }
+        
+        switch bookImage {
+        case .initial:
+            activityIndicator.isHidden = false
+        case .loading:
+            activityIndicator.isHidden = false
+        case .successImage(let success):
+            images = success
+            tableView.isHidden = false
+            activityIndicator.isHidden = true
+            tableView.reloadData()
+        case .failure:
+            tableView.isHidden = false
+            activityIndicator.isHidden = true
+        }
 }
 }
 extension ProfileView: UITableViewDelegate, UITableViewDataSource {
@@ -157,20 +173,21 @@ extension ProfileView: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reading", for: indexPath) as! ProfileTableViewCell
-        let book = readingBooks[indexPath.row].book
+        let book = readingBooks[indexPath.row].book!
         cell.backgroundColor = Constants.gray
-        cell.titleLabel.text = book?.title
-        cell.authorLabel.text = book?.author
-        cell.publishDateLabel.text = book?.publish_date
+        cell.titleLabel.text = book.title
+        cell.authorLabel.text = book.author
+        cell.publishDateLabel.text = book.publish_date
         cell.selectionStyle = .none
         cell.contentView.isUserInteractionEnabled = true
         cell.bookImage.image = .none
-        for image in images{
-            if book!.id == image.id{
+        
+            for image in self.images {
+            if book.id == image.id {
                 cell.bookImage.image = UIImage(data: image.image!)
-                
             }
         }
+        
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

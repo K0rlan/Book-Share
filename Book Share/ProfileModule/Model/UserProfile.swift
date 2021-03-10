@@ -13,7 +13,7 @@ enum UserProfile {
     case loading
     case success(UserData)
     case successReading([RentsData])
-    case successImages([BooksImages])
+//    case successImages([BooksImages])
     case failure(Error)
     
     struct UserData {

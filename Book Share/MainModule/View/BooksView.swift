@@ -105,8 +105,6 @@ class BooksView: UIView{
             tableView.reloadData()
             collectionView.reloadData()
         case .failure:
-            tableView.isHidden = false
-            collectionView.isHidden = false
             activityIndicator.isHidden = true
         }
         
@@ -123,8 +121,6 @@ class BooksView: UIView{
             tableView.isHidden = false
             activityIndicator.isHidden = true
         case .failure:
-            tableView.isHidden = false
-            collectionView.isHidden = false
             activityIndicator.isHidden = true
         }
     }

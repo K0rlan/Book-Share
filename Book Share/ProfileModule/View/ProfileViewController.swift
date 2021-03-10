@@ -74,6 +74,10 @@ class ProfileViewController: UIViewController {
         profileViewModel.updateViewData = { [weak self] profileData in
             self?.profileView.profileData = profileData
         }
+        
+        profileViewModel.updateViewImages = { [weak self] profileData in
+            self?.profileView.bookImage = profileData
+        }
     }
     
     private func setNavigationBar(){

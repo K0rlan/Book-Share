@@ -13,7 +13,7 @@ class ProfileTableViewCell: UITableViewCell {
     lazy var bookImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = Constants.back
+//        imageView.image = Constants.back
         return imageView
     }()
     

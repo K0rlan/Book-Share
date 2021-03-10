@@ -149,12 +149,11 @@ extension MoreView: UITableViewDelegate, UITableViewDataSource {
         cell.selectionStyle = .none
         cell.contentView.isUserInteractionEnabled = true
         cell.bookImage.image = .none
-//        for image in images{
-//            if book.id == image.id{
-//                cell.bookImage.image = UIImage(data: image.image!)
-//            }
-//        }
-        print("aaa\(images)")
+        for image in images{
+            if book.id == image.id{
+                cell.bookImage.image = UIImage(data: image.image!)
+            }
+        }
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

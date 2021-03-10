@@ -53,4 +53,3 @@ enum MoreModel {
         let end_date: String?
     }
 }
-

@@ -15,18 +15,21 @@ protocol ProfileViewModelProtocol {
 
 final class ProfileViewModel: ProfileViewModelProtocol{
     var updateViewData: ((UserProfile) -> ())?
+    var updateViewImages: ((ViewImages) -> ())?
     let provider = MoyaProvider<APIService>()
     let provide = MoyaProvider<APIImage>()
     var user = UserProfile.UserData(image: Constants.book, name: "Koko", surname: "Koko", email: "koko@mail.ru",
                                 phone: 87072470783)
-    var images = [UserProfile.BooksImages]()
+    var images = [ViewImages.BooksImages]()
     
     init() {
         updateViewData?(.initial)
+        updateViewImages?(.initial)
     }
     
     func startFetch() {
         updateViewData?(.loading)
+        
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             guard let user = self?.user else { return }
@@ -52,6 +55,7 @@ final class ProfileViewModel: ProfileViewModelProtocol{
     }
     
     func fetchImages(books: [UserProfile.RentsData]){
+        updateViewImages?(.loading)
         for book in books{
             if let img = book.book?.image{
                 provide.request(.getImage(imageName: img)) { [weak self] (result) in
@@ -59,17 +63,17 @@ final class ProfileViewModel: ProfileViewModelProtocol{
                     case .success(let response):
                         do {
                             let img = try response.mapImage().jpegData(compressionQuality: 1)
-                            let book = UserProfile.BooksImages(id: book.id, image: img)
+                            let book = ViewImages.BooksImages(id: book.id, image: img)
                             self?.images.append(book)
-                            self?.updateViewData?(.successImages(self!.images))
+                            self?.updateViewImages?(.successImage(self!.images))
                         } catch let error {
                             print("Error in parsing: \(error)")
-                            self?.updateViewData?(.failure(error))
+                            self?.updateViewImages?(.failure(error))
                         }
                     case .failure(let error):
                         let requestError = (error as NSError)
                         print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
-                        self?.updateViewData?(.failure(error))
+                        self?.updateViewImages?(.failure(error))
                     }
                 }
             }
