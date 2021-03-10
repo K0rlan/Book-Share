@@ -6,7 +6,8 @@
 //
 
 import Foundation
-
+import Griffon_ios_spm
+import Moya
 protocol ProfileViewModelProtocol {
     var updateViewData: ((UserProfile)->())? { get set }
     func startFetch()
@@ -14,8 +15,7 @@ protocol ProfileViewModelProtocol {
 
 final class ProfileViewModel: ProfileViewModelProtocol{
     var updateViewData: ((UserProfile) -> ())?
-    
-    
+    let provider = MoyaProvider<APIService>()
     var user = UserProfile.Data(image: Constants.book, name: "Koko", surname: "Koko", email: "koko@mail.ru",
                                 phone: 87072470783)
     
@@ -26,15 +26,28 @@ final class ProfileViewModel: ProfileViewModelProtocol{
     func startFetch() {
         updateViewData?(.loading)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-            guard let user = self?.user else { return }
-            self?.updateViewData?(.success(user))
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+//            guard let user = self?.user else { return }
+//            self?.updateViewData?(.success(user))
+//        }
+        provider.request(.getUserBooks(userID: "\(Griffon.shared.getUserProfiles()?.id)")) { [weak self] (result) in
+            switch result{
+            case .success(let response):
+                do {
+                    let readingResponse = try JSONDecoder().decode([UserProfile.RentsData].self, from: response.data)
+                    self?.updateViewData?(.successReading(readingResponse))
+                } catch let error {
+                    print("Error in parsing: \(error)")
+                    self?.updateViewData?(.failure(error))
+                }
+            case .failure(let error):
+                let requestError = (error as NSError)
+                print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
+                self?.updateViewData?(.failure(error))
+            }
         }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 6) { [weak self] in
-            self?.updateViewData?(.failure)
     }
     
     
 }
-}
+

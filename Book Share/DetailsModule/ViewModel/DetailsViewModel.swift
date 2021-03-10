@@ -52,9 +52,9 @@ class DetailsViewModel: DetailsViewModelProtocol{
                 do {
                     let bookResponse = try JSONDecoder().decode(DetailsData.Data.self, from: response.data)
                     self?.insertIntoDBBook(book: bookResponse)
+                    print(bookResponse)
                     self?.updateViewData?(.success(bookResponse))
                     self?.fetchImages(image: bookResponse.image)
-                    print(bookResponse.author)
                 } catch let error {
                     print("Error in parsing: \(error)")
                     self?.updateViewData?(.failure(error))
@@ -65,11 +65,33 @@ class DetailsViewModel: DetailsViewModelProtocol{
                 self?.updateViewData?(.failure(error))
             }
         }
+       
+    }
+    
+    
+    func getBookStatus() {
+        DispatchQueue.main.async { [weak self] in
+        do {
+            try dbQueue.read { [weak self] db in
+                let bookIsTaken = try BookRent.filterByBookID(id: self!.bookID).fetchAll(db)
+                let bookIsTakenByThisUser = try BookRent.filterByUserID(userId: Griffon.shared.getUserProfiles()!.id, bookId: self!.bookID).fetchAll(db)
+                if !bookIsTakenByThisUser.isEmpty {
+                    self?.updateViewData?(.bookStatus(BookStatus.canReturnBook))
+                } else if !bookIsTaken.isEmpty, bookIsTakenByThisUser.isEmpty {
+                    self?.updateViewData?(.bookStatus(BookStatus.notAvailable))
+                } else {
+                    self?.updateViewData?(.bookStatus(BookStatus.available))
+                }
+            }
+        } catch {
+            print("\(error)")
+        }
+        }
     }
     
     func addRent(){
-        let calendar = Calendar.current
-        let addTwoWeekToCurrentDate = calendar.date(byAdding: .weekOfYear, value: 2, to: Date())
+//        let calendar = Calendar.current
+//        let addTwoWeekToCurrentDate = calendar.date(byAdding: .weekOfYear, value: 2, to: Date())
         var book: BookDetails!
         do {
             try dbQueue.read { db in
@@ -79,7 +101,7 @@ class DetailsViewModel: DetailsViewModelProtocol{
         } catch {
             print("\(error)")
         }
-        let rent = ViewData.RentData(user_id: "\(Griffon.shared.getUserProfiles()!.id)", user_contact: "\((Griffon.shared.getUserProfiles()!.email)!)", user_name: "nil", book_id: bookID, start_date: "\(Date())", end_date: "\((addTwoWeekToCurrentDate)!)", book: book!)
+        let rent = ViewData.RentData(user_id: "\(Griffon.shared.getUserProfiles()!.id)", user_contact: "\((Griffon.shared.getUserProfiles()!.email)!)", user_name: "nil", book_id: bookID, start_date: "\(Date())", end_date: nil, book: book!)
         provider.request(.postRent(rent: rent)) { [weak self] (result) in
             switch result{
             case .success(let response):
@@ -194,7 +216,6 @@ class DetailsViewModel: DetailsViewModelProtocol{
         }
     }
     func insertIntoDBBook(book: DetailsData.Data){
-        
         do {
             try dbQueue.write { db in
                 var book = BookDetails(
@@ -213,16 +234,14 @@ class DetailsViewModel: DetailsViewModelProtocol{
         } catch {
             print("\(error)")
         }
-        
+        getBookStatus()
         
     }
     func putBook(id: Int, enabled: Bool){
         provider.request(.updateRent(id: id, enabled: enabled)) { [weak self] (result) in
             switch result{
             case .success(let response):
-                
                 print(response)
-                
             case .failure(let error):
                 let requestError = (error as NSError)
                 print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")

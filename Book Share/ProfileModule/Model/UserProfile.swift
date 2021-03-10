@@ -12,7 +12,8 @@ enum UserProfile {
     case initial
     case loading
     case success(Data)
-    case failure
+    case successReading([RentsData])
+    case failure(Error)
     
     struct Data {
         let image: UIImage?
@@ -20,5 +21,27 @@ enum UserProfile {
         let surname: String
         let email: String
         let phone: Int
+    }
+    
+    struct BookData: Decodable {
+        let id: Int
+        let isbn: String
+        let image: String?
+        let title: String
+        let author: String
+        let publish_date: String
+        let genre_id: Int?
+        let enabled: Bool
+    }
+    
+    struct RentsData: Decodable {
+        let id: Int
+        let user_id: String
+        let user_contact: String?
+        let user_name: String?
+        let book_id: Int
+        let start_date: String
+        let end_date: String?
+        let book: BookData?
     }
 }

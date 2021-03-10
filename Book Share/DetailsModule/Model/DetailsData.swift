@@ -8,11 +8,18 @@
 import Foundation
 import UIKit
 
+enum BookStatus{
+    case available
+    case notAvailable
+    case canReturnBook
+}
+
 enum DetailsData {
     case initial
     case loading
     case success(Data)
     case successImage(UIImage)
+    case bookStatus(BookStatus)
     case failure(Error)
 
     struct Data: Decodable {

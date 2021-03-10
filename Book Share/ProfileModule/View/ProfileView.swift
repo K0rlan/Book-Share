@@ -43,11 +43,25 @@ class ProfileView: UIView {
         return label
     }()
     
+    lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.backgroundColor = Constants.gray
+        tableView.showsVerticalScrollIndicator = false
+        tableView.register(MoreTableViewCell.self, forCellReuseIdentifier: "books")
+        tableView.layer.cornerRadius = 14
+        tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
+        return tableView
+    }()
+    
     var profileData: UserProfile = .initial{
         didSet{
             setNeedsLayout()
         }
     }
+    
+    var readingBooks: [UserProfile.RentsData] = []
     
     let activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView(style: .large)
@@ -67,7 +81,7 @@ class ProfileView: UIView {
     }
     
     private func setupViews(){
-        [avaImage, nameLabel, surnameLabel, emailLabel, phoneLabel].forEach {
+        [avaImage, nameLabel, surnameLabel, emailLabel, phoneLabel, tableView].forEach {
             self.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -88,6 +102,11 @@ class ProfileView: UIView {
 
         phoneLabel.topAnchor.constraint(equalTo: emailLabel.bottomAnchor, constant: 10).isActive = true
         phoneLabel.leadingAnchor.constraint(equalTo: avaImage.trailingAnchor, constant: 10).isActive = true
+        
+        tableView.topAnchor.constraint(equalTo: phoneLabel.bottomAnchor, constant: 20).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
 
         
     }
@@ -98,17 +117,60 @@ class ProfileView: UIView {
         switch profileData {
         case .initial:
             activityIndicator.isHidden = false
+            tableView.isHidden = true
         case .loading:
             activityIndicator.isHidden = false
+            tableView.isHidden = true
         case .success(let success):
-            activityIndicator.isHidden = true
+            
+            tableView.isHidden = false
+            tableView.reloadData()
             avaImage.image = success.image
             nameLabel.text = success.name
             surnameLabel.text = success.surname
             emailLabel.text = success.email
             phoneLabel.text = String(success.phone)
+        case .successReading(let success):
+            activityIndicator.isHidden = true
+            readingBooks = success
+            tableView.isHidden = false
+            tableView.reloadData()
         case .failure:
             activityIndicator.isHidden = true
-        }
+            tableView.isHidden = true
+       
     }
 }
+}
+extension ProfileView: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return readingBooks.count
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "books", for: indexPath) as! MoreTableViewCell
+        let book = readingBooks[indexPath.row].book
+        cell.backgroundColor = Constants.gray
+        cell.titleLabel.text = book?.title
+        cell.authorLabel.text = book?.author
+        cell.publishDateLabel.text = book?.publish_date
+        cell.selectionStyle = .none
+        cell.contentView.isUserInteractionEnabled = true
+        cell.bookImage.image = .none
+//        for image in images{
+//            if book.id == image.id{
+//                cell.bookImage.image = UIImage(data: image.image!)
+//            }
+//        }
+        
+        return cell
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        160
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let bookID = readingBooks[indexPath.row].book?.id
+//        delegate.getBooksID(id: bookID)
+    }
+    
+}
+
