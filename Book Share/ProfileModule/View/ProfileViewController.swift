@@ -42,6 +42,7 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = Constants.gray
         profileViewModel.startFetch()
+        profileView.delegate = self
         setNavigationBar()
         updateView()
         setupViews()
@@ -94,5 +95,11 @@ extension ProfileViewController: SignInViewControllerDelegate {
     
     func successfullSignUp(_ ctrl: SignInViewController) {
         self.dismiss(animated: true)
+    }
+}
+extension ProfileViewController: ProfileViewProtocol{
+    func getBooksID(id: Int) {
+        let detailsVC = ModelBuilder.createBookDetails(id: id)
+        self.navigationController?.pushViewController(detailsVC, animated: true)
     }
 }

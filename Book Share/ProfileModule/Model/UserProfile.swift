@@ -11,11 +11,12 @@ import UIKit
 enum UserProfile {
     case initial
     case loading
-    case success(Data)
+    case success(UserData)
     case successReading([RentsData])
+    case successImages([BooksImages])
     case failure(Error)
     
-    struct Data {
+    struct UserData {
         let image: UIImage?
         let name: String
         let surname: String
@@ -34,6 +35,11 @@ enum UserProfile {
         let enabled: Bool
     }
     
+    struct BooksImages: Decodable {
+        var id: Int
+        var image: Data?
+    }
+    
     struct RentsData: Decodable {
         let id: Int
         let user_id: String
@@ -44,4 +50,6 @@ enum UserProfile {
         let end_date: String?
         let book: BookData?
     }
+    
+    
 }

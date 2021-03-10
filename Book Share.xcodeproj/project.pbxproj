@@ -55,6 +55,7 @@
 		E4D5917F25F084DD0082D681 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5917E25F084DD0082D681 /* ProfileViewController.swift */; };
 		E4D5918225F084E70082D681 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5918125F084E70082D681 /* ProfileView.swift */; };
 		E4D5918525F084F40082D681 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5918425F084F40082D681 /* UserProfile.swift */; };
+		E4E66F8925F959BF008F53AE /* ProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E66F8825F959BF008F53AE /* ProfileTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -104,6 +105,7 @@
 		E4D5917E25F084DD0082D681 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		E4D5918125F084E70082D681 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		E4D5918425F084F40082D681 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
+		E4E66F8825F959BF008F53AE /* ProfileTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -386,6 +388,7 @@
 			children = (
 				E4D5917E25F084DD0082D681 /* ProfileViewController.swift */,
 				E4D5918125F084E70082D681 /* ProfileView.swift */,
+				E4E66F8825F959BF008F53AE /* ProfileTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -493,6 +496,7 @@
 				E4D5912425F082910082D681 /* ModelBuilder.swift in Sources */,
 				E4D590EB25F07FDF0082D681 /* SceneDelegate.swift in Sources */,
 				E4D5917F25F084DD0082D681 /* ProfileViewController.swift in Sources */,
+				E4E66F8925F959BF008F53AE /* ProfileTableViewCell.swift in Sources */,
 				E4D5916D25F084770082D681 /* ReservedBooksViewModel.swift in Sources */,
 				E4D5916425F0844C0082D681 /* DetailsViewController.swift in Sources */,
 				E45CD7E325F0C30200AB5FFE /* SearchByCodeController.swift in Sources */,

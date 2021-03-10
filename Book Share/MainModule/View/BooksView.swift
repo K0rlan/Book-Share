@@ -95,18 +95,19 @@ class BooksView: UIView{
             genres = success
             collectionView.reloadData()
             tableView.reloadData()
+            collectionView.reloadData()
         case .successBooks(let success):
             books = success
+            tableView.reloadData()
+            collectionView.reloadData()
+        case .successRent(let success):
+            rents = success
             tableView.reloadData()
             collectionView.reloadData()
         case .failure:
             tableView.isHidden = false
             collectionView.isHidden = false
             activityIndicator.isHidden = true
-        case .successRent(let success):
-            rents = success
-            tableView.reloadData()
-//            collectionView.reloadData()
         }
         
         switch bookImage {

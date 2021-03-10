@@ -7,6 +7,11 @@
 
 import UIKit
 
+protocol ProfileViewProtocol {
+    func getBooksID(id: Int)
+}
+
+
 class ProfileView: UIView {
     
     lazy var avaImage: UIImageView = {
@@ -49,7 +54,7 @@ class ProfileView: UIView {
         tableView.dataSource = self
         tableView.backgroundColor = Constants.gray
         tableView.showsVerticalScrollIndicator = false
-        tableView.register(MoreTableViewCell.self, forCellReuseIdentifier: "books")
+        tableView.register(ProfileTableViewCell.self, forCellReuseIdentifier: "reading")
         tableView.layer.cornerRadius = 14
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         return tableView
@@ -62,6 +67,8 @@ class ProfileView: UIView {
     }
     
     var readingBooks: [UserProfile.RentsData] = []
+    var delegate: ProfileViewProtocol!
+    var images = [UserProfile.BooksImages]()
     
     let activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView(style: .large)
@@ -73,6 +80,7 @@ class ProfileView: UIView {
     
     override init(frame: CGRect  = .zero) {
         super .init(frame: frame)
+        tableView.reloadData()
         setupViews()
     }
 
@@ -122,18 +130,19 @@ class ProfileView: UIView {
             activityIndicator.isHidden = false
             tableView.isHidden = true
         case .success(let success):
-            
-            tableView.isHidden = false
-            tableView.reloadData()
             avaImage.image = success.image
             nameLabel.text = success.name
             surnameLabel.text = success.surname
             emailLabel.text = success.email
             phoneLabel.text = String(success.phone)
+            tableView.reloadData()
         case .successReading(let success):
             activityIndicator.isHidden = true
             readingBooks = success
             tableView.isHidden = false
+            tableView.reloadData()
+        case .successImages(let success):
+            images = success
             tableView.reloadData()
         case .failure:
             activityIndicator.isHidden = true
@@ -147,7 +156,7 @@ extension ProfileView: UITableViewDelegate, UITableViewDataSource {
         return readingBooks.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "books", for: indexPath) as! MoreTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "reading", for: indexPath) as! ProfileTableViewCell
         let book = readingBooks[indexPath.row].book
         cell.backgroundColor = Constants.gray
         cell.titleLabel.text = book?.title
@@ -156,12 +165,12 @@ extension ProfileView: UITableViewDelegate, UITableViewDataSource {
         cell.selectionStyle = .none
         cell.contentView.isUserInteractionEnabled = true
         cell.bookImage.image = .none
-//        for image in images{
-//            if book.id == image.id{
-//                cell.bookImage.image = UIImage(data: image.image!)
-//            }
-//        }
-        
+        for image in images{
+            if book!.id == image.id{
+                cell.bookImage.image = UIImage(data: image.image!)
+                
+            }
+        }
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -169,7 +178,7 @@ extension ProfileView: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let bookID = readingBooks[indexPath.row].book?.id
-//        delegate.getBooksID(id: bookID)
+        delegate.getBooksID(id: bookID!)
     }
     
 }
