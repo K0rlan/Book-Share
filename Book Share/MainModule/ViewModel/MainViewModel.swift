@@ -126,7 +126,7 @@ final class MainViewModel: MainViewModelProtocol{
             try dbQueue.write { db in
                 try db.execute(sql: "DELETE FROM genres")
                 try db.execute(sql: "DELETE FROM books")
-                try db.execute(sql: "DELETE FROM booking")
+                try db.execute(sql: "DELETE FROM bookRent")
             }
         } catch {
             print("\(error)")
@@ -158,12 +158,13 @@ final class MainViewModel: MainViewModelProtocol{
     
     func insertIntoDBRents(rents: [ViewData.RentsData]){
         for rent in rents{
-            
             do {
                 try dbQueue.write { db in
-                    var rents = Booking(
+                    var rents = BookRent(
                         id: rent.id,
                         user_id: rent.user_id,
+                        user_contact: rent.user_contact,
+                        user_name: rent.user_name,
                         book_id: rent.book_id,
                         start_date: rent.start_date,
                         end_date: rent.end_date

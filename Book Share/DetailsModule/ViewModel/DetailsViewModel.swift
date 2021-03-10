@@ -51,6 +51,7 @@ class DetailsViewModel: DetailsViewModelProtocol{
             case .success(let response):
                 do {
                     let bookResponse = try JSONDecoder().decode(DetailsData.Data.self, from: response.data)
+                    self?.insertIntoDBBook(book: bookResponse)
                     self?.updateViewData?(.success(bookResponse))
                     self?.fetchImages(image: bookResponse.image)
                     print(bookResponse.author)
@@ -69,15 +70,24 @@ class DetailsViewModel: DetailsViewModelProtocol{
     func addRent(){
         let calendar = Calendar.current
         let addTwoWeekToCurrentDate = calendar.date(byAdding: .weekOfYear, value: 2, to: Date())
-        let rent = ViewData.RentData(user_id: Griffon.shared.getUserProfiles()!.id, book_id: bookID, start_date: "\(Date())", end_date: "\(addTwoWeekToCurrentDate!)")
+        var book: BookDetails!
+        do {
+            try dbQueue.read { db in
+                let draft = try BookDetails.fetchAll(db)
+                book = draft.first!
+            }
+        } catch {
+            print("\(error)")
+        }
+        let rent = ViewData.RentData(user_id: "\(Griffon.shared.getUserProfiles()!.id)", user_contact: "\((Griffon.shared.getUserProfiles()!.email)!)", user_name: "nil", book_id: bookID, start_date: "\(Date())", end_date: "\((addTwoWeekToCurrentDate)!)", book: book!)
         provider.request(.postRent(rent: rent)) { [weak self] (result) in
             switch result{
             case .success(let response):
                 do {
-                    if let jsonResponse = try JSONSerialization.jsonObject(with: response.data, options: []) as? [String: String]{
+                    if let jsonResponse = try JSONSerialization.jsonObject(with: response.data, options: []) as? [String: Any]{
                         print(jsonResponse)
                     }
-                    
+
                 } catch let error {
                     print("Error in parsing: \(error)")
                     self?.updateViewData?(.failure(error))
@@ -96,18 +106,20 @@ class DetailsViewModel: DetailsViewModelProtocol{
     func refreshTables(){
         do {
             try dbQueue.write { db in
-                try db.execute(sql: "DELETE FROM booking")
+                try db.execute(sql: "DELETE FROM bookRent")
+                try db.execute(sql: "DELETE FROM bookDetails")
             }
         } catch {
             print("\(error)")
         }
+        
     }
     
     func deleteRent(){
         var rentID = Int()
         do {
             try dbQueue.read { db in
-                let draft = try Booking.filterByBookID(id: self.bookID).fetchAll(db)
+                let draft = try BookRent.filterByBookID(id: self.bookID).fetchAll(db)
                 if !draft.isEmpty{
                     rentID = draft.first!.id
                     print(rentID)}
@@ -135,7 +147,7 @@ class DetailsViewModel: DetailsViewModelProtocol{
         }
         do {
             try dbQueue.write { db in
-                try db.execute(sql: "DELETE FROM booking WHERE id = \(rentID)")
+                try db.execute(sql: "DELETE FROM bookRent WHERE id = \(rentID)")
             }
         } catch {
             print("\(error)")
@@ -163,12 +175,13 @@ class DetailsViewModel: DetailsViewModelProtocol{
     
     func insertIntoDBRents(rents: [ViewData.RentsData]){
         for rent in rents{
-            
             do {
                 try dbQueue.write { db in
-                    var rents = Booking(
+                    var rents = BookRent(
                         id: rent.id,
                         user_id: rent.user_id,
+                        user_contact: rent.user_contact,
+                        user_name: rent.user_name,
                         book_id: rent.book_id,
                         start_date: rent.start_date,
                         end_date: rent.end_date
@@ -179,6 +192,29 @@ class DetailsViewModel: DetailsViewModelProtocol{
                 print("\(error)")
             }
         }
+    }
+    func insertIntoDBBook(book: DetailsData.Data){
+        
+        do {
+            try dbQueue.write { db in
+                var book = BookDetails(
+                    id: book.id,
+                    isbn: book.isbn,
+                    title: book.title,
+                    author: book.author,
+                    image: book.image,
+                    publish_date: book.publish_date,
+                    genre_id: book.genre_id,
+                    enabled: book.enabled
+                )
+                
+                try! book.insert(db)
+            }
+        } catch {
+            print("\(error)")
+        }
+        
+        
     }
     func putBook(id: Int, enabled: Bool){
         provider.request(.updateRent(id: id, enabled: enabled)) { [weak self] (result) in

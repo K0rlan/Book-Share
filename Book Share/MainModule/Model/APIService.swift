@@ -78,13 +78,26 @@ extension APIService: TargetType {
                 
             ]
             return .requestParameters(parameters: params, encoding: JSONEncoding.default)
+            
         case .postRent(let rent):
+            let bookParams: [String : Any] = [
+                "id" :  rent.book!.id,
+                "isbn" : rent.book!.isbn,
+                "title" : rent.book!.title,
+                "author" : rent.book!.author,
+                "image" : rent.book!.image ?? nil,
+                "publish_date" : rent.book!.publish_date,
+                "genre_id" : rent.book!.genre_id ?? nil,
+                "enabled" : rent.book!.enabled,
+            ]
             let params: [String : Any] = [
                 "user_id" : rent.user_id,
+                "user_contact" : rent.user_contact ?? nil,
+                "user_name" : rent.user_name ?? nil,
                 "book_id" : rent.book_id,
                 "start_date" : rent.start_date,
                 "end_date" : rent.end_date ?? nil,
-                
+                "book" : bookParams ?? nil,
             ]
             return .requestParameters(parameters: params, encoding: JSONEncoding.default)
         

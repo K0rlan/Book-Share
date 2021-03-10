@@ -7,18 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E401C3D625F8F7D500B2FA5E /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = E401C3D525F8F7D500B2FA5E /* FirebaseAnalytics */; };
+		E401C3D825F8F7D500B2FA5E /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = E401C3D725F8F7D500B2FA5E /* FirebaseMessaging */; };
 		E40D308425F0DAC100BEB939 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40D308325F0DAC100BEB939 /* APIService.swift */; };
 		E449395B25F7A03800A869A9 /* SearchByCodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E449395A25F7A03800A869A9 /* SearchByCodeViewModel.swift */; };
 		E45CD7E325F0C30200AB5FFE /* SearchByCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E45CD7E225F0C30200AB5FFE /* SearchByCodeController.swift */; };
 		E472970C25F51743004F45DE /* APIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E472970B25F51743004F45DE /* APIImage.swift */; };
 		E472971C25F590AA004F45DE /* MoreModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E472971B25F590AA004F45DE /* MoreModel.swift */; };
-		E472972025F5A7EE004F45DE /* Booking.swift in Sources */ = {isa = PBXBuildFile; fileRef = E472971F25F5A7EE004F45DE /* Booking.swift */; };
+		E472972025F5A7EE004F45DE /* BookRent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E472971F25F5A7EE004F45DE /* BookRent.swift */; };
 		E472972425F5E35F004F45DE /* ViewImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = E472972325F5E35F004F45DE /* ViewImages.swift */; };
 		E48604C225F3A029002709AE /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48604C125F3A029002709AE /* DatabaseManager.swift */; };
 		E48604C525F3A0B0002709AE /* Books.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48604C425F3A0B0002709AE /* Books.swift */; };
 		E48604C825F3A64E002709AE /* Genres.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48604C725F3A64E002709AE /* Genres.swift */; };
 		E48604FC25F40CE3002709AE /* FilterCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48604FB25F40CE3002709AE /* FilterCollectionViewCell.swift */; };
 		E496E48725F128FE00786C93 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E496E48625F128FE00786C93 /* Utils.swift */; };
+		E4B209FE25F8CCA700206975 /* BookDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4B209FD25F8CCA700206975 /* BookDetails.swift */; };
 		E4D590E925F07FDF0082D681 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D590E825F07FDF0082D681 /* AppDelegate.swift */; };
 		E4D590EB25F07FDF0082D681 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D590EA25F07FDF0082D681 /* SceneDelegate.swift */; };
 		E4D590F225F07FE00082D681 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4D590F125F07FE00082D681 /* Assets.xcassets */; };
@@ -62,13 +65,14 @@
 		E45CD7E225F0C30200AB5FFE /* SearchByCodeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchByCodeController.swift; sourceTree = "<group>"; };
 		E472970B25F51743004F45DE /* APIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIImage.swift; sourceTree = "<group>"; };
 		E472971B25F590AA004F45DE /* MoreModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreModel.swift; sourceTree = "<group>"; };
-		E472971F25F5A7EE004F45DE /* Booking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Booking.swift; sourceTree = "<group>"; };
+		E472971F25F5A7EE004F45DE /* BookRent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookRent.swift; sourceTree = "<group>"; };
 		E472972325F5E35F004F45DE /* ViewImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewImages.swift; sourceTree = "<group>"; };
 		E48604C125F3A029002709AE /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		E48604C425F3A0B0002709AE /* Books.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Books.swift; sourceTree = "<group>"; };
 		E48604C725F3A64E002709AE /* Genres.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Genres.swift; sourceTree = "<group>"; };
 		E48604FB25F40CE3002709AE /* FilterCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCollectionViewCell.swift; sourceTree = "<group>"; };
 		E496E48625F128FE00786C93 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		E4B209FD25F8CCA700206975 /* BookDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookDetails.swift; sourceTree = "<group>"; };
 		E4D590E525F07FDF0082D681 /* Book Share.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Book Share.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4D590E825F07FDF0082D681 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E4D590EA25F07FDF0082D681 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -111,6 +115,8 @@
 			files = (
 				E4D5910F25F080410082D681 /* RxMoya in Frameworks */,
 				E4D5910B25F080410082D681 /* Moya in Frameworks */,
+				E401C3D825F8F7D500B2FA5E /* FirebaseMessaging in Frameworks */,
+				E401C3D625F8F7D500B2FA5E /* FirebaseAnalytics in Frameworks */,
 				E4D5910D25F080410082D681 /* ReactiveMoya in Frameworks */,
 				E4D5911925F0815F0082D681 /* GRDB in Frameworks */,
 				E4D5911D25F081B70082D681 /* Griffon_ios_spm in Frameworks */,
@@ -151,7 +157,8 @@
 				E48604C125F3A029002709AE /* DatabaseManager.swift */,
 				E48604C725F3A64E002709AE /* Genres.swift */,
 				E48604C425F3A0B0002709AE /* Books.swift */,
-				E472971F25F5A7EE004F45DE /* Booking.swift */,
+				E472971F25F5A7EE004F45DE /* BookRent.swift */,
+				E4B209FD25F8CCA700206975 /* BookDetails.swift */,
 			);
 			path = DBModels;
 			sourceTree = "<group>";
@@ -417,6 +424,8 @@
 				E4D5910E25F080410082D681 /* RxMoya */,
 				E4D5911825F0815F0082D681 /* GRDB */,
 				E4D5911C25F081B70082D681 /* Griffon_ios_spm */,
+				E401C3D525F8F7D500B2FA5E /* FirebaseAnalytics */,
+				E401C3D725F8F7D500B2FA5E /* FirebaseMessaging */,
 			);
 			productName = "Book Share";
 			productReference = E4D590E525F07FDF0082D681 /* Book Share.app */;
@@ -448,6 +457,7 @@
 			packageReferences = (
 				E4D5910925F080410082D681 /* XCRemoteSwiftPackageReference "Moya" */,
 				E4D5911725F0815F0082D681 /* XCRemoteSwiftPackageReference "GRDB.swift" */,
+				E401C3D425F8F7D500B2FA5E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = E4D590E625F07FDF0082D681 /* Products */;
 			projectDirPath = "";
@@ -483,7 +493,7 @@
 				E4D5916125F0843C0082D681 /* DetailsViewModel.swift in Sources */,
 				E449395B25F7A03800A869A9 /* SearchByCodeViewModel.swift in Sources */,
 				E4D5914B25F083B60082D681 /* BooksView.swift in Sources */,
-				E472972025F5A7EE004F45DE /* Booking.swift in Sources */,
+				E472972025F5A7EE004F45DE /* BookRent.swift in Sources */,
 				E4D590E925F07FDF0082D681 /* AppDelegate.swift in Sources */,
 				E472971C25F590AA004F45DE /* MoreModel.swift in Sources */,
 				E4D5915225F083E00082D681 /* BooksCollectionViewCell.swift in Sources */,
@@ -494,6 +504,7 @@
 				E4D5916425F0844C0082D681 /* DetailsViewController.swift in Sources */,
 				E45CD7E325F0C30200AB5FFE /* SearchByCodeController.swift in Sources */,
 				E48604C825F3A64E002709AE /* Genres.swift in Sources */,
+				E4B209FE25F8CCA700206975 /* BookDetails.swift in Sources */,
 				E4D5917325F0848C0082D681 /* ReservedBooksView.swift in Sources */,
 				E40D308425F0DAC100BEB939 /* APIService.swift in Sources */,
 				E4D5915B25F0841B0082D681 /* MoreView.swift in Sources */,
@@ -710,6 +721,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		E401C3D425F8F7D500B2FA5E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.8.0;
+			};
+		};
 		E4D5910925F080410082D681 /* XCRemoteSwiftPackageReference "Moya" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Moya/Moya.git";
@@ -729,6 +748,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E401C3D525F8F7D500B2FA5E /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E401C3D425F8F7D500B2FA5E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		E401C3D725F8F7D500B2FA5E /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E401C3D425F8F7D500B2FA5E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
 		E4D5910A25F080410082D681 /* Moya */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E4D5910925F080410082D681 /* XCRemoteSwiftPackageReference "Moya" */;

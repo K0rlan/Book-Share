@@ -38,13 +38,28 @@ class DatabaseManager {
             }
         }
         
-        migrator.registerMigration("createBooking") { db in
-            try db.create(table: "booking") { t in
+        migrator.registerMigration("createBookRent") { db in
+            try db.create(table: "bookRent") { t in
                 t.column("id", .integer).notNull()
                 t.column("user_id", .text).notNull()
+                t.column("user_contact", .text)
+                t.column("user_name", .text)
                 t.column("book_id", .integer).notNull()
                 t.column("start_date", .text).notNull()
                 t.column("end_date", .text)
+            }
+        }
+        
+        migrator.registerMigration("createBookDetails") { db in
+            try db.create(table: "bookDetails") { t in
+                t.column("id", .integer).notNull()
+                t.column("isbn", .text).notNull()
+                t.column("title", .text).notNull()
+                t.column("author", .text).notNull()
+                t.column("image", .text)
+                t.column("publish_date", .text).notNull()
+                t.column("genre_id", .integer)
+                t.column("enabled", .integer).notNull()
             }
         }
         
