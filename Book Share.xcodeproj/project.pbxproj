@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E401C3D625F8F7D500B2FA5E /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = E401C3D525F8F7D500B2FA5E /* FirebaseAnalytics */; };
+		E401C3D825F8F7D500B2FA5E /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = E401C3D725F8F7D500B2FA5E /* FirebaseMessaging */; };
 		E40D308425F0DAC100BEB939 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40D308325F0DAC100BEB939 /* APIService.swift */; };
 		E449395B25F7A03800A869A9 /* SearchByCodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E449395A25F7A03800A869A9 /* SearchByCodeViewModel.swift */; };
 		E45CD7E325F0C30200AB5FFE /* SearchByCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E45CD7E225F0C30200AB5FFE /* SearchByCodeController.swift */; };
@@ -113,6 +115,8 @@
 			files = (
 				E4D5910F25F080410082D681 /* RxMoya in Frameworks */,
 				E4D5910B25F080410082D681 /* Moya in Frameworks */,
+				E401C3D825F8F7D500B2FA5E /* FirebaseMessaging in Frameworks */,
+				E401C3D625F8F7D500B2FA5E /* FirebaseAnalytics in Frameworks */,
 				E4D5910D25F080410082D681 /* ReactiveMoya in Frameworks */,
 				E4D5911925F0815F0082D681 /* GRDB in Frameworks */,
 				E4D5911D25F081B70082D681 /* Griffon_ios_spm in Frameworks */,
@@ -420,6 +424,8 @@
 				E4D5910E25F080410082D681 /* RxMoya */,
 				E4D5911825F0815F0082D681 /* GRDB */,
 				E4D5911C25F081B70082D681 /* Griffon_ios_spm */,
+				E401C3D525F8F7D500B2FA5E /* FirebaseAnalytics */,
+				E401C3D725F8F7D500B2FA5E /* FirebaseMessaging */,
 			);
 			productName = "Book Share";
 			productReference = E4D590E525F07FDF0082D681 /* Book Share.app */;
@@ -451,6 +457,7 @@
 			packageReferences = (
 				E4D5910925F080410082D681 /* XCRemoteSwiftPackageReference "Moya" */,
 				E4D5911725F0815F0082D681 /* XCRemoteSwiftPackageReference "GRDB.swift" */,
+				E401C3D425F8F7D500B2FA5E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = E4D590E625F07FDF0082D681 /* Products */;
 			projectDirPath = "";
@@ -714,6 +721,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		E401C3D425F8F7D500B2FA5E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.8.0;
+			};
+		};
 		E4D5910925F080410082D681 /* XCRemoteSwiftPackageReference "Moya" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Moya/Moya.git";
@@ -733,6 +748,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E401C3D525F8F7D500B2FA5E /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E401C3D425F8F7D500B2FA5E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		E401C3D725F8F7D500B2FA5E /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E401C3D425F8F7D500B2FA5E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
 		E4D5910A25F080410082D681 /* Moya */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E4D5910925F080410082D681 /* XCRemoteSwiftPackageReference "Moya" */;
