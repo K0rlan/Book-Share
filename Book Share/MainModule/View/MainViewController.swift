@@ -15,6 +15,7 @@ class MainViewController: UIViewController {
         label.text = "Dar Library"
         label.textColor = Constants.dark
         label.font = .boldSystemFont(ofSize: 24)
+        
         return label
     }()
     
@@ -22,12 +23,14 @@ class MainViewController: UIViewController {
         let button = UIButton()
         button.setImage(Constants.logout, for: .normal)
         button.addTarget(self, action: #selector(logoutButtonPressed), for: .touchUpInside)
+//        button.isHidden = true
         return button
     }()
     
     lazy var addButton: UIButton = {
         let button = UIButton()
         button.setImage(Constants.add, for: .normal)
+//        button.isHidden = true
         return button
     }()
     
@@ -43,11 +46,11 @@ class MainViewController: UIViewController {
     
     
     lazy var bookView = BooksView()
-    
-    
     private var viewModel = MainViewModel()
     
     var bookID = 0
+    
+    var userRole: RolesViewData.Roles!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,6 +70,8 @@ class MainViewController: UIViewController {
                 let item = arrayOfTabBarItems[i] as? UITabBarItem
                 item?.isEnabled = false
             }
+            logoutButton.isHidden = true
+            addButton.isHidden = true
         }
         }
     }
@@ -77,6 +82,9 @@ class MainViewController: UIViewController {
         }
         viewModel.updateImages = { [weak self] viewData in
             self?.bookView.bookImage = viewData
+        }
+        viewModel.updateRoles = { [weak self] viewData in
+            self?.bookView.userRoles = viewData
         }
     }
     
@@ -117,6 +125,15 @@ class MainViewController: UIViewController {
         }
     }
     
+    @objc func addButtonPressed() {
+        let createVC = ModelBuilder.createCreateBook()
+        self.navigationController?.pushViewController(createVC, animated: true)
+    }
+    
+    @objc func requestButtonPressed() {
+        print(#function)
+    }
+    
     private func setNavigationBar(){
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
@@ -138,6 +155,17 @@ class MainViewController: UIViewController {
     
 }
 extension MainViewController: BooksViewProtocol{
+    func getRole(role: RolesViewData.Roles) {
+        if role.role == "user"{
+            addButton.addTarget(self, action: #selector(requestButtonPressed), for: .touchUpInside)
+        }else {
+            addButton.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
+//            view.window?.rootViewController = TabBarAdmin()
+//            view.window?.makeKeyAndVisible()
+
+        }
+    }
+    
     func moreBooks(id: Int) {
         if Griffon.shared.idToken != nil{
             let moreVC = ModelBuilder.createMoreBooks(id: id)
@@ -167,6 +195,8 @@ extension MainViewController: SignInViewControllerDelegate {
                 item?.isEnabled = true
             }
         }
+        logoutButton.isHidden = false
+        addButton.isHidden = false
         viewModel.getRole()
     }
     
@@ -178,6 +208,8 @@ extension MainViewController: SignInViewControllerDelegate {
                 item?.isEnabled = true
             }
         }
+        logoutButton.isHidden = false
+        addButton.isHidden = false
         viewModel.setRole()
     }
 }

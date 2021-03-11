@@ -57,6 +57,11 @@
 		E4D5918225F084E70082D681 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5918125F084E70082D681 /* ProfileView.swift */; };
 		E4D5918525F084F40082D681 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5918425F084F40082D681 /* UserProfile.swift */; };
 		E4E66F8925F959BF008F53AE /* ProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E66F8825F959BF008F53AE /* ProfileTableViewCell.swift */; };
+		E4F0019725FAD44A00532AB6 /* CreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F0019625FAD44A00532AB6 /* CreateViewController.swift */; };
+		E4F0019A25FAD46E00532AB6 /* CreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F0019925FAD46E00532AB6 /* CreateView.swift */; };
+		E4F0019E25FAD4D400532AB6 /* CreateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F0019D25FAD4D400532AB6 /* CreateViewModel.swift */; };
+		E4F001A125FAD86C00532AB6 /* CreateBook.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F001A025FAD86C00532AB6 /* CreateBook.swift */; };
+		E4F5FD2425FAD04400472152 /* TabBarAdmin.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F5FD2325FAD04400472152 /* TabBarAdmin.swift */; };
 		E4F866DB25FA335D00677506 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E4F866DA25FA335D00677506 /* GoogleService-Info.plist */; };
 		E4F866DF25FA346800677506 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = E4F866DE25FA346800677506 /* FirebaseAnalytics */; };
 		E4F866E125FA346800677506 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = E4F866E025FA346800677506 /* FirebaseFirestore */; };
@@ -119,6 +124,11 @@
 		E4D5918125F084E70082D681 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		E4D5918425F084F40082D681 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		E4E66F8825F959BF008F53AE /* ProfileTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewCell.swift; sourceTree = "<group>"; };
+		E4F0019625FAD44A00532AB6 /* CreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateViewController.swift; sourceTree = "<group>"; };
+		E4F0019925FAD46E00532AB6 /* CreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateView.swift; sourceTree = "<group>"; };
+		E4F0019D25FAD4D400532AB6 /* CreateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateViewModel.swift; sourceTree = "<group>"; };
+		E4F001A025FAD86C00532AB6 /* CreateBook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBook.swift; sourceTree = "<group>"; };
+		E4F5FD2325FAD04400472152 /* TabBarAdmin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarAdmin.swift; sourceTree = "<group>"; };
 		E4F866DA25FA335D00677506 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E4F866E325FA83A200677506 /* RolesFirebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RolesFirebase.swift; sourceTree = "<group>"; };
 		E4F866EA25FA9C8800677506 /* DetailsAdminViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsAdminViewModel.swift; sourceTree = "<group>"; };
@@ -207,7 +217,8 @@
 		E4D590E725F07FDF0082D681 /* Book Share */ = {
 			isa = PBXGroup;
 			children = (
-				E4F866FB25FAAFEA00677506 /* EditModule */,
+				E4F0018725FAD3F300532AB6 /* CreateBookModule */,
+				E4F866FB25FAAFEA00677506 /* EditBookModule */,
 				E4F866E625FA9C4600677506 /* DetailsModuleAdmin */,
 				E45CD7E025F0C2DC00AB5FFE /* SearchByCode */,
 				E4D5913025F083100082D681 /* ProfileModule */,
@@ -218,6 +229,7 @@
 				E4D5912025F0827B0082D681 /* Constants.swift */,
 				E4D5912325F082910082D681 /* ModelBuilder.swift */,
 				E4D5912625F082A10082D681 /* TabBar.swift */,
+				E4F5FD2325FAD04400472152 /* TabBarAdmin.swift */,
 				E496E48625F128FE00786C93 /* Utils.swift */,
 				E4D5911325F080610082D681 /* SupportingFIles */,
 				E4D590F625F07FE00082D681 /* Info.plist */,
@@ -430,6 +442,41 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		E4F0018725FAD3F300532AB6 /* CreateBookModule */ = {
+			isa = PBXGroup;
+			children = (
+				E4F0018E25FAD41A00532AB6 /* ViewModel */,
+				E4F0018C25FAD41100532AB6 /* View */,
+				E4F0018B25FAD40C00532AB6 /* Model */,
+			);
+			path = CreateBookModule;
+			sourceTree = "<group>";
+		};
+		E4F0018B25FAD40C00532AB6 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E4F001A025FAD86C00532AB6 /* CreateBook.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		E4F0018C25FAD41100532AB6 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E4F0019625FAD44A00532AB6 /* CreateViewController.swift */,
+				E4F0019925FAD46E00532AB6 /* CreateView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E4F0018E25FAD41A00532AB6 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				E4F0019D25FAD4D400532AB6 /* CreateViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		E4F866E625FA9C4600677506 /* DetailsModuleAdmin */ = {
 			isa = PBXGroup;
 			children = (
@@ -464,14 +511,14 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
-		E4F866FB25FAAFEA00677506 /* EditModule */ = {
+		E4F866FB25FAAFEA00677506 /* EditBookModule */ = {
 			isa = PBXGroup;
 			children = (
 				E4F8670325FAB12500677506 /* ViewModel */,
 				E4F8670225FAB11F00677506 /* Model */,
 				E4F866FC25FAAFF500677506 /* View */,
 			);
-			path = EditModule;
+			path = EditBookModule;
 			sourceTree = "<group>";
 		};
 		E4F866FC25FAAFF500677506 /* View */ = {
@@ -583,7 +630,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4F0019A25FAD46E00532AB6 /* CreateView.swift in Sources */,
 				E4F866EF25FA9DB500677506 /* DetailsAdminController.swift in Sources */,
+				E4F001A125FAD86C00532AB6 /* CreateBook.swift in Sources */,
 				E4D5914525F083990082D681 /* ViewData.swift in Sources */,
 				E4D5918225F084E70082D681 /* ProfileView.swift in Sources */,
 				E4D5917925F084A50082D681 /* ReservedBooksViewData.swift in Sources */,
@@ -595,6 +644,7 @@
 				E472972025F5A7EE004F45DE /* BookRent.swift in Sources */,
 				E4D590E925F07FDF0082D681 /* AppDelegate.swift in Sources */,
 				E472971C25F590AA004F45DE /* MoreModel.swift in Sources */,
+				E4F0019725FAD44A00532AB6 /* CreateViewController.swift in Sources */,
 				E4D5915225F083E00082D681 /* BooksCollectionViewCell.swift in Sources */,
 				E4D5912425F082910082D681 /* ModelBuilder.swift in Sources */,
 				E4D590EB25F07FDF0082D681 /* SceneDelegate.swift in Sources */,
@@ -612,10 +662,12 @@
 				E4D5917325F0848C0082D681 /* ReservedBooksView.swift in Sources */,
 				E40D308425F0DAC100BEB939 /* APIService.swift in Sources */,
 				E4F866F925FAA90800677506 /* EditView.swift in Sources */,
+				E4F5FD2425FAD04400472152 /* TabBarAdmin.swift in Sources */,
 				E4D5915B25F0841B0082D681 /* MoreView.swift in Sources */,
 				E4D5918525F084F40082D681 /* UserProfile.swift in Sources */,
 				E48604FC25F40CE3002709AE /* FilterCollectionViewCell.swift in Sources */,
 				E4D5917C25F084B80082D681 /* ProfileViewModel.swift in Sources */,
+				E4F0019E25FAD4D400532AB6 /* CreateViewModel.swift in Sources */,
 				E4D5916725F084580082D681 /* DetailsView.swift in Sources */,
 				E496E48725F128FE00786C93 /* Utils.swift in Sources */,
 				E449A56625F984FA00C45818 /* BooksImages.swift in Sources */,

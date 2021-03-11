@@ -59,6 +59,12 @@ class ModelBuilder: Builder {
         view.editViewModel = viewModel
         return view
     }
+    static func createCreateBook() -> UIViewController {
+        let view = CreateViewController()
+        let viewModel = CreateViewModel()
+        view.createViewModel = viewModel
+        return view
+    }
 
 
     static func createMoreBooks(id: Int) -> UIViewController {

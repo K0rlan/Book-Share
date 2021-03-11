@@ -14,12 +14,15 @@ import Griffon_ios_spm
 protocol MainViewModelProtocol {
     var updateViewData: ((ViewData)->())? { get set }
     var updateImages: ((ViewImages)->())? { get set }
+    var updateRoles: ((RolesViewData)->())? { get set }
     func startFetch()
 }
 
 final class MainViewModel: MainViewModelProtocol{
     var updateViewData: ((ViewData) -> ())?
     var updateImages: ((ViewImages)->())?
+    var updateRoles: ((RolesViewData)->())?
+    
     let provider = MoyaProvider<APIService>()
     var images = [ViewImages.BooksImages]()
     
@@ -27,11 +30,13 @@ final class MainViewModel: MainViewModelProtocol{
     init() {
         updateViewData?(.initial)
         updateImages?(.initial)
+        updateRoles?(.initial)
     }
     
     func startFetch() {
         updateViewData?(.loading)
         updateImages?(.loading)
+        updateRoles?(.loading)
         refreshTables()
         fetchBooks()
         fetchRents()
@@ -244,17 +249,18 @@ final class MainViewModel: MainViewModelProtocol{
     func getRole(){
         let db = Firestore.firestore()
         let userID = Utils.getUserID()
-        db.collection("roles").whereField("user_id", isEqualTo: userID).getDocuments() { (querySnapshot, err) in
+        db.collection("roles").whereField("user_id", isEqualTo: userID).getDocuments() { [weak self] (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
             } else {
                 for document in querySnapshot!.documents {
-                    print("\(document.documentID) => \(document.data())")
-                    let newJob = Roles(dictionary: document.data())
-                    print(newJob.role)
+//                    let role = Roles(dictionary: document.data())
+                    self?.updateRoles?(.success(RolesViewData.Roles(dictionary: document.data())))
                 }
+               
             }
         }
+        
     }
     
     func setRole() {

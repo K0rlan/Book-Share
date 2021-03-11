@@ -10,6 +10,7 @@ import UIKit
 protocol BooksViewProtocol {
     func getBooksID(id: Int)
     func moreBooks(id: Int)
+    func getRole(role: RolesViewData.Roles)
 }
 
 class BooksView: UIView{
@@ -62,13 +63,18 @@ class BooksView: UIView{
         }
     }
     
+    var userRoles: RolesViewData = .initial{
+        didSet{
+            setNeedsLayout()
+        }
+    }
+    
     var books = [ViewData.BooksData]()
     var genres = [Genres]()
     var keysArray = [String]()
     var delegateBooksViewProtocol: BooksViewProtocol!
     var images = [BooksImages]()
     var rents = [ViewData.RentsData]()
-    
     var arr = [ViewImages.BooksImages]()
     
     override init(frame: CGRect  = .zero) {
@@ -93,8 +99,8 @@ class BooksView: UIView{
             activityIndicator.isHidden = false
         case .successGenres(let success):
             genres = success
-//            tableView.reloadData()
-//            collectionView.reloadData()
+            tableView.reloadData()
+            collectionView.reloadData()
         case .successBooks(let success):
             books = success
 //            tableView.reloadData()
@@ -119,6 +125,17 @@ class BooksView: UIView{
             activityIndicator.isHidden = true
         case .failure:
             activityIndicator.isHidden = true
+        }
+        
+        switch userRoles {
+        case .success(let success):
+            delegateBooksViewProtocol.getRole(role: success)
+        case .failure(let err):
+            print(err)
+        case .initial:
+            print("")
+        case .loading:
+            print("")
         }
     }
     

@@ -15,7 +15,7 @@ enum APIService {
     case getBook(bookID: Int)
     case getImage(imageName: String)
     case getUserBooks(userID: String)
-    case postBook(book: ViewData.BooksData)
+    case postBook(book: CreateBook)
     case postRent(rent: ViewData.RentData)
     case deleteRent(rentId: Int)
     case updateRent(id: Int, enabled: Bool)
@@ -77,14 +77,13 @@ extension APIService: TargetType {
             return .requestPlain
         case .postBook(let book):
             let params: [String : Any] = [
-                "id" :  book.id,
                 "isbn" : book.isbn,
                 "title" : book.title,
                 "author" : book.author,
                 "image" : book.image ?? nil,
                 "publish_date" : book.publish_date,
+                "enabled" : book.enabled,
                 "genre_id" : book.genre_id ?? nil,
-                
             ]
             return .requestParameters(parameters: params, encoding: JSONEncoding.default)
             
