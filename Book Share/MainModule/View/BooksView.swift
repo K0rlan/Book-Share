@@ -93,12 +93,12 @@ class BooksView: UIView{
             activityIndicator.isHidden = false
         case .successGenres(let success):
             genres = success
-            tableView.reloadData()
-            collectionView.reloadData()
+//            tableView.reloadData()
+//            collectionView.reloadData()
         case .successBooks(let success):
             books = success
-            tableView.reloadData()
-            collectionView.reloadData()
+//            tableView.reloadData()
+//            collectionView.reloadData()
         case .successRent(let success):
             rents = success
         case .failure:

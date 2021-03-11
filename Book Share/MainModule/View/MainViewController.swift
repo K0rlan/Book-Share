@@ -61,13 +61,14 @@ class MainViewController: UIViewController {
         if Utils.isExpDate() {
             authViaGriffon()
         }
+        if Utils.getUserID() == ""{
         if let arrayOfTabBarItems = self.tabBarController!.tabBar.items as AnyObject as? NSArray {
             for i in 1..<arrayOfTabBarItems.count{
                 let item = arrayOfTabBarItems[i] as? UITabBarItem
                 item?.isEnabled = false
             }
         }
-        
+        }
     }
     
     private func updateView(){
@@ -149,7 +150,7 @@ extension MainViewController: BooksViewProtocol{
     func getBooksID(id: Int) {
         self.bookID = id
         if Griffon.shared.idToken != nil{
-            let detailsVC = ModelBuilder.createBookDetails(id: bookID)
+            let detailsVC = ModelBuilder.createBookDetailsAdmin(id: bookID)
             self.navigationController?.pushViewController(detailsVC, animated: true)
         }else {
             authViaGriffon()

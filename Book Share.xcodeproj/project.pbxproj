@@ -61,6 +61,13 @@
 		E4F866DF25FA346800677506 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = E4F866DE25FA346800677506 /* FirebaseAnalytics */; };
 		E4F866E125FA346800677506 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = E4F866E025FA346800677506 /* FirebaseFirestore */; };
 		E4F866E425FA83A200677506 /* RolesFirebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F866E325FA83A200677506 /* RolesFirebase.swift */; };
+		E4F866EB25FA9C8800677506 /* DetailsAdminViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F866EA25FA9C8800677506 /* DetailsAdminViewModel.swift */; };
+		E4F866EF25FA9DB500677506 /* DetailsAdminController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F866EE25FA9DB500677506 /* DetailsAdminController.swift */; };
+		E4F866F225FA9DE500677506 /* DetailsAdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F866F125FA9DE500677506 /* DetailsAdminView.swift */; };
+		E4F866F925FAA90800677506 /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F866F825FAA90800677506 /* EditView.swift */; };
+		E4F866FE25FAB00100677506 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F866FD25FAB00100677506 /* EditViewController.swift */; };
+		E4F8670525FAB14000677506 /* EditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F8670425FAB14000677506 /* EditViewModel.swift */; };
+		E4F8670825FAB5FF00677506 /* EditBook.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F8670725FAB5FF00677506 /* EditBook.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -114,6 +121,13 @@
 		E4E66F8825F959BF008F53AE /* ProfileTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewCell.swift; sourceTree = "<group>"; };
 		E4F866DA25FA335D00677506 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E4F866E325FA83A200677506 /* RolesFirebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RolesFirebase.swift; sourceTree = "<group>"; };
+		E4F866EA25FA9C8800677506 /* DetailsAdminViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsAdminViewModel.swift; sourceTree = "<group>"; };
+		E4F866EE25FA9DB500677506 /* DetailsAdminController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsAdminController.swift; sourceTree = "<group>"; };
+		E4F866F125FA9DE500677506 /* DetailsAdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsAdminView.swift; sourceTree = "<group>"; };
+		E4F866F825FAA90800677506 /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
+		E4F866FD25FAB00100677506 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
+		E4F8670425FAB14000677506 /* EditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewModel.swift; sourceTree = "<group>"; };
+		E4F8670725FAB5FF00677506 /* EditBook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBook.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,6 +207,8 @@
 		E4D590E725F07FDF0082D681 /* Book Share */ = {
 			isa = PBXGroup;
 			children = (
+				E4F866FB25FAAFEA00677506 /* EditModule */,
+				E4F866E625FA9C4600677506 /* DetailsModuleAdmin */,
 				E45CD7E025F0C2DC00AB5FFE /* SearchByCode */,
 				E4D5913025F083100082D681 /* ProfileModule */,
 				E4D5912F25F082FF0082D681 /* ReservedBooksModule */,
@@ -414,6 +430,75 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		E4F866E625FA9C4600677506 /* DetailsModuleAdmin */ = {
+			isa = PBXGroup;
+			children = (
+				E4F866E925FA9C5D00677506 /* ViewModel */,
+				E4F866E825FA9C5900677506 /* View */,
+				E4F866E725FA9C5200677506 /* Model */,
+			);
+			path = DetailsModuleAdmin;
+			sourceTree = "<group>";
+		};
+		E4F866E725FA9C5200677506 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		E4F866E825FA9C5900677506 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E4F866EE25FA9DB500677506 /* DetailsAdminController.swift */,
+				E4F866F125FA9DE500677506 /* DetailsAdminView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E4F866E925FA9C5D00677506 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				E4F866EA25FA9C8800677506 /* DetailsAdminViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		E4F866FB25FAAFEA00677506 /* EditModule */ = {
+			isa = PBXGroup;
+			children = (
+				E4F8670325FAB12500677506 /* ViewModel */,
+				E4F8670225FAB11F00677506 /* Model */,
+				E4F866FC25FAAFF500677506 /* View */,
+			);
+			path = EditModule;
+			sourceTree = "<group>";
+		};
+		E4F866FC25FAAFF500677506 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E4F866FD25FAB00100677506 /* EditViewController.swift */,
+				E4F866F825FAA90800677506 /* EditView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E4F8670225FAB11F00677506 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E4F8670725FAB5FF00677506 /* EditBook.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		E4F8670325FAB12500677506 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				E4F8670425FAB14000677506 /* EditViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -498,6 +583,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4F866EF25FA9DB500677506 /* DetailsAdminController.swift in Sources */,
 				E4D5914525F083990082D681 /* ViewData.swift in Sources */,
 				E4D5918225F084E70082D681 /* ProfileView.swift in Sources */,
 				E4D5917925F084A50082D681 /* ReservedBooksViewData.swift in Sources */,
@@ -513,15 +599,19 @@
 				E4D5912425F082910082D681 /* ModelBuilder.swift in Sources */,
 				E4D590EB25F07FDF0082D681 /* SceneDelegate.swift in Sources */,
 				E4D5917F25F084DD0082D681 /* ProfileViewController.swift in Sources */,
+				E4F866EB25FA9C8800677506 /* DetailsAdminViewModel.swift in Sources */,
+				E4F8670825FAB5FF00677506 /* EditBook.swift in Sources */,
 				E4E66F8925F959BF008F53AE /* ProfileTableViewCell.swift in Sources */,
 				E4F866E425FA83A200677506 /* RolesFirebase.swift in Sources */,
 				E4D5916D25F084770082D681 /* ReservedBooksViewModel.swift in Sources */,
+				E4F8670525FAB14000677506 /* EditViewModel.swift in Sources */,
 				E4D5916425F0844C0082D681 /* DetailsViewController.swift in Sources */,
 				E45CD7E325F0C30200AB5FFE /* SearchByCodeController.swift in Sources */,
 				E48604C825F3A64E002709AE /* Genres.swift in Sources */,
 				E4B209FE25F8CCA700206975 /* BookDetails.swift in Sources */,
 				E4D5917325F0848C0082D681 /* ReservedBooksView.swift in Sources */,
 				E40D308425F0DAC100BEB939 /* APIService.swift in Sources */,
+				E4F866F925FAA90800677506 /* EditView.swift in Sources */,
 				E4D5915B25F0841B0082D681 /* MoreView.swift in Sources */,
 				E4D5918525F084F40082D681 /* UserProfile.swift in Sources */,
 				E48604FC25F40CE3002709AE /* FilterCollectionViewCell.swift in Sources */,
@@ -535,6 +625,8 @@
 				E4D5912725F082A10082D681 /* TabBar.swift in Sources */,
 				E4D5914125F083820082D681 /* MainViewModel.swift in Sources */,
 				E4D5916A25F084630082D681 /* DetailsData.swift in Sources */,
+				E4F866F225FA9DE500677506 /* DetailsAdminView.swift in Sources */,
+				E4F866FE25FAB00100677506 /* EditViewController.swift in Sources */,
 				E48604C525F3A0B0002709AE /* Books.swift in Sources */,
 				E4D5915525F084010082D681 /* MoreViewModel.swift in Sources */,
 				E4D5917625F084970082D681 /* ReservedBooksTableViewCell.swift in Sources */,

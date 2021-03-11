@@ -19,6 +19,8 @@ enum APIService {
     case postRent(rent: ViewData.RentData)
     case deleteRent(rentId: Int)
     case updateRent(id: Int, enabled: Bool)
+    case updateBook(id: Int, book: EditBook)
+    case deleteBook(id: Int)
 }
 
 extension APIService: TargetType {
@@ -45,6 +47,10 @@ extension APIService: TargetType {
             return "api/rent/\(rentId)"
         case .getUserBooks(let userID):
             return "api/rent/reading/\(userID)"
+        case .updateBook(let id, let _):
+            return "api/books/\(id)"
+        case .deleteBook(let id):
+            return "api/books/\(id)"
         }
     }
     
@@ -54,9 +60,9 @@ extension APIService: TargetType {
             return .get
         case .postBook, .postRent:
             return .post
-        case .deleteRent:
+        case .deleteRent, .deleteBook:
             return .delete
-        case .updateRent:
+        case .updateRent, .updateBook:
             return .put
         }
     }
@@ -67,7 +73,7 @@ extension APIService: TargetType {
     
     var task: Task {
         switch self {
-        case .getBooks, .getGenres, .getBook, .getRent, .getImage, .deleteRent, .getUserBooks:
+        case .getBooks, .getGenres, .getBook, .getRent, .getImage, .deleteRent, .getUserBooks, .deleteBook:
             return .requestPlain
         case .postBook(let book):
             let params: [String : Any] = [
@@ -107,6 +113,17 @@ extension APIService: TargetType {
         case .updateRent(let _, let enabled):
             let params: [String : Any] = [
                 "enabled" : enabled
+            ]
+            return .requestParameters(parameters: params, encoding: JSONEncoding.default)
+            
+        case .updateBook(let _, let book):
+            let params: [String : Any] = [
+                "isbn" : book.isbn,
+                "title" : book.title,
+                "author" : book.author,
+                "publish_date" : book.publish_date,
+                "enabled" : book.enabled,
+                "genre_id" : book.genre_id ?? nil,
             ]
             return .requestParameters(parameters: params, encoding: JSONEncoding.default)
         }
