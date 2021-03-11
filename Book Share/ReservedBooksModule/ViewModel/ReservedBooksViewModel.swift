@@ -28,7 +28,7 @@ final class ReservedBooksViewModel: ReservedBooksViewModelProtocol{
     
     func startFetch() {
         updateViewData?(.loading)
-        
+        if (Griffon.shared.getUserProfiles()!.id) != nil {
         provider.request(.getUserBooks(userID: "\(Griffon.shared.getUserProfiles()!.id)")) { [weak self] (result) in
             switch result{
             case .success(let response):
@@ -46,7 +46,7 @@ final class ReservedBooksViewModel: ReservedBooksViewModelProtocol{
                 self?.updateViewData?(.failure(error))
             }
         }
-        
+        }
     }
     
     func fetchImages(books: [ReservedBooksViewData.RentsData]){

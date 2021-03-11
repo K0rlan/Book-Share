@@ -17,6 +17,8 @@ struct Constants {
     static let reserved = UIImage(named: "reserved")
     static let logo = UIImage(named: "logo")
     static let back = UIImage(named: "back")
+    static let add = UIImage(named: "add")
+    static let logout = UIImage(named: "logout")
     
     static let dark = UIColor(red: 44/255, green: 44/255, blue: 44/255, alpha: 1)
     

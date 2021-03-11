@@ -8,6 +8,8 @@
 import Foundation
 import Moya
 import UIKit
+import FirebaseFirestore
+import Griffon_ios_spm
 
 protocol MainViewModelProtocol {
     var updateViewData: ((ViewData)->())? { get set }
@@ -237,6 +239,41 @@ final class MainViewModel: MainViewModelProtocol{
                 print("\(error)")
             }
         }
+    }
+    
+    func getRole(){
+        let db = Firestore.firestore()
+        let userID = Utils.getUserID()
+        db.collection("roles").whereField("user_id", isEqualTo: userID).getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            } else {
+                for document in querySnapshot!.documents {
+                    print("\(document.documentID) => \(document.data())")
+                    let newJob = Roles(dictionary: document.data())
+                    print(newJob.role)
+                }
+            }
+        }
+    }
+    
+    func setRole() {
+        let userID = Utils.getUserID()
+        let db = Firestore.firestore()
+        db.collection("roles").addDocument(data: [
+            "user_id": userID,
+            "role": "user"
+        ]) { err in
+            if let err = err {
+                print("Error saving user data: \(err)")
+            }
+        }
+    }
+    
+    func logout() {
+        Griffon.shared.cleanKeyChain()
+        Griffon.shared.signInModel = nil
+        Griffon.shared.signUpModel = nil
     }
     
 }

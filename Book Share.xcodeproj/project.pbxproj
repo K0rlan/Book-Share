@@ -57,6 +57,10 @@
 		E4D5918225F084E70082D681 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5918125F084E70082D681 /* ProfileView.swift */; };
 		E4D5918525F084F40082D681 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5918425F084F40082D681 /* UserProfile.swift */; };
 		E4E66F8925F959BF008F53AE /* ProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E66F8825F959BF008F53AE /* ProfileTableViewCell.swift */; };
+		E4F866DB25FA335D00677506 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E4F866DA25FA335D00677506 /* GoogleService-Info.plist */; };
+		E4F866DF25FA346800677506 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = E4F866DE25FA346800677506 /* FirebaseAnalytics */; };
+		E4F866E125FA346800677506 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = E4F866E025FA346800677506 /* FirebaseFirestore */; };
+		E4F866E425FA83A200677506 /* RolesFirebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F866E325FA83A200677506 /* RolesFirebase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -108,6 +112,8 @@
 		E4D5918125F084E70082D681 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		E4D5918425F084F40082D681 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		E4E66F8825F959BF008F53AE /* ProfileTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewCell.swift; sourceTree = "<group>"; };
+		E4F866DA25FA335D00677506 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		E4F866E325FA83A200677506 /* RolesFirebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RolesFirebase.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,9 +123,11 @@
 			files = (
 				E4D5910F25F080410082D681 /* RxMoya in Frameworks */,
 				E4D5910B25F080410082D681 /* Moya in Frameworks */,
+				E4F866DF25FA346800677506 /* FirebaseAnalytics in Frameworks */,
 				E4D5910D25F080410082D681 /* ReactiveMoya in Frameworks */,
 				E4D5911925F0815F0082D681 /* GRDB in Frameworks */,
 				E4D5911D25F081B70082D681 /* Griffon_ios_spm in Frameworks */,
+				E4F866E125FA346800677506 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -197,6 +205,7 @@
 				E496E48625F128FE00786C93 /* Utils.swift */,
 				E4D5911325F080610082D681 /* SupportingFIles */,
 				E4D590F625F07FE00082D681 /* Info.plist */,
+				E4F866DA25FA335D00677506 /* GoogleService-Info.plist */,
 			);
 			path = "Book Share";
 			sourceTree = "<group>";
@@ -277,6 +286,7 @@
 				E40D308325F0DAC100BEB939 /* APIService.swift */,
 				E472970B25F51743004F45DE /* APIImage.swift */,
 				E472972325F5E35F004F45DE /* ViewImages.swift */,
+				E4F866E325FA83A200677506 /* RolesFirebase.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -426,6 +436,8 @@
 				E4D5910E25F080410082D681 /* RxMoya */,
 				E4D5911825F0815F0082D681 /* GRDB */,
 				E4D5911C25F081B70082D681 /* Griffon_ios_spm */,
+				E4F866DE25FA346800677506 /* FirebaseAnalytics */,
+				E4F866E025FA346800677506 /* FirebaseFirestore */,
 			);
 			productName = "Book Share";
 			productReference = E4D590E525F07FDF0082D681 /* Book Share.app */;
@@ -457,6 +469,7 @@
 			packageReferences = (
 				E4D5910925F080410082D681 /* XCRemoteSwiftPackageReference "Moya" */,
 				E4D5911725F0815F0082D681 /* XCRemoteSwiftPackageReference "GRDB.swift" */,
+				E4F866DD25FA346800677506 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = E4D590E625F07FDF0082D681 /* Products */;
 			projectDirPath = "";
@@ -473,6 +486,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4D590F525F07FE00082D681 /* LaunchScreen.storyboard in Resources */,
+				E4F866DB25FA335D00677506 /* GoogleService-Info.plist in Resources */,
 				E4D590F225F07FE00082D681 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -500,6 +514,7 @@
 				E4D590EB25F07FDF0082D681 /* SceneDelegate.swift in Sources */,
 				E4D5917F25F084DD0082D681 /* ProfileViewController.swift in Sources */,
 				E4E66F8925F959BF008F53AE /* ProfileTableViewCell.swift in Sources */,
+				E4F866E425FA83A200677506 /* RolesFirebase.swift in Sources */,
 				E4D5916D25F084770082D681 /* ReservedBooksViewModel.swift in Sources */,
 				E4D5916425F0844C0082D681 /* DetailsViewController.swift in Sources */,
 				E45CD7E325F0C30200AB5FFE /* SearchByCodeController.swift in Sources */,
@@ -738,6 +753,14 @@
 				minimumVersion = 5.5.0;
 			};
 		};
+		E4F866DD25FA346800677506 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.8.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -764,6 +787,16 @@
 		E4D5911C25F081B70082D681 /* Griffon_ios_spm */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Griffon_ios_spm;
+		};
+		E4F866DE25FA346800677506 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E4F866DD25FA346800677506 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		E4F866E025FA346800677506 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E4F866DD25FA346800677506 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -18,16 +18,16 @@ class MainViewController: UIViewController {
         return label
     }()
     
-    lazy var notificationButton: UIButton = {
+    lazy var logoutButton: UIButton = {
         let button = UIButton()
-        button.setImage(Constants.notification, for: .normal)
+        button.setImage(Constants.logout, for: .normal)
+        button.addTarget(self, action: #selector(logoutButtonPressed), for: .touchUpInside)
         return button
     }()
     
-    lazy var nightButton: UIButton = {
+    lazy var addButton: UIButton = {
         let button = UIButton()
-        button.setImage(Constants.moon, for: .normal)
-        button.addTarget(self, action: #selector(changeMode), for: .touchUpInside)
+        button.setImage(Constants.add, for: .normal)
         return button
     }()
     
@@ -80,7 +80,7 @@ class MainViewController: UIViewController {
     }
     
     private func setupViews(){
-        [appLabel, notificationButton, nightButton, separatorView, bookView].forEach {
+        [appLabel, logoutButton, addButton, separatorView, bookView].forEach {
             self.view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -88,11 +88,11 @@ class MainViewController: UIViewController {
         appLabel.widthAnchor.constraint(equalToConstant: 164).isActive = true
         appLabel.heightAnchor.constraint(equalToConstant: 34).isActive = true
         
-        notificationButton.widthAnchor.constraint(equalToConstant: 34).isActive = true
-        notificationButton.heightAnchor.constraint(equalToConstant: 34).isActive = true
+        logoutButton.widthAnchor.constraint(equalToConstant: 34).isActive = true
+        logoutButton.heightAnchor.constraint(equalToConstant: 34).isActive = true
         
-        nightButton.widthAnchor.constraint(equalToConstant: 34).isActive = true
-        nightButton.heightAnchor.constraint(equalToConstant: 34).isActive = true
+        addButton.widthAnchor.constraint(equalToConstant: 34).isActive = true
+        addButton.heightAnchor.constraint(equalToConstant: 34).isActive = true
         
         separatorViewForNavBar.widthAnchor.constraint(equalToConstant: 7).isActive = true
         separatorViewForNavBar.heightAnchor.constraint(equalToConstant: 7).isActive = true
@@ -106,8 +106,14 @@ class MainViewController: UIViewController {
         separatorView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.12).isActive = true
     }
     
-    @objc func changeMode(_ sender: UIButton){
-        
+    @objc func logoutButtonPressed(){
+        viewModel.logout()
+        if let arrayOfTabBarItems = self.tabBarController!.tabBar.items as AnyObject as? NSArray {
+            for i in 1..<arrayOfTabBarItems.count{
+                let item = arrayOfTabBarItems[i] as? UITabBarItem
+                item?.isEnabled = false
+            }
+        }
     }
     
     private func setNavigationBar(){
@@ -120,7 +126,7 @@ class MainViewController: UIViewController {
         navigationController?.navigationBar.isHidden = false
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: appLabel)
-        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: notificationButton), UIBarButtonItem(customView: separatorViewForNavBar),UIBarButtonItem(customView: nightButton)]
+        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: logoutButton), UIBarButtonItem(customView: separatorViewForNavBar),UIBarButtonItem(customView: addButton)]
     }
     
     func authViaGriffon(){
@@ -160,6 +166,7 @@ extension MainViewController: SignInViewControllerDelegate {
                 item?.isEnabled = true
             }
         }
+        viewModel.getRole()
     }
     
     func successfullSignUp(_ ctrl: SignInViewController) {
@@ -170,6 +177,7 @@ extension MainViewController: SignInViewControllerDelegate {
                 item?.isEnabled = true
             }
         }
+        viewModel.setRole()
     }
 }
 

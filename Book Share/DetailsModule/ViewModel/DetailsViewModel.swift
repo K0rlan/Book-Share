@@ -90,8 +90,8 @@ class DetailsViewModel: DetailsViewModelProtocol{
     }
     
     func addRent(){
-//        let calendar = Calendar.current
-//        let addTwoWeekToCurrentDate = calendar.date(byAdding: .weekOfYear, value: 2, to: Date())
+        let calendar = Calendar.current
+        let addTwoWeekToCurrentDate = calendar.date(byAdding: .weekOfYear, value: 2, to: Date())
         var book: BookDetails!
         do {
             try dbQueue.read { db in
