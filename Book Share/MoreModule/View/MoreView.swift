@@ -53,7 +53,7 @@ class MoreView: UIView{
     
     var filteredData: [Books] = []
     var books: [Books] = []
-    var images = [MoreModel.BooksImages]()
+    var images = [BooksImages]()
     var delegate: MoreViewProtocol!
     
     override init(frame: CGRect  = .zero) {
@@ -154,7 +154,6 @@ extension MoreView: UITableViewDelegate, UITableViewDataSource {
                 cell.bookImage.image = UIImage(data: image.image!)
             }
         }
-        
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

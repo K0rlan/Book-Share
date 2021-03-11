@@ -66,7 +66,7 @@ class BooksView: UIView{
     var genres = [Genres]()
     var keysArray = [String]()
     var delegateBooksViewProtocol: BooksViewProtocol!
-    var images = [ViewData.BooksImages]()
+    var images = [BooksImages]()
     var rents = [ViewData.RentsData]()
     
     var arr = [ViewImages.BooksImages]()
@@ -93,20 +93,16 @@ class BooksView: UIView{
             activityIndicator.isHidden = false
         case .successGenres(let success):
             genres = success
-            collectionView.reloadData()
             tableView.reloadData()
+            collectionView.reloadData()
         case .successBooks(let success):
             books = success
             tableView.reloadData()
             collectionView.reloadData()
-        case .failure:
-            tableView.isHidden = false
-            collectionView.isHidden = false
-            activityIndicator.isHidden = true
         case .successRent(let success):
             rents = success
-            tableView.reloadData()
-//            collectionView.reloadData()
+        case .failure:
+            activityIndicator.isHidden = true
         }
         
         switch bookImage {
@@ -122,8 +118,6 @@ class BooksView: UIView{
             tableView.isHidden = false
             activityIndicator.isHidden = true
         case .failure:
-            tableView.isHidden = false
-            collectionView.isHidden = false
             activityIndicator.isHidden = true
         }
     }

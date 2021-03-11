@@ -36,10 +36,12 @@ class ReservedBooksView: UIView {
         }
     }
    
-    var books: [ReservedBooksViewData.Data] = []
+    var books: [ReservedBooksViewData.RentsData] = []
+    var images = [BooksImages]()
     
     override init(frame: CGRect  = .zero) {
         super .init(frame: frame)
+        tableView.reloadData()
         setupViews()
         
     }
@@ -64,9 +66,13 @@ class ReservedBooksView: UIView {
             books = success
             print("asd\(success)")
             tableView.reloadData()
+        case .successImage(let success):
+            images = success
+            tableView.reloadData()
         case .failure:
             tableView.isHidden = false
             activityIndicator.isHidden = true
+        
         }
     }
     
@@ -96,14 +102,18 @@ extension ReservedBooksView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reservedBooks", for: indexPath) as! ReservedBooksTableViewCell
-        let book = books[indexPath.row]
+        let book = books[indexPath.row].book!
         print(books)
         cell.backgroundColor = Constants.elements
-        cell.bookImage.image = book.image
+//        cell.bookImage.image = images[]
+        for image in images {
+            if book.id == image.id {
+                cell.bookImage.image = UIImage(data: image.image!)
+            }
+        }
         cell.titleLabel.text = book.title
-        cell.genreLabel.text = book.genre
         cell.authorLabel.text = book.author
-        cell.publishDateLabel.text = book.publishDate
+        cell.publishDateLabel.text = book.publish_date
         return cell
         
     }

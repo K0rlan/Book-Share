@@ -17,7 +17,7 @@ final class MoreViewModel: MoreViewModelProtocol{
     var bookID: Int
     let provide = MoyaProvider<APIImage>()
     
-    var images = [MoreModel.BooksImages]()
+    var images = [BooksImages]()
     
     init(id: Int) {
         updateViewData?(.initial)
@@ -26,7 +26,7 @@ final class MoreViewModel: MoreViewModelProtocol{
     
     func startFetch() {
         updateViewData?(.loading)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1){ [weak self] in
+        DispatchQueue.main.async{ [weak self] in
             do {
                 try dbQueue.read { db in
                     if self?.bookID == 0{
@@ -45,26 +45,19 @@ final class MoreViewModel: MoreViewModelProtocol{
         }
     }
     
+    
     func fetchImages(books: [Books]){
-        for book in books{
-            if let img = book.image{
-                provide.request(.getImage(imageName: img)) { [weak self] (result) in
-                    switch result{
-                    case .success(let response):
-                        do {
-                            let img = try response.mapImage().jpegData(compressionQuality: 1)
-                            let book = MoreModel.BooksImages(id: book.id, image: img)
-                            self?.images.append(book)
-                            self?.updateViewData?(.successImage(self!.images))
-                        } catch let error {
-                            print("Error in parsing: \(error)")
-                            self?.updateViewData?(.failure(error))
-                        }
-                    case .failure(let error):
-                        let requestError = (error as NSError)
-                        print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
-                        self?.updateViewData?(.failure(error))
+        DispatchQueue.main.async { [weak self] in
+            for book in books{
+                do {
+                    try dbQueue.read { db in
+                        let draft = try BooksImages.filterById(id: book.id).fetchAll(db)
+                        print(draft)
+                        self?.images.append(contentsOf: draft)
+                        self?.updateViewData?(.successImage(self!.images))
                     }
+                } catch {
+                    print("\(error)")
                 }
             }
         }

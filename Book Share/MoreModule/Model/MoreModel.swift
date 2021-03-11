@@ -33,11 +33,11 @@ enum MoreModel {
         let enabled: Bool?
     }
     
-    struct BooksImages: Decodable {
-        var id: Int
-        var image: Data?
-    }
-    
+//    struct BooksImages: Decodable {
+//        var id: Int
+//        var image: Data?
+//    }
+//    
     struct RentsData: Decodable {
         let id: Int
         let user_id: String
@@ -53,4 +53,3 @@ enum MoreModel {
         let end_date: String?
     }
 }
-

@@ -76,20 +76,22 @@ class DetailsView: UIView {
         return button
     }()
     
-    lazy var notAvailableButton: UIButton = {
-        let button = UIButton()
-        button.alpha = 0
-        button.backgroundColor = Constants.dark
-        button.layer.cornerRadius = 8
-        button.layer.borderWidth = 1
-        button.layer.borderColor = Constants.dark.cgColor
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowOffset = CGSize(width: 3, height: 4)
-        button.layer.shadowRadius = 2
-        button.layer.shadowOpacity = 0.1
-        button.setTitle("Not available", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        return button
+    lazy var notAvailableLabel: UILabel = {
+        let label = UILabel()
+        label.alpha = 0
+        label.backgroundColor = Constants.dark
+        label.layer.cornerRadius = 8
+        label.layer.borderWidth = 1
+        label.layer.masksToBounds = true
+        label.layer.borderColor = Constants.dark.cgColor
+        label.layer.shadowColor = UIColor.black.cgColor
+        label.layer.shadowOffset = CGSize(width: 3, height: 4)
+        label.textAlignment = .center
+        label.layer.shadowRadius = 2
+        label.layer.shadowOpacity = 0.1
+        label.text = "Not available"
+        label.textColor = .white
+        return label
     }()
     
     lazy var returnBookButton: UIButton = {
@@ -181,22 +183,47 @@ class DetailsView: UIView {
         
         switch bookData {
         case .initial:
+            self.isHidden = true
             activityIndicator.isHidden = false
         case .loading:
+            self.isHidden = true
             activityIndicator.isHidden = false
         case .success(let success):
-            reserveBookButton.alpha = 1
-            returnBookButton.alpha = 1
-            descriptionLabel.alpha = 1
-            activityIndicator.isHidden = true
+            self.isHidden = true
             self.update(viewData: success)
-        case .successImage(let success):
-            bookImage.alpha = 1
-            returnBookButton.alpha = 1
-            reserveBookButton.alpha = 1
-            descriptionLabel.alpha = 1
-            self.updateImage(image: success)
             activityIndicator.isHidden = true
+        case .successImage(let success):
+            self.updateImage(image: success)
+            self.isHidden = false
+            activityIndicator.isHidden = true
+        case .bookStatus(let status):
+            activityIndicator.isHidden = true
+            self.isHidden = false
+        if status == BookStatus.available {
+            bringSubviewToFront(reserveBookButton)
+            reserveBookButton.isHidden = false
+            reserveBookButton.isEnabled = true
+            returnBookButton.isHidden = true
+            notAvailableLabel.isHidden = true
+            returnBookButton.isEnabled = false
+            notAvailableLabel.isEnabled = false
+        } else if status == BookStatus.canReturnBook {
+            bringSubviewToFront(returnBookButton)
+            returnBookButton.isHidden = false
+            returnBookButton.isEnabled = true
+            reserveBookButton.isHidden = true
+            notAvailableLabel.isHidden = true
+            reserveBookButton.isEnabled = false
+            notAvailableLabel.isEnabled = false
+        }else if status == BookStatus.notAvailable {
+            bringSubviewToFront(notAvailableLabel)
+            notAvailableLabel.isHidden = false
+            notAvailableLabel.isEnabled = true
+            reserveBookButton.isHidden = true
+            returnBookButton.isHidden = true
+            returnBookButton.isEnabled = false
+            reserveBookButton.isEnabled = false
+        }
         case .failure:
             activityIndicator.isHidden = true
         }
@@ -207,48 +234,19 @@ class DetailsView: UIView {
         titleLabel.text = data.title
         authorLabel.text = data.author
         publishDateLabel.text = data.publish_date
+        notAvailableLabel.alpha = 1
+        returnBookButton.alpha = 1
+        reserveBookButton.alpha = 1
+        descriptionLabel.alpha = 1
         
-        do {
-            try dbQueue.read { db in
-                let draft = try BookRent.filterByBookID(id: data.id).fetchAll(db)
-                if draft.isEmpty{
-                    returnBookButton.isHidden = true
-                    bringSubviewToFront(reserveBookButton)
-                    reserveBookButton.isHidden = false
-                    reserveBookButton.isEnabled = true
-                    returnBookButton.isEnabled = false
-                }else {
-                    reserveBookButton.isHidden = true
-                    bringSubviewToFront(returnBookButton)
-                    returnBookButton.isHidden = false
-                    returnBookButton.isEnabled = true
-                    reserveBookButton.isEnabled = false
-                }
-
-            }
-        } catch {
-            print("\(error)")
-        }
-//        if data.enabled{
-//            returnBookButton.isHidden = true
-//            bringSubviewToFront(reserveBookButton)
-//            reserveBookButton.isHidden = false
-//            reserveBookButton.isEnabled = true
-//            returnBookButton.isEnabled = false
-//        }else {
-//            reserveBookButton.isHidden = true
-//            bringSubviewToFront(returnBookButton)
-//            returnBookButton.isHidden = false
-//            returnBookButton.isEnabled = true
-//            reserveBookButton.isEnabled = false
-//        }
     }
     private func updateImage(image: UIImage){
         bookImage.image = image
+        bookImage.alpha = 1
     }
     
     private func setupViews() {
-        [bookImage, authorLabel, publishDateLabel, genreLabel, titleLabel, activityIndicator, descriptionLabel, reserveBookButton, returnBookButton].forEach {
+        [bookImage, authorLabel, publishDateLabel, genreLabel, titleLabel, activityIndicator, descriptionLabel, reserveBookButton, returnBookButton, notAvailableLabel].forEach {
             self.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -277,6 +275,11 @@ class DetailsView: UIView {
         returnBookButton.topAnchor.constraint(equalTo: publishDateLabel.bottomAnchor, constant: 10).isActive = true
         returnBookButton.leadingAnchor.constraint(equalTo: bookImage.trailingAnchor, constant: 20).isActive = true
         returnBookButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        
+        notAvailableLabel.topAnchor.constraint(equalTo: publishDateLabel.bottomAnchor, constant: 10).isActive = true
+        notAvailableLabel.leadingAnchor.constraint(equalTo: bookImage.trailingAnchor, constant: 20).isActive = true
+        notAvailableLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        notAvailableLabel.heightAnchor.constraint(equalToConstant: 35).isActive = true
         
         descriptionLabel.topAnchor.constraint(equalTo: bookImage.bottomAnchor, constant: 50).isActive = true
         descriptionLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true

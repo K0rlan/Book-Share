@@ -26,8 +26,6 @@ class DetailsViewController: UIViewController {
         return view
     }()
     
-    
-    
     lazy var separatorView: UIView = {
         let view = UIView()
         return view
@@ -84,14 +82,11 @@ class DetailsViewController: UIViewController {
         navigationController?.navigationBar.backgroundColor = Constants.gray
         navigationController?.navigationBar.barTintColor = .orange
         
-        //        navigationController?.navigationBar.isHidden = false
         let backButton = UIBarButtonItem()
         backButton.title = "Back"
         self.navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
         
         navigationController?.navigationBar.tintColor = Constants.orange
-        
-        //        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: appLabel)
         navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: notificationButton), UIBarButtonItem(customView: separatorViewForNavBar),UIBarButtonItem(customView: nightButton)]
     }
     

@@ -43,12 +43,7 @@ enum ViewData {
         let sort: Int
         let enabled: Bool?
     }
-    
-    struct BooksImages: Decodable {
-        var id: Int
-        var image: Data?
-    }
-    
+
     struct RentsData: Decodable {
         let id: Int
         let user_id: String

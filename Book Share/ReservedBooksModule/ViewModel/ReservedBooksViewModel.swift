@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import Moya
+import Griffon_ios_spm
 
 protocol ReservedBooksViewModelProtocol {
     var updateViewData: ((ReservedBooksViewData)->())? { get set }
@@ -14,26 +16,56 @@ protocol ReservedBooksViewModelProtocol {
 
 final class ReservedBooksViewModel: ReservedBooksViewModelProtocol{
     var updateViewData: ((ReservedBooksViewData) -> ())?
+    let provider = MoyaProvider<APIService>()
+    let provide = MoyaProvider<APIImage>()
     
-    
-    var books = [ReservedBooksViewData.Data(image: Constants.book!, title: "Pride and Prejudice", author: "Jane Austin", publishDate: "23.22.1923", genre: "Classic"), ReservedBooksViewData.Data(image: Constants.book!, title: "Lol", author: "Jane Austin", publishDate: "23.22.1923", genre: "Classic"), ReservedBooksViewData.Data(image: Constants.book!, title: "Pride and Prejudice", author: "Jane Austin", publishDate: "23.22.1923", genre: "Classic"), ReservedBooksViewData.Data(image: Constants.book!, title: "Pride and Prejudice", author: "Jane Austin", publishDate: "23.22.1923", genre: "Classic"), ReservedBooksViewData.Data(image: Constants.book!, title: "Pride and Prejudice", author: "Jane Austin", publishDate: "23.22.1923", genre: "Classic"), ReservedBooksViewData.Data(image: Constants.book!, title: "Koko", author: "Jane Austin", publishDate: "23.22.1923", genre: "Classic"), ReservedBooksViewData.Data(image: Constants.book!, title: "Pride and Prejudice", author: "Jane Austin", publishDate: "23.22.1923", genre: "Classic"), ReservedBooksViewData.Data(image: Constants.book!, title: "Pride and Prejudice", author: "Jane Austin", publishDate: "23.22.1923", genre: "Classic"), ReservedBooksViewData.Data(image: Constants.book!, title: "Koko", author: "Jane Austin", publishDate: "23.22.1923", genre: "Classic")]
     
     init() {
         updateViewData?(.initial)
     }
     
+    var images = [BooksImages]()
+    
     func startFetch() {
         updateViewData?(.loading)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-            guard let booksData = self?.books else { return }
-            self?.updateViewData?(.success(booksData))
+        provider.request(.getUserBooks(userID: "\(Griffon.shared.getUserProfiles()!.id)")) { [weak self] (result) in
+            switch result{
+            case .success(let response):
+                do {
+                    let readingResponse = try JSONDecoder().decode([ReservedBooksViewData.RentsData].self, from: response.data)
+                    self?.fetchImages(books: readingResponse)
+                    self?.updateViewData?(.success(readingResponse))
+                } catch let error {
+                    print("Error in parsing: \(error)")
+                    self?.updateViewData?(.failure(error))
+                }
+            case .failure(let error):
+                let requestError = (error as NSError)
+                print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
+                self?.updateViewData?(.failure(error))
+            }
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 6) { [weak self] in
-            self?.updateViewData?(.failure)
+    }
+    
+    func fetchImages(books: [ReservedBooksViewData.RentsData]){
+        DispatchQueue.main.async { [weak self] in
+            for book in books{
+                do {
+                    try dbQueue.read { db in
+                        let draft = try BooksImages.filterById(id: book.book_id).fetchAll(db)
+                        print(draft)
+                        self?.images.append(contentsOf: draft)
+                        self?.updateViewData?(.successImage(self!.images))
+                    }
+                } catch {
+                    print("\(error)")
+                }
+            }
+        }
     }
     
     
-}
+
 }

@@ -14,6 +14,7 @@ enum APIService {
     case getRent
     case getBook(bookID: Int)
     case getImage(imageName: String)
+    case getUserBooks(userID: String)
     case postBook(book: ViewData.BooksData)
     case postRent(rent: ViewData.RentData)
     case deleteRent(rentId: Int)
@@ -42,12 +43,14 @@ extension APIService: TargetType {
             return "\(imageName)"
         case .deleteRent(let rentId):
             return "api/rent/\(rentId)"
+        case .getUserBooks(let userID):
+            return "api/rent/reading/\(userID)"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .getBooks, .getGenres, .getBook, .getRent, .getImage:
+        case .getBooks, .getGenres, .getBook, .getRent, .getImage, .getUserBooks:
             return .get
         case .postBook, .postRent:
             return .post
@@ -64,7 +67,7 @@ extension APIService: TargetType {
     
     var task: Task {
         switch self {
-        case .getBooks, .getGenres, .getBook, .getRent, .getImage, .deleteRent:
+        case .getBooks, .getGenres, .getBook, .getRent, .getImage, .deleteRent, .getUserBooks:
             return .requestPlain
         case .postBook(let book):
             let params: [String : Any] = [
