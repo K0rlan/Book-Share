@@ -88,6 +88,7 @@ final class MainViewModel: MainViewModelProtocol{
                             let book = ViewImages.BooksImages(id: book.id, image: img)
                             self?.images.append(book)
                             self?.updateImages?(.successImage(self!.images))
+                            self?.insertIntoDBImages(books: book)
                         } catch let error {
                             print("Error in parsing: \(error)")
                             self?.updateViewData?(.failure(error))
@@ -127,10 +128,26 @@ final class MainViewModel: MainViewModelProtocol{
                 try db.execute(sql: "DELETE FROM genres")
                 try db.execute(sql: "DELETE FROM books")
                 try db.execute(sql: "DELETE FROM bookRent")
+                try db.execute(sql: "DELETE FROM booksImages")
             }
         } catch {
             print("\(error)")
         }
+    }
+    
+    func insertIntoDBImages(books: ViewImages.BooksImages){
+            do {
+                try dbQueue.write { db in
+                    var books = BooksImages(
+                        id: books.id,
+                        image: books.image
+                    )
+                    try! books.insert(db)
+                }
+            } catch {
+                print("\(error)")
+            }
+
     }
     
     func insertIntoDBBooks(books: [ViewData.BooksData]){
@@ -153,7 +170,6 @@ final class MainViewModel: MainViewModelProtocol{
                 print("\(error)")
             }
         }
-        
     }
     
     func insertIntoDBRents(rents: [ViewData.RentsData]){
@@ -175,6 +191,7 @@ final class MainViewModel: MainViewModelProtocol{
                 print("\(error)")
             }
         }
+        
     }
     func insertIntoDBAll(){
         do {

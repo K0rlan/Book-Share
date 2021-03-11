@@ -18,7 +18,6 @@ class MoreViewController: UIViewController {
     lazy var nightButton: UIButton = {
         let button = UIButton()
         button.setImage(Constants.moon, for: .normal)
-        button.addTarget(self, action: #selector(changeMode), for: .touchUpInside)
         return button
     }()
     
@@ -46,12 +45,6 @@ class MoreViewController: UIViewController {
         moreViewModel.startFetch()
         updateView()
         setupViews()
-//        if UserDefaults.standard.bool(forKey: "nightMode"){
-//            overrideUserInterfaceStyle = .light
-//        }else{
-//            overrideUserInterfaceStyle = .dark
-//        }
-//
     }
 
     private func updateView(){
@@ -84,19 +77,6 @@ class MoreViewController: UIViewController {
         separatorView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.12).isActive = true
     }
     
-    @objc func changeMode(_ sender: UIButton){
-        if UserDefaults.standard.bool(forKey: "nightMode"){
-        UserDefaults.standard.setValue(false, forKey: "nightMode")
-            print(UserDefaults.standard.bool(forKey: "nightMode"))
-            overrideUserInterfaceStyle = .light
-        
-        }else{
-            UserDefaults.standard.setValue(true, forKey: "nightMode")
-            print(UserDefaults.standard.bool(forKey: "nightMode"))
-            overrideUserInterfaceStyle = .dark
-            
-        }
-    }
     
     private func setNavigationBar(){
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)

@@ -53,7 +53,7 @@ class MoreView: UIView{
     
     var filteredData: [Books] = []
     var books: [Books] = []
-    var images = [MoreModel.BooksImages]()
+    var images = [BooksImages]()
     var delegate: MoreViewProtocol!
     
     override init(frame: CGRect  = .zero) {

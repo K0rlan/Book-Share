@@ -50,6 +50,13 @@ class DatabaseManager {
             }
         }
         
+        migrator.registerMigration("createBooksImages") { db in
+            try db.create(table: "booksImages") { t in
+                t.column("id", .integer).notNull()
+                t.column("image", .blob)
+            }
+        }
+        
         migrator.registerMigration("createBookDetails") { db in
             try db.create(table: "bookDetails") { t in
                 t.column("id", .integer).notNull()

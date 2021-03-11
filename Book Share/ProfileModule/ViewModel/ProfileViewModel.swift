@@ -29,8 +29,6 @@ final class ProfileViewModel: ProfileViewModelProtocol{
     
     func startFetch() {
         updateViewData?(.loading)
-        
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             guard let user = self?.user else { return }
             self?.updateViewData?(.success(user))
