@@ -1,25 +1,24 @@
 //
-//  DetailsViewController.swift
-//  Dar Library
+//  EditViewController.swift
+//  Book Share
 //
-//  Created by Korlan Omarova on 28.02.2021.
+//  Created by Korlan Omarova on 12.03.2021.
 //
 
+import Foundation
 import UIKit
 
-class DetailsViewController: UIViewController {
+class EditViewController: UIViewController {
     
     lazy var trashButton: UIButton = {
         let button = UIButton()
         button.setImage(Constants.trash, for: .normal)
-        button.addTarget(self, action: #selector(deleteButtonPressed), for: .touchUpInside)
         return button
     }()
     
     lazy var editButton: UIButton = {
         let button = UIButton()
         button.setImage(Constants.edit, for: .normal)
-        button.addTarget(self, action: #selector(editButtonPressed), for: .touchUpInside)
         return button
     }()
     
@@ -32,44 +31,29 @@ class DetailsViewController: UIViewController {
         let view = UIView()
         return view
     }()
-    
-    lazy var detailsView = DetailsView()
-    
-    var detailsViewModel: DetailsViewModel!
+
+    lazy var editView = EditView()
+
+    var editViewModel: EditViewModel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = Constants.gray
         setNavigationBar()
-        detailsViewModel.getRole()
-        detailsViewModel.startFetch()
-        detailsView.delegate = self
+        editViewModel.startFetch()
+        editView.delegate = self
         setupViews()
         updateView()
     }
     
     private func updateView(){
-        detailsViewModel.updateViewData = { [weak self] viewData in
-            self?.detailsView.bookData = viewData
+        editViewModel.updateViewData = { [weak self] viewData in
+            self?.editView.bookData = viewData
         }
-        detailsViewModel.updateRoles = { [weak self] viewData in
-            self?.detailsView.userRoles = viewData
-        }
-    }
-    @objc func deleteButtonPressed(){
-        detailsViewModel.deleteBook()
-        let mainVC = ModelBuilder.createMain()
-        self.navigationController?.pushViewController(mainVC, animated: true)
-    }
-    
-    
-    @objc func editButtonPressed(){
-        let editVC = ModelBuilder.createEdit(id: detailsViewModel.getBookID())
-        self.navigationController?.pushViewController(editVC, animated: true)
     }
     
     private func setupViews(){
-        [trashButton, editButton, separatorView, detailsView].forEach {
+        [trashButton, editButton, separatorView, editView].forEach {
             self.view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -83,11 +67,11 @@ class DetailsViewController: UIViewController {
         separatorViewForNavBar.widthAnchor.constraint(equalToConstant: 7).isActive = true
         separatorViewForNavBar.heightAnchor.constraint(equalToConstant: 7).isActive = true
         
-        detailsView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
-        detailsView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
-        detailsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
-        
-        separatorView.topAnchor.constraint(equalTo: detailsView.bottomAnchor).isActive = true
+        editView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
+        editView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+        editView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
+
+        separatorView.topAnchor.constraint(equalTo: editView.bottomAnchor).isActive = true
         separatorView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         separatorView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.12).isActive = true
     }
@@ -107,28 +91,14 @@ class DetailsViewController: UIViewController {
         navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: trashButton), UIBarButtonItem(customView: separatorViewForNavBar),UIBarButtonItem(customView: editButton)]
     }
     
-    
+
     
 }
-extension DetailsViewController: DetailsViewProtocol {
-    func getRole(role: RolesViewData.Roles) {
-        if role.role == "user"{
-            print(role)
-            trashButton.isHidden = true
-            editButton.isHidden = true
-        }
-    }
-    
-    func deleteRentButtonPressed() {
-        detailsViewModel.deleteRent()
-        self.view.window?.rootViewController = TabBar()
-        self.view.window?.makeKeyAndVisible()
-    }
-    
-    func addRentButtonPressed() {
-        detailsViewModel.addRent()
-        self.view.window?.rootViewController = TabBar()
-        self.view.window?.makeKeyAndVisible()
+extension EditViewController: EditViewProtocol {
+    func updateBook(book: EditBook) {
+        editViewModel.putBook(book: book)
+        let mainVC = ModelBuilder.createMain()
+        self.navigationController?.pushViewController(mainVC, animated: true)
     }
     
     

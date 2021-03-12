@@ -38,5 +38,9 @@ extension BookRent: Codable, FetchableRecord, MutablePersistableRecord {
     static func filterByUserID(userId: String, bookId: Int) -> QueryInterfaceRequest<BookRent> {
             return BookRent.filter(Columns.user_id == userId && Columns.book_id == bookId)
     }
+    
+    static func filterByUser(userId: String) -> QueryInterfaceRequest<BookRent> {
+            return BookRent.filter(Columns.user_id == userId)
+    }
 
 }
