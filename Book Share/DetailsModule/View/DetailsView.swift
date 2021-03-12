@@ -12,6 +12,8 @@ protocol DetailsViewProtocol {
     func addRentButtonPressed()
     func deleteRentButtonPressed()
     func getRole(role: RolesViewData.Roles)
+    func deleteComment(id: Int)
+    func updateComment(id: Int, text: String)
 }
 
 class DetailsView: UIView {
@@ -160,6 +162,7 @@ class DetailsView: UIView {
     }
     var delegate: DetailsViewProtocol!
     var comments = [BooksComments]()
+    var role: RolesViewData.Roles!
     
     override init(frame: CGRect  = .zero) {
         super .init(frame: frame)
@@ -255,6 +258,7 @@ class DetailsView: UIView {
         switch userRoles {
         case .success(let success):
             delegate?.getRole(role: success)
+            role = success
             print(success)
         case .failure(let err):
             print(err)
@@ -354,9 +358,16 @@ extension DetailsView: UITableViewDelegate, UITableViewDataSource {
    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "comments", for: indexPath) as! CommentsTableViewCell
+        cell.delegate = self
         cell.backgroundColor = Constants.gray
         cell.userNameLabel.text = comments[indexPath.row].user_name
-        cell.commentLabel.text = comments[indexPath.row].text
+        cell.commentTextField.text = comments[indexPath.row].text
+        cell.contentView.isUserInteractionEnabled = false
+        cell.selectionStyle = .none
+        cell.getId(id: comments[indexPath.row].id)
+        if role.role == "admin" {
+            cell.admin()
+        }
         return cell
     }
    
@@ -365,4 +376,17 @@ extension DetailsView: UITableViewDelegate, UITableViewDataSource {
     }
     
 
+}
+extension DetailsView: CommentsTableViewCellProtocol {
+    func deleteButtonPressed(id: Int) {
+        delegate.deleteComment(id: id)
+        tableView.reloadData()
+    }
+    
+    func updateButtonPressed(id: Int, text: String) {
+        delegate.updateComment(id: id, text: text)
+        tableView.reloadData()
+    }
+    
+    
 }

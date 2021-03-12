@@ -114,6 +114,16 @@ class DetailsViewController: UIViewController {
     
 }
 extension DetailsViewController: DetailsViewProtocol {
+    func deleteComment(id: Int) {
+        detailsViewModel.deleteComment(id: id)
+        detailsViewModel.getComments()
+    }
+    
+    func updateComment(id: Int, text: String) {
+        detailsViewModel.putComment(id: id, text: text)
+        detailsViewModel.getComments()
+    }
+    
     func getRole(role: RolesViewData.Roles) {
         if role.role == "user"{
             print(role)

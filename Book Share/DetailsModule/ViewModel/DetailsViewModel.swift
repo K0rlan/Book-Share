@@ -48,6 +48,19 @@ class DetailsViewModel: DetailsViewModelProtocol{
         }
     }
     
+    func deleteComment(id: Int){
+        provider.request(.deleteComment(id: id)) { [weak self] (result) in
+            switch result{
+            case .success(let response):
+                    print(response)
+            case .failure(let error):
+                let requestError = (error as NSError)
+                print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
+                
+            }
+        }
+    }
+    
     func fetchImages(image: String?){
         if let img = image{
             provide.request(.getImage(imageName: img)) { [weak self] (result) in
@@ -71,7 +84,6 @@ class DetailsViewModel: DetailsViewModelProtocol{
     
     func startFetch() {
         getComments()
-        refreshTables()
         provider.request(.getBook(bookID: bookID)) { [weak self] (result) in
             switch result{
             case .success(let response):
@@ -95,6 +107,7 @@ class DetailsViewModel: DetailsViewModelProtocol{
     }
     
     func getComments() {
+        refreshComments()
         provider.request(.getComments) { [weak self] (result) in
             switch result{
             case .success(let response):
@@ -177,6 +190,17 @@ class DetailsViewModel: DetailsViewModelProtocol{
             try dbQueue.write { db in
                 try db.execute(sql: "DELETE FROM bookRent")
                 try db.execute(sql: "DELETE FROM bookDetails")
+                try db.execute(sql: "DELETE FROM booksComments")
+            }
+        } catch {
+            print("\(error)")
+        }
+        
+    }
+    
+    func refreshComments(){
+        do {
+            try dbQueue.write { db in
                 try db.execute(sql: "DELETE FROM booksComments")
             }
         } catch {
@@ -348,6 +372,19 @@ class DetailsViewModel: DetailsViewModelProtocol{
         let comment = CommentResponse.CreateData(user_id: Utils.getUserID(), user_contact: (Griffon.shared.getUserProfiles()?.email)!, user_name: "Koko", book_id: bookID, text: text)
         postComment(comment: comment)
         
+    }
+    
+    func putComment(id: Int, text: String){
+        provider.request(.updateComment(id: id, text: text)) { [weak self] (result) in
+            switch result{
+            case .success(let response):
+                print(response)
+            case .failure(let error):
+                let requestError = (error as NSError)
+                print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
+                
+            }
+        }
     }
     
     func postComment(comment: CommentResponse.CreateData){
