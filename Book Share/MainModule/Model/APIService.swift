@@ -23,6 +23,8 @@ enum APIService {
     case deleteBook(id: Int)
     case postComment(comment: CommentResponse.CreateData)
     case getComments
+    case updateComment(id: Int, text: String)
+    case deleteComment(id: Int)
 }
 
 extension APIService: TargetType {
@@ -55,6 +57,10 @@ extension APIService: TargetType {
             return "api/books/\(id)"
         case .postComment, .getComments:
             return "api/comments"
+        case .deleteComment(let id):
+            return "api/comments/\(id)"
+        case .updateComment(let id, let _):
+            return "api/comments/\(id)"
         }
     }
     
@@ -64,9 +70,9 @@ extension APIService: TargetType {
             return .get
         case .postBook, .postRent, .postComment:
             return .post
-        case .deleteRent, .deleteBook:
+        case .deleteRent, .deleteBook, .deleteComment:
             return .delete
-        case .updateRent, .updateBook:
+        case .updateRent, .updateBook, .updateComment:
             return .put
         }
     }
@@ -77,7 +83,7 @@ extension APIService: TargetType {
     
     var task: Task {
         switch self {
-        case .getBooks, .getGenres, .getBook, .getRent, .getImage, .deleteRent, .getUserBooks, .deleteBook, .getComments:
+        case .getBooks, .getGenres, .getBook, .getRent, .getImage, .deleteRent, .getUserBooks, .deleteBook, .getComments, .deleteComment:
             return .requestPlain
         case .postBook(let book):
             let params: [String : Any] = [
@@ -127,6 +133,11 @@ extension APIService: TargetType {
                 "publish_date" : book.publish_date,
                 "enabled" : book.enabled,
                 "genre_id" : book.genre_id ?? nil,
+            ]
+            return .requestParameters(parameters: params, encoding: JSONEncoding.default)
+        case .updateComment(let _, let text):
+            let params: [String : Any] = [
+                "text" : text
             ]
             return .requestParameters(parameters: params, encoding: JSONEncoding.default)
             
