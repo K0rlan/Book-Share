@@ -11,7 +11,7 @@ import UIKit
 enum ReservedBooksViewData {
     case initial
     case loading
-    case success([RentsData])
+    case success([Books])
     case successImage([BooksImages])
     case failure(Error)
     

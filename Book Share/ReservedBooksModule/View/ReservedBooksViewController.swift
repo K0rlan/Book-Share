@@ -16,18 +16,12 @@ class ReservedBooksViewController: UIViewController {
         return label
     }()
     
-    lazy var notificationButton: UIButton = {
+    lazy var userBookRequest: UIButton = {
         let button = UIButton()
-        button.setImage(Constants.notification, for: .normal)
+        button.setImage(Constants.lamp, for: .normal)
         return button
     }()
     
-    lazy var nightButton: UIButton = {
-        let button = UIButton()
-        button.setImage(Constants.moon, for: .normal)
-//        button.addTarget(self, action: #selector(changeMode), for: .touchUpInside)
-        return button
-    }()
     
     lazy var separatorViewForNavBar: UIView = {
         let view = UIView()
@@ -43,18 +37,18 @@ class ReservedBooksViewController: UIViewController {
     
     private var reservedBooksViewModel = ReservedBooksViewModel()
     
+    var userRole: RolesViewData.Roles!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = Constants.gray
         setNavigationBar()
+        reservedBooksViewModel.getRole()
         reservedBooksViewModel.startFetch()
+        reservedBooksView.delegate = self
         updateView()
         setupViews()
-//        if UserDefaults.standard.bool(forKey: "nightMode"){
-//            overrideUserInterfaceStyle = .light
-//        }else{
-//            overrideUserInterfaceStyle = .dark
-//        }
+
         if Utils.isExpDate(){
             authViaGriffon()
         }
@@ -70,10 +64,13 @@ class ReservedBooksViewController: UIViewController {
         reservedBooksViewModel.updateViewData = { [weak self] reservedBooksData in
             self?.reservedBooksView.reservedBooksData = reservedBooksData
         }
+        reservedBooksViewModel.updateRoles = { [weak self] viewData in
+            self?.reservedBooksView.userRoles = viewData
+        }
     }
     
     private func setupViews(){
-        [appLabel, notificationButton, nightButton, separatorView, reservedBooksView].forEach {
+        [appLabel, userBookRequest, separatorView, reservedBooksView].forEach {
             self.view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -81,11 +78,8 @@ class ReservedBooksViewController: UIViewController {
         appLabel.widthAnchor.constraint(equalToConstant: 164).isActive = true
         appLabel.heightAnchor.constraint(equalToConstant: 34).isActive = true
         
-        notificationButton.widthAnchor.constraint(equalToConstant: 34).isActive = true
-        notificationButton.heightAnchor.constraint(equalToConstant: 34).isActive = true
-        
-        nightButton.widthAnchor.constraint(equalToConstant: 34).isActive = true
-        nightButton.heightAnchor.constraint(equalToConstant: 34).isActive = true
+        userBookRequest.widthAnchor.constraint(equalToConstant: 34).isActive = true
+        userBookRequest.heightAnchor.constraint(equalToConstant: 34).isActive = true
         
         separatorViewForNavBar.widthAnchor.constraint(equalToConstant: 7).isActive = true
         separatorViewForNavBar.heightAnchor.constraint(equalToConstant: 7).isActive = true
@@ -98,21 +92,6 @@ class ReservedBooksViewController: UIViewController {
         separatorView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         separatorView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.12).isActive = true
     }
-//
-//    @objc func changeMode(_ sender: UIButton){
-//        if UserDefaults.standard.bool(forKey: "nightMode"){
-//        UserDefaults.standard.setValue(false, forKey: "nightMode")
-//            print(UserDefaults.standard.bool(forKey: "nightMode"))
-//            overrideUserInterfaceStyle = .light
-//
-//        }else{
-//            UserDefaults.standard.setValue(true, forKey: "nightMode")
-//            print(UserDefaults.standard.bool(forKey: "nightMode"))
-//            overrideUserInterfaceStyle = .dark
-//
-//        }
-//    }
-//
     private func setNavigationBar(){
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
@@ -121,7 +100,7 @@ class ReservedBooksViewController: UIViewController {
         navigationController?.navigationBar.barTintColor = .orange
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: appLabel)
-        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: notificationButton), UIBarButtonItem(customView: separatorViewForNavBar),UIBarButtonItem(customView: nightButton)]
+        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: separatorViewForNavBar),UIBarButtonItem(customView: userBookRequest)]
     }
 
     
@@ -135,4 +114,16 @@ extension ReservedBooksViewController: SignInViewControllerDelegate {
     func successfullSignUp(_ ctrl: SignInViewController) {
         self.dismiss(animated: true)
     }
+}
+
+extension ReservedBooksViewController: ReservedBooksViewProtocol {
+    func getRole(role: RolesViewData.Roles) {
+        print("koko\(role.role)")
+        if role.role == "user"{
+            userBookRequest.isHidden = true
+        }else {
+            userBookRequest.isHidden = false
+        }
+    }
+ 
 }

@@ -1,13 +1,13 @@
 //
-//  DetailsViewController.swift
-//  Dar Library
+//  DetailsAdminController.swift
+//  Book Share
 //
-//  Created by Korlan Omarova on 28.02.2021.
+//  Created by Korlan Omarova on 12.03.2021.
 //
 
 import UIKit
 
-class DetailsViewController: UIViewController {
+class DetailsAdminController: UIViewController {
     
     lazy var trashButton: UIButton = {
         let button = UIButton()
@@ -33,17 +33,15 @@ class DetailsViewController: UIViewController {
         return view
     }()
     
-    lazy var detailsView = DetailsView()
+    lazy var detailsView = DetailsAdminView()
     
-    var detailsViewModel: DetailsViewModel!
+    var detailsViewModel: DetailsAdminViewModel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = Constants.gray
         setNavigationBar()
-        detailsViewModel.getRole()
         detailsViewModel.startFetch()
-        detailsView.delegate = self
         setupViews()
         updateView()
     }
@@ -52,10 +50,8 @@ class DetailsViewController: UIViewController {
         detailsViewModel.updateViewData = { [weak self] viewData in
             self?.detailsView.bookData = viewData
         }
-        detailsViewModel.updateRoles = { [weak self] viewData in
-            self?.detailsView.userRoles = viewData
-        }
     }
+    
     @objc func deleteButtonPressed(){
         detailsViewModel.deleteBook()
         let mainVC = ModelBuilder.createMain()
@@ -107,29 +103,7 @@ class DetailsViewController: UIViewController {
         navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: trashButton), UIBarButtonItem(customView: separatorViewForNavBar),UIBarButtonItem(customView: editButton)]
     }
     
-    
-    
-}
-extension DetailsViewController: DetailsViewProtocol {
-    func getRole(role: RolesViewData.Roles) {
-        if role.role == "user"{
-            print(role)
-            trashButton.isHidden = true
-            editButton.isHidden = true
-        }
-    }
-    
-    func deleteRentButtonPressed() {
-        detailsViewModel.deleteRent()
-        self.view.window?.rootViewController = TabBar()
-        self.view.window?.makeKeyAndVisible()
-    }
-    
-    func addRentButtonPressed() {
-        detailsViewModel.addRent()
-        self.view.window?.rootViewController = TabBar()
-        self.view.window?.makeKeyAndVisible()
-    }
-    
+
     
 }
+

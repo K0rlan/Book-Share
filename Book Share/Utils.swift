@@ -21,8 +21,8 @@ class Utils {
             let payloadData = Data(base64Encoded: payload64,
                                    options:.ignoreUnknownCharacters)!
             let payload = String(data: payloadData, encoding: .utf8)!
-//            print("lol\(payload)")
-            print("lol\(Griffon.shared.getUserProfiles())")
+            print("lol\(payload)")
+//            print("lol\(Griffon.shared.getUserProfiles())")
             
 //            print("lol\(Griffon.shared.getIdTokenFromKeyChain())")
             let json = try! JSONSerialization.jsonObject(with: payloadData, options: []) as! [String:Any]
@@ -37,4 +37,21 @@ class Utils {
         return false
     }
 
+    static func getUserID() -> String{
+        let idToken = Griffon.shared.idToken
+        if let token = idToken {
+            var payload64 = token.components(separatedBy: ".")[1]
+            
+            while payload64.count % 4 != 0 {
+                payload64 += "="
+            }
+            let payloadData = Data(base64Encoded: payload64,
+                                   options:.ignoreUnknownCharacters)!
+            let json = try! JSONSerialization.jsonObject(with: payloadData, options: []) as! [String:Any]
+            let sub = json["sub"] as! String
+            
+            return sub
+        }
+        return ""
+    }
 }

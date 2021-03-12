@@ -10,6 +10,7 @@ import UIKit
 protocol BooksViewProtocol {
     func getBooksID(id: Int)
     func moreBooks(id: Int)
+    func getRole(role: RolesViewData.Roles)
 }
 
 class BooksView: UIView{
@@ -62,17 +63,24 @@ class BooksView: UIView{
         }
     }
     
+    var userRoles: RolesViewData = .initial{
+        didSet{
+            setNeedsLayout()
+        }
+    }
+    
     var books = [ViewData.BooksData]()
     var genres = [Genres]()
     var keysArray = [String]()
     var delegateBooksViewProtocol: BooksViewProtocol!
     var images = [BooksImages]()
     var rents = [ViewData.RentsData]()
-    
     var arr = [ViewImages.BooksImages]()
     
     override init(frame: CGRect  = .zero) {
         super .init(frame: frame)
+        tableView.reloadData()
+        collectionView.reloadData()
         setupViews()     
     }
     
@@ -119,6 +127,17 @@ class BooksView: UIView{
             activityIndicator.isHidden = true
         case .failure:
             activityIndicator.isHidden = true
+        }
+        
+        switch userRoles {
+        case .success(let success):
+            delegateBooksViewProtocol.getRole(role: success)
+        case .failure(let err):
+            print(err)
+        case .initial:
+            print("")
+        case .loading:
+            print("")
         }
     }
     
@@ -167,6 +186,10 @@ extension BooksView: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         320
+    }
+    
+    func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
+        tableView.reloadData()
     }
 }
 extension BooksView: BookTableViewCellDelegate{

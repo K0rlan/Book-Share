@@ -1,8 +1,8 @@
 //
-//  DetailsViewModel.swift
-//  Dar Library
+//  DetailsAdminViewModel.swift
+//  Book Share
 //
-//  Created by Korlan Omarova on 28.02.2021.
+//  Created by Korlan Omarova on 12.03.2021.
 //
 
 import Foundation
@@ -10,18 +10,19 @@ import Moya
 import Griffon_ios_spm
 import FirebaseFirestore
 
-protocol DetailsViewModelProtocol {
+protocol DetailsAdminViewModelProtocol {
     var updateViewData: ((DetailsData)->())? { get set }
     var updateRoles: ((RolesViewData)->())? { get set }
     func startFetch()
 }
 
-class DetailsViewModel: DetailsViewModelProtocol{
+class DetailsAdminViewModel: DetailsViewModelProtocol{
     var updateViewData: ((DetailsData) -> ())?
-    var updateRoles: ((RolesViewData)->())?
+    var updateRoles: ((RolesViewData)->())? 
     let bookID: Int
     let provider = MoyaProvider<APIService>()
     let provide = MoyaProvider<APIImage>()
+    
     init(bookID: Int) {
         updateViewData?(.initial)
         updateRoles?(.initial)
@@ -95,55 +96,17 @@ class DetailsViewModel: DetailsViewModelProtocol{
         do {
             try dbQueue.read { [weak self] db in
                 let bookIsTaken = try BookRent.filterByBookID(id: self!.bookID).fetchAll(db)
-                let bookIsTakenByThisUser = try BookRent.filterByUserID(userId: Griffon.shared.getUserProfiles()!.id, bookId: self!.bookID).fetchAll(db)
-                if !bookIsTakenByThisUser.isEmpty {
-                    self?.updateViewData?(.bookStatus(BookStatus.canReturnBook))
-                } else if !bookIsTaken.isEmpty, bookIsTakenByThisUser.isEmpty {
-                    self?.updateViewData?(.bookStatus(BookStatus.notAvailable))
-                } else {
+                if bookIsTaken.isEmpty {
                     self?.updateViewData?(.bookStatus(BookStatus.available))
+                } else {
+                    self?.updateViewData?(.bookStatus(BookStatus.notAvailable))
+                    
                 }
             }
         } catch {
             print("\(error)")
         }
         }
-    }
-    
-    func addRent(){
-        let calendar = Calendar.current
-        let addTwoWeekToCurrentDate = calendar.date(byAdding: .weekOfYear, value: 2, to: Date())
-        var book: BookDetails!
-        do {
-            try dbQueue.read { db in
-                let draft = try BookDetails.fetchAll(db)
-                book = draft.first!
-            }
-        } catch {
-            print("\(error)")
-        }
-        let rent = ViewData.RentData(user_id: "\(Griffon.shared.getUserProfiles()!.id)", user_contact: "\((Griffon.shared.getUserProfiles()!.email)!)", user_name: "nil", book_id: bookID, start_date: "\(Date())", end_date: "\(Date())", book: book!)
-        provider.request(.postRent(rent: rent)) { [weak self] (result) in
-            switch result{
-            case .success(let response):
-                do {
-                    if let jsonResponse = try JSONSerialization.jsonObject(with: response.data, options: []) as? [String: Any]{
-                        print(jsonResponse)
-                    }
-
-                } catch let error {
-                    print("Error in parsing: \(error)")
-                    self?.updateViewData?(.failure(error))
-                }
-            case .failure(let error):
-                let requestError = (error as NSError)
-                print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
-                self?.updateViewData?(.failure(error))
-            }
-        }
-        refreshTables()
-        fetchRents()
-        putBook(id: bookID, enabled: false)
     }
     
     func refreshTables(){
@@ -158,47 +121,7 @@ class DetailsViewModel: DetailsViewModelProtocol{
         
     }
     
-    func deleteRent(){
-        var rentID = Int()
-        do {
-            try dbQueue.read { db in
-                let draft = try BookRent.filterByBookID(id: self.bookID).fetchAll(db)
-                if !draft.isEmpty{
-                    rentID = draft.first!.id
-                    print(rentID)}
-            }
-        } catch {
-            print("\(error)")
-        }
-        provider.request(.deleteRent(rentId: rentID)) { [weak self] (result) in
-            switch result{
-            case .success(let response):
-                do {
-                    if let jsonResponse = try JSONSerialization.jsonObject(with: response.data, options: []) as? [String: String]{
-                        print(jsonResponse)
-                    }
-                    
-                } catch let error {
-                    print("Error in parsing: \(error)")
-                    self?.updateViewData?(.failure(error))
-                }
-            case .failure(let error):
-                let requestError = (error as NSError)
-                print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
-                self?.updateViewData?(.failure(error))
-            }
-        }
-        do {
-            try dbQueue.write { db in
-                try db.execute(sql: "DELETE FROM bookRent WHERE id = \(rentID)")
-            }
-        } catch {
-            print("\(error)")
-        }
-        refreshTables()
-        fetchRents()
-        putBook(id: bookID, enabled: true)
-    }
+    
     func fetchRents(){
         provider.request(.getRent) { [weak self] (result) in
             switch result{
@@ -237,6 +160,14 @@ class DetailsViewModel: DetailsViewModelProtocol{
                 print("\(error)")
             }
         }
+        do {
+            try dbQueue.read { db in
+                let draft = try BookRent.fetchAll(db)
+               print("koko\(draft)")
+            }
+        } catch {
+            print("\(error)")
+        }
     }
     func insertIntoDBBook(book: DetailsData.Data){
         do {
@@ -257,35 +188,17 @@ class DetailsViewModel: DetailsViewModelProtocol{
         } catch {
             print("\(error)")
         }
+        do {
+            try dbQueue.read { db in
+                let draft = try BookDetails.fetchAll(db)
+               print("koko\(draft)")
+            }
+        } catch {
+            print("\(error)")
+        }
         getBookStatus()
         
     }
-    func putBook(id: Int, enabled: Bool){
-        provider.request(.updateRent(id: id, enabled: enabled)) { [weak self] (result) in
-            switch result{
-            case .success(let response):
-                print(response)
-            case .failure(let error):
-                let requestError = (error as NSError)
-                print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
-                
-            }
-        }
-    }
-    func getRole(){
-        let db = Firestore.firestore()
-        let userID = Utils.getUserID()
-        db.collection("roles").whereField("user_id", isEqualTo: userID).getDocuments() { [weak self] (querySnapshot, err) in
-            if let err = err {
-                print("Error getting documents: \(err)")
-            } else {
-                for document in querySnapshot!.documents {
-                    self?.updateRoles?(.success(RolesViewData.Roles(dictionary: document.data())))
-                }
-               
-            }
-        }
-        
-    }
+    
     
 }

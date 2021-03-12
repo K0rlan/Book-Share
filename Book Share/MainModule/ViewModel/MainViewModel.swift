@@ -8,16 +8,21 @@
 import Foundation
 import Moya
 import UIKit
+import FirebaseFirestore
+import Griffon_ios_spm
 
 protocol MainViewModelProtocol {
     var updateViewData: ((ViewData)->())? { get set }
     var updateImages: ((ViewImages)->())? { get set }
+    var updateRoles: ((RolesViewData)->())? { get set }
     func startFetch()
 }
 
 final class MainViewModel: MainViewModelProtocol{
     var updateViewData: ((ViewData) -> ())?
     var updateImages: ((ViewImages)->())?
+    var updateRoles: ((RolesViewData)->())?
+    
     let provider = MoyaProvider<APIService>()
     var images = [ViewImages.BooksImages]()
     
@@ -25,11 +30,13 @@ final class MainViewModel: MainViewModelProtocol{
     init() {
         updateViewData?(.initial)
         updateImages?(.initial)
+        updateRoles?(.initial)
     }
     
     func startFetch() {
         updateViewData?(.loading)
         updateImages?(.loading)
+        updateRoles?(.loading)
         refreshTables()
         fetchBooks()
         fetchRents()
@@ -235,6 +242,53 @@ final class MainViewModel: MainViewModelProtocol{
                 }
             } catch {
                 print("\(error)")
+            }
+        }
+    }
+    
+    func getRole(){
+        let db = Firestore.firestore()
+        let userID = Utils.getUserID()
+        db.collection("roles").whereField("user_id", isEqualTo: userID).getDocuments() { [weak self] (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            } else {
+                for document in querySnapshot!.documents {
+                    self?.updateRoles?(.success(RolesViewData.Roles(dictionary: document.data())))
+                }
+               
+            }
+        }
+        
+    }
+    
+    func setRole() {
+        let userID = Utils.getUserID()
+        let db = Firestore.firestore()
+        db.collection("roles").addDocument(data: [
+            "user_id": userID,
+            "role": "user"
+        ]) { err in
+            if let err = err {
+                print("Error saving user data: \(err)")
+            }
+        }
+    }
+    
+    func logout() {
+        Griffon.shared.cleanKeyChain()
+        Griffon.shared.signInModel = nil
+        Griffon.shared.signUpModel = nil
+    }
+    
+    func requestForBook(title: String, author: String){
+        let db = Firestore.firestore()
+        db.collection("bookRequest").addDocument(data: [
+            "author": author,
+            "title": title
+        ]) { err in
+            if let err = err {
+                print("Error saving user data: \(err)")
             }
         }
     }
