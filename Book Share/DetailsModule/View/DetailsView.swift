@@ -122,6 +122,18 @@ class DetailsView: UIView {
         return label
     }()
     
+    lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.backgroundColor = Constants.gray
+        tableView.showsVerticalScrollIndicator = false
+        tableView.register(CommentsTableViewCell.self, forCellReuseIdentifier: "comments")
+        tableView.layer.cornerRadius = 14
+        tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
+        return tableView
+    }()
+    
     let activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView(style: .large)
         activityIndicator.color = .gray
@@ -147,6 +159,7 @@ class DetailsView: UIView {
         }
     }
     var delegate: DetailsViewProtocol!
+    var comments = [BooksComments]()
     
     override init(frame: CGRect  = .zero) {
         super .init(frame: frame)
@@ -253,14 +266,17 @@ class DetailsView: UIView {
     
         switch commentsData {
         case .success(let success):
-            
+            comments = success
+            tableView.reloadData()
             print(success)
         case .failure(let err):
             print(err)
         case .initial:
             print("")
+            tableView.reloadData()
         case .loading:
             print("")
+            tableView.reloadData()
         }
     }
     
@@ -281,7 +297,7 @@ class DetailsView: UIView {
     }
     
     private func setupViews() {
-        [bookImage, authorLabel, publishDateLabel, genreLabel, titleLabel, activityIndicator, descriptionLabel, reserveBookButton, returnBookButton, notAvailableLabel].forEach {
+        [bookImage, authorLabel, publishDateLabel, genreLabel, titleLabel, activityIndicator, descriptionLabel, reserveBookButton, returnBookButton, notAvailableLabel, tableView].forEach {
             self.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -320,9 +336,33 @@ class DetailsView: UIView {
         descriptionLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
         descriptionLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
+        tableView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 20).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -20).isActive = true
+        
         activityIndicator.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         activityIndicator.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
 
     }
     
+}
+extension DetailsView: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return comments.count
+    }
+   
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "comments", for: indexPath) as! CommentsTableViewCell
+        cell.backgroundColor = Constants.gray
+        cell.userNameLabel.text = comments[indexPath.row].user_name
+        cell.commentLabel.text = comments[indexPath.row].text
+        return cell
+    }
+   
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        130
+    }
+    
+
 }

@@ -71,6 +71,7 @@ class DetailsViewModel: DetailsViewModelProtocol{
     
     func startFetch() {
         getComments()
+        refreshTables()
         provider.request(.getBook(bookID: bookID)) { [weak self] (result) in
             switch result{
             case .success(let response):
@@ -176,6 +177,7 @@ class DetailsViewModel: DetailsViewModelProtocol{
             try dbQueue.write { db in
                 try db.execute(sql: "DELETE FROM bookRent")
                 try db.execute(sql: "DELETE FROM bookDetails")
+                try db.execute(sql: "DELETE FROM booksComments")
             }
         } catch {
             print("\(error)")
