@@ -141,6 +141,11 @@ class DetailsView: UIView {
             setNeedsLayout()
         }
     }
+    var commentsData: CommentResponse = .initial{
+        didSet{
+            setNeedsLayout()
+        }
+    }
     var delegate: DetailsViewProtocol!
     
     override init(frame: CGRect  = .zero) {
@@ -237,6 +242,18 @@ class DetailsView: UIView {
         switch userRoles {
         case .success(let success):
             delegate?.getRole(role: success)
+            print(success)
+        case .failure(let err):
+            print(err)
+        case .initial:
+            print("")
+        case .loading:
+            print("")
+        }
+    
+        switch commentsData {
+        case .success(let success):
+            
             print(success)
         case .failure(let err):
             print(err)

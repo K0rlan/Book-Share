@@ -16,13 +16,6 @@ class ReservedBooksViewController: UIViewController {
         return label
     }()
     
-    lazy var userBookRequest: UIButton = {
-        let button = UIButton()
-        button.setImage(Constants.lamp, for: .normal)
-        return button
-    }()
-    
-    
     lazy var separatorViewForNavBar: UIView = {
         let view = UIView()
         return view
@@ -43,9 +36,7 @@ class ReservedBooksViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = Constants.gray
         setNavigationBar()
-        reservedBooksViewModel.getRole()
         reservedBooksViewModel.startFetch()
-        reservedBooksView.delegate = self
         updateView()
         setupViews()
 
@@ -64,22 +55,17 @@ class ReservedBooksViewController: UIViewController {
         reservedBooksViewModel.updateViewData = { [weak self] reservedBooksData in
             self?.reservedBooksView.reservedBooksData = reservedBooksData
         }
-        reservedBooksViewModel.updateRoles = { [weak self] viewData in
-            self?.reservedBooksView.userRoles = viewData
-        }
+       
     }
     
     private func setupViews(){
-        [appLabel, userBookRequest, separatorView, reservedBooksView].forEach {
+        [appLabel, separatorView, reservedBooksView].forEach {
             self.view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
         appLabel.widthAnchor.constraint(equalToConstant: 164).isActive = true
         appLabel.heightAnchor.constraint(equalToConstant: 34).isActive = true
-        
-        userBookRequest.widthAnchor.constraint(equalToConstant: 34).isActive = true
-        userBookRequest.heightAnchor.constraint(equalToConstant: 34).isActive = true
         
         separatorViewForNavBar.widthAnchor.constraint(equalToConstant: 7).isActive = true
         separatorViewForNavBar.heightAnchor.constraint(equalToConstant: 7).isActive = true
@@ -100,7 +86,7 @@ class ReservedBooksViewController: UIViewController {
         navigationController?.navigationBar.barTintColor = .orange
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: appLabel)
-        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: separatorViewForNavBar),UIBarButtonItem(customView: userBookRequest)]
+        
     }
 
     
@@ -114,16 +100,4 @@ extension ReservedBooksViewController: SignInViewControllerDelegate {
     func successfullSignUp(_ ctrl: SignInViewController) {
         self.dismiss(animated: true)
     }
-}
-
-extension ReservedBooksViewController: ReservedBooksViewProtocol {
-    func getRole(role: RolesViewData.Roles) {
-        print("koko\(role.role)")
-        if role.role == "user"{
-            userBookRequest.isHidden = true
-        }else {
-            userBookRequest.isHidden = false
-        }
-    }
- 
 }

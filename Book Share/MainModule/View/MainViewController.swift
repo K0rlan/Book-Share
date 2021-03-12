@@ -53,11 +53,11 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.startFetch()
         self.view.backgroundColor = Constants.gray
         bookView.backgroundColor = Constants.gray
         bookView.delegateBooksViewProtocol = self
         setNavigationBar()
-        viewModel.startFetch()
         updateView()
         setupViews()
         if Utils.isExpDate() {
