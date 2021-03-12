@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E40D308425F0DAC100BEB939 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40D308325F0DAC100BEB939 /* APIService.swift */; };
+		E41E19CA25FBA0F900F9EB5F /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = E41E19C925FBA0F900F9EB5F /* FirebaseMessaging */; };
 		E449395B25F7A03800A869A9 /* SearchByCodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E449395A25F7A03800A869A9 /* SearchByCodeViewModel.swift */; };
 		E449A56625F984FA00C45818 /* BooksImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = E449A56525F984FA00C45818 /* BooksImages.swift */; };
 		E45CD7E325F0C30200AB5FFE /* SearchByCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E45CD7E225F0C30200AB5FFE /* SearchByCodeController.swift */; };
@@ -77,6 +78,7 @@
 
 /* Begin PBXFileReference section */
 		E40D308325F0DAC100BEB939 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		E41E19CD25FBA70800F9EB5F /* Book Share.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Book Share.entitlements"; sourceTree = "<group>"; };
 		E449395A25F7A03800A869A9 /* SearchByCodeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchByCodeViewModel.swift; sourceTree = "<group>"; };
 		E449A56525F984FA00C45818 /* BooksImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooksImages.swift; sourceTree = "<group>"; };
 		E45CD7E225F0C30200AB5FFE /* SearchByCodeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchByCodeController.swift; sourceTree = "<group>"; };
@@ -145,6 +147,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E41E19CA25FBA0F900F9EB5F /* FirebaseMessaging in Frameworks */,
 				E4D5910F25F080410082D681 /* RxMoya in Frameworks */,
 				E4D5910B25F080410082D681 /* Moya in Frameworks */,
 				E4F866DF25FA346800677506 /* FirebaseAnalytics in Frameworks */,
@@ -217,6 +220,7 @@
 		E4D590E725F07FDF0082D681 /* Book Share */ = {
 			isa = PBXGroup;
 			children = (
+				E41E19CD25FBA70800F9EB5F /* Book Share.entitlements */,
 				E4F0018725FAD3F300532AB6 /* CreateBookModule */,
 				E4F866FB25FAAFEA00677506 /* EditBookModule */,
 				E4F866E625FA9C4600677506 /* DetailsModuleAdmin */,
@@ -570,6 +574,7 @@
 				E4D5911C25F081B70082D681 /* Griffon_ios_spm */,
 				E4F866DE25FA346800677506 /* FirebaseAnalytics */,
 				E4F866E025FA346800677506 /* FirebaseFirestore */,
+				E41E19C925FBA0F900F9EB5F /* FirebaseMessaging */,
 			);
 			productName = "Book Share";
 			productReference = E4D590E525F07FDF0082D681 /* Book Share.app */;
@@ -824,6 +829,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Book Share/Book Share.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 5MS9KG4339;
 				INFOPLIST_FILE = "Book Share/Info.plist";
@@ -843,6 +849,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Book Share/Book Share.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 5MS9KG4339;
 				INFOPLIST_FILE = "Book Share/Info.plist";
@@ -908,6 +915,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E41E19C925FBA0F900F9EB5F /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E4F866DD25FA346800677506 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
 		E4D5910A25F080410082D681 /* Moya */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E4D5910925F080410082D681 /* XCRemoteSwiftPackageReference "Moya" */;

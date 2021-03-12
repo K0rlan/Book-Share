@@ -47,7 +47,7 @@ class ReservedBooksView: UIView {
         }
     }
     
-    var books: [ReservedBooksViewData.RentsData] = []
+    var books: [Books] = []
     var images = [BooksImages]()
     
     var delegate: ReservedBooksViewProtocol!
@@ -127,7 +127,7 @@ extension ReservedBooksView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reservedBooks", for: indexPath) as! ReservedBooksTableViewCell
-        let book = books[indexPath.row].book!
+        let book = books[indexPath.row]
         print(books)
         cell.backgroundColor = Constants.elements
 //        cell.bookImage.image = images[]

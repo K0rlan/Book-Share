@@ -122,7 +122,7 @@ class DetailsViewModel: DetailsViewModelProtocol{
         } catch {
             print("\(error)")
         }
-        let rent = ViewData.RentData(user_id: "\(Griffon.shared.getUserProfiles()!.id)", user_contact: "\((Griffon.shared.getUserProfiles()!.email)!)", user_name: "nil", book_id: bookID, start_date: "\(Date())", end_date: nil, book: book!)
+        let rent = ViewData.RentData(user_id: "\(Griffon.shared.getUserProfiles()!.id)", user_contact: "\((Griffon.shared.getUserProfiles()!.email)!)", user_name: "nil", book_id: bookID, start_date: "\(Date())", end_date: "\(Date())", book: book!)
         provider.request(.postRent(rent: rent)) { [weak self] (result) in
             switch result{
             case .success(let response):
@@ -195,6 +195,8 @@ class DetailsViewModel: DetailsViewModelProtocol{
         } catch {
             print("\(error)")
         }
+        refreshTables()
+        fetchRents()
         putBook(id: bookID, enabled: true)
     }
     func fetchRents(){

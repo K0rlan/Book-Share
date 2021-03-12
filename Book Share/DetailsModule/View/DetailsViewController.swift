@@ -121,10 +121,14 @@ extension DetailsViewController: DetailsViewProtocol {
     
     func deleteRentButtonPressed() {
         detailsViewModel.deleteRent()
+        self.view.window?.rootViewController = TabBar()
+        self.view.window?.makeKeyAndVisible()
     }
     
     func addRentButtonPressed() {
         detailsViewModel.addRent()
+        self.view.window?.rootViewController = TabBar()
+        self.view.window?.makeKeyAndVisible()
     }
     
     

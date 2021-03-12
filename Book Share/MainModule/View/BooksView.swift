@@ -79,6 +79,8 @@ class BooksView: UIView{
     
     override init(frame: CGRect  = .zero) {
         super .init(frame: frame)
+        tableView.reloadData()
+        collectionView.reloadData()
         setupViews()     
     }
     
@@ -103,8 +105,8 @@ class BooksView: UIView{
             collectionView.reloadData()
         case .successBooks(let success):
             books = success
-//            tableView.reloadData()
-//            collectionView.reloadData()
+            tableView.reloadData()
+            collectionView.reloadData()
         case .successRent(let success):
             rents = success
         case .failure:
@@ -184,6 +186,10 @@ extension BooksView: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         320
+    }
+    
+    func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
+        tableView.reloadData()
     }
 }
 extension BooksView: BookTableViewCellDelegate{
