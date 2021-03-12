@@ -55,6 +55,9 @@ class DetailsViewController: UIViewController {
         detailsViewModel.updateRoles = { [weak self] viewData in
             self?.detailsView.userRoles = viewData
         }
+        detailsViewModel.updateComments = { [weak self] viewData in
+            self?.detailsView.commentsData = viewData
+        }
     }
     @objc func deleteButtonPressed(){
         detailsViewModel.deleteBook()
@@ -121,8 +124,22 @@ extension DetailsViewController: DetailsViewProtocol {
     
     func deleteRentButtonPressed() {
         detailsViewModel.deleteRent()
-        self.view.window?.rootViewController = TabBar()
-        self.view.window?.makeKeyAndVisible()
+        let alert = UIAlertController(title: "Comment", message: "Leave a comment", preferredStyle: .alert)
+        alert.addTextField { (textField:UITextField) in
+            textField.placeholder = "Enter title"
+        }
+        let action = UIAlertAction(title: "Submit", style: .default) { [weak self] (alertAction) in
+            let text = alert.textFields![0] as UITextField
+            self?.detailsViewModel.addComment(text: text.text!)
+            self?.view.window?.rootViewController = TabBar()
+            self?.view.window?.makeKeyAndVisible()
+        }
+        
+        alert.addAction(action)
+        
+        self.present(alert, animated: true, completion: nil)
+        
+       
     }
     
     func addRentButtonPressed() {

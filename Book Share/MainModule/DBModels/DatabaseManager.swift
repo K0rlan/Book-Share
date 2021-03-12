@@ -70,6 +70,17 @@ class DatabaseManager {
             }
         }
         
+        migrator.registerMigration("createBooksComments") { db in
+            try db.create(table: "booksComments") { t in
+                t.column("id", .integer).notNull()
+                t.column("user_id", .text).notNull()
+                t.column("user_contact", .text).notNull()
+                t.column("user_name", .text).notNull()
+                t.column("book_id", .integer).notNull()
+                t.column("text", .text).notNull()
+            }
+        }
+        
         migrator.registerMigration("createGenres") { db in
             try db.create(table: "genres") { t in
                 t.column("id", .integer).notNull()

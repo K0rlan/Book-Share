@@ -11,7 +11,7 @@ import UIKit
 enum ReservedBooksViewData {
     case initial
     case loading
-    case success([Books])
+    case success([RentsData])
     case successImage([BooksImages])
     case failure(Error)
     
@@ -26,11 +26,6 @@ enum ReservedBooksViewData {
         let enabled: Bool
     }
     
-//    struct BooksImages: Decodable {
-//        var id: Int
-//        var image: Data?
-//    }
-//    
     struct RentsData: Decodable {
         let id: Int
         let user_id: String

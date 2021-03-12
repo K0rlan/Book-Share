@@ -40,14 +40,8 @@ class ReservedBooksView: UIView {
             setNeedsLayout()
         }
     }
-   
-    var userRoles: RolesViewData = .initial{
-        didSet{
-            setNeedsLayout()
-        }
-    }
     
-    var books: [Books] = []
+    var books: [ReservedBooksViewData.RentsData] = []
     var images = [BooksImages]()
     
     var delegate: ReservedBooksViewProtocol!
@@ -89,16 +83,6 @@ class ReservedBooksView: UIView {
         
         }
         
-        switch userRoles {
-        case .success(let success):
-            delegate.getRole(role: success)
-        case .failure(let err):
-            print(err)
-        case .initial:
-            print("")
-        case .loading:
-            print("")
-        }
     }
     
     private func setupViews(){
@@ -127,7 +111,7 @@ extension ReservedBooksView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reservedBooks", for: indexPath) as! ReservedBooksTableViewCell
-        let book = books[indexPath.row]
+        let book = books[indexPath.row].book!
         print(books)
         cell.backgroundColor = Constants.elements
 //        cell.bookImage.image = images[]

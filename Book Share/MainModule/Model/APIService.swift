@@ -21,6 +21,8 @@ enum APIService {
     case updateRent(id: Int, enabled: Bool)
     case updateBook(id: Int, book: EditBook)
     case deleteBook(id: Int)
+    case postComment(comment: CommentResponse.CreateData)
+    case getComments
 }
 
 extension APIService: TargetType {
@@ -51,14 +53,16 @@ extension APIService: TargetType {
             return "api/books/\(id)"
         case .deleteBook(let id):
             return "api/books/\(id)"
+        case .postComment, .getComments:
+            return "api/comments"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .getBooks, .getGenres, .getBook, .getRent, .getImage, .getUserBooks:
+        case .getBooks, .getGenres, .getBook, .getRent, .getImage, .getUserBooks, .getComments:
             return .get
-        case .postBook, .postRent:
+        case .postBook, .postRent, .postComment:
             return .post
         case .deleteRent, .deleteBook:
             return .delete
@@ -73,7 +77,7 @@ extension APIService: TargetType {
     
     var task: Task {
         switch self {
-        case .getBooks, .getGenres, .getBook, .getRent, .getImage, .deleteRent, .getUserBooks, .deleteBook:
+        case .getBooks, .getGenres, .getBook, .getRent, .getImage, .deleteRent, .getUserBooks, .deleteBook, .getComments:
             return .requestPlain
         case .postBook(let book):
             let params: [String : Any] = [
@@ -125,7 +129,20 @@ extension APIService: TargetType {
                 "genre_id" : book.genre_id ?? nil,
             ]
             return .requestParameters(parameters: params, encoding: JSONEncoding.default)
+            
+        case .postComment(let comment):
+            let params: [String : Any] = [
+                "user_id" : comment.user_id,
+                "user_contact" : comment.user_contact,
+                "user_name" : comment.user_name,
+                "book_id" : comment.book_id,
+                "text" : comment.text
+                
+            ]
+            return .requestParameters(parameters: params, encoding: JSONEncoding.default)
         }
+        
+        
     }
     
     var headers: [String : String]? {
