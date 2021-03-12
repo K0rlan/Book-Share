@@ -254,7 +254,6 @@ final class MainViewModel: MainViewModelProtocol{
                 print("Error getting documents: \(err)")
             } else {
                 for document in querySnapshot!.documents {
-//                    let role = Roles(dictionary: document.data())
                     self?.updateRoles?(.success(RolesViewData.Roles(dictionary: document.data())))
                 }
                
@@ -280,6 +279,18 @@ final class MainViewModel: MainViewModelProtocol{
         Griffon.shared.cleanKeyChain()
         Griffon.shared.signInModel = nil
         Griffon.shared.signUpModel = nil
+    }
+    
+    func requestForBook(title: String, author: String){
+        let db = Firestore.firestore()
+        db.collection("bookRequest").addDocument(data: [
+            "author": author,
+            "title": title
+        ]) { err in
+            if let err = err {
+                print("Error saving user data: \(err)")
+            }
+        }
     }
     
 }

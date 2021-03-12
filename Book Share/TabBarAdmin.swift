@@ -46,9 +46,9 @@ class TabBarAdmin: UITabBarController {
     public func setupVCs() {
         viewControllers = [
             createNavController(for: ModelBuilder.createMain(), title: NSLocalizedString("", comment: ""), image: Constants.home!),
-//            createNavController(for: ModelBuilder.createReservedBooks(), title: NSLocalizedString("", comment: ""), image: Constants.reserved!),
+            createNavController(for: ModelBuilder.createReservedBooks(), title: NSLocalizedString("", comment: ""), image: Constants.reserved!),
             createNavController(for: ModelBuilder.createProfile(), title: NSLocalizedString("", comment: ""), image: Constants.profile!),
-            createNavController(for: ModelBuilder.createSearch(), title: NSLocalizedString("", comment: ""), image: Constants.search!)
+//            createNavController(for: ModelBuilder.createSearch(), title: NSLocalizedString("", comment: ""), image: Constants.search!)
         ]
     }
     

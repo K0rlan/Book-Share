@@ -11,6 +11,7 @@ import UIKit
 protocol DetailsViewProtocol {
     func addRentButtonPressed()
     func deleteRentButtonPressed()
+    func getRole(role: RolesViewData.Roles)
 }
 
 class DetailsView: UIView {
@@ -135,6 +136,11 @@ class DetailsView: UIView {
         }
     }
     
+    var userRoles: RolesViewData = .initial{
+        didSet{
+            setNeedsLayout()
+        }
+    }
     var delegate: DetailsViewProtocol!
     
     override init(frame: CGRect  = .zero) {
@@ -226,6 +232,18 @@ class DetailsView: UIView {
         }
         case .failure:
             activityIndicator.isHidden = true
+        }
+        
+        switch userRoles {
+        case .success(let success):
+            delegate?.getRole(role: success)
+            print(success)
+        case .failure(let err):
+            print(err)
+        case .initial:
+            print("")
+        case .loading:
+            print("")
         }
     }
     

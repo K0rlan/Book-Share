@@ -9,15 +9,17 @@ import UIKit
 
 class DetailsViewController: UIViewController {
     
-    lazy var notificationButton: UIButton = {
+    lazy var trashButton: UIButton = {
         let button = UIButton()
-        button.setImage(Constants.notification, for: .normal)
+        button.setImage(Constants.trash, for: .normal)
+        button.addTarget(self, action: #selector(deleteButtonPressed), for: .touchUpInside)
         return button
     }()
     
-    lazy var nightButton: UIButton = {
+    lazy var editButton: UIButton = {
         let button = UIButton()
-        button.setImage(Constants.moon, for: .normal)
+        button.setImage(Constants.edit, for: .normal)
+        button.addTarget(self, action: #selector(editButtonPressed), for: .touchUpInside)
         return button
     }()
     
@@ -39,6 +41,7 @@ class DetailsViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = Constants.gray
         setNavigationBar()
+        detailsViewModel.getRole()
         detailsViewModel.startFetch()
         detailsView.delegate = self
         setupViews()
@@ -49,19 +52,33 @@ class DetailsViewController: UIViewController {
         detailsViewModel.updateViewData = { [weak self] viewData in
             self?.detailsView.bookData = viewData
         }
+        detailsViewModel.updateRoles = { [weak self] viewData in
+            self?.detailsView.userRoles = viewData
+        }
+    }
+    @objc func deleteButtonPressed(){
+        detailsViewModel.deleteBook()
+        let mainVC = ModelBuilder.createMain()
+        self.navigationController?.pushViewController(mainVC, animated: true)
+    }
+    
+    
+    @objc func editButtonPressed(){
+        let editVC = ModelBuilder.createEdit(id: detailsViewModel.getBookID())
+        self.navigationController?.pushViewController(editVC, animated: true)
     }
     
     private func setupViews(){
-        [notificationButton, nightButton, separatorView, detailsView].forEach {
+        [trashButton, editButton, separatorView, detailsView].forEach {
             self.view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
-        notificationButton.widthAnchor.constraint(equalToConstant: 34).isActive = true
-        notificationButton.heightAnchor.constraint(equalToConstant: 34).isActive = true
+        trashButton.widthAnchor.constraint(equalToConstant: 34).isActive = true
+        trashButton.heightAnchor.constraint(equalToConstant: 34).isActive = true
         
-        nightButton.widthAnchor.constraint(equalToConstant: 34).isActive = true
-        nightButton.heightAnchor.constraint(equalToConstant: 34).isActive = true
+        editButton.widthAnchor.constraint(equalToConstant: 34).isActive = true
+        editButton.heightAnchor.constraint(equalToConstant: 34).isActive = true
         
         separatorViewForNavBar.widthAnchor.constraint(equalToConstant: 7).isActive = true
         separatorViewForNavBar.heightAnchor.constraint(equalToConstant: 7).isActive = true
@@ -87,13 +104,21 @@ class DetailsViewController: UIViewController {
         self.navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
         
         navigationController?.navigationBar.tintColor = Constants.orange
-        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: notificationButton), UIBarButtonItem(customView: separatorViewForNavBar),UIBarButtonItem(customView: nightButton)]
+        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: trashButton), UIBarButtonItem(customView: separatorViewForNavBar),UIBarButtonItem(customView: editButton)]
     }
     
     
     
 }
 extension DetailsViewController: DetailsViewProtocol {
+    func getRole(role: RolesViewData.Roles) {
+        if role.role == "user"{
+            print(role)
+            trashButton.isHidden = true
+            editButton.isHidden = true
+        }
+    }
+    
     func deleteRentButtonPressed() {
         detailsViewModel.deleteRent()
     }

@@ -27,6 +27,7 @@ class CreateView: UIView {
         textField.layer.borderWidth = 1
         textField.layer.borderColor = CGColor(red: 220/255, green: 220/255, blue: 222/255, alpha: 1)
         textField.layer.cornerRadius = 8
+        textField.placeholder = "Title"
         textField.backgroundColor = UIColor(cgColor: CGColor(red: 239/255, green: 239/255, blue: 243/255, alpha: 1))
         return textField
     }()
@@ -35,6 +36,7 @@ class CreateView: UIView {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
         textField.layer.borderWidth = 1
+        textField.placeholder = "ISBN"
         textField.layer.borderColor = CGColor(red: 220/255, green: 220/255, blue: 222/255, alpha: 1)
         textField.layer.cornerRadius = 8
         textField.backgroundColor = UIColor(cgColor: CGColor(red: 239/255, green: 239/255, blue: 243/255, alpha: 1))
@@ -45,6 +47,7 @@ class CreateView: UIView {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
         textField.layer.borderWidth = 1
+        textField.placeholder = "Author"
         textField.layer.borderColor = CGColor(red: 220/255, green: 220/255, blue: 222/255, alpha: 1)
         textField.layer.cornerRadius = 8
         textField.backgroundColor = UIColor(cgColor: CGColor(red: 239/255, green: 239/255, blue: 243/255, alpha: 1))
@@ -55,6 +58,7 @@ class CreateView: UIView {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
         textField.layer.borderWidth = 1
+        textField.placeholder = "Publish Date"
         textField.layer.borderColor = CGColor(red: 220/255, green: 220/255, blue: 222/255, alpha: 1)
         textField.layer.cornerRadius = 8
         textField.backgroundColor = UIColor(cgColor: CGColor(red: 239/255, green: 239/255, blue: 243/255, alpha: 1))
@@ -65,6 +69,7 @@ class CreateView: UIView {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
         textField.layer.borderWidth = 1
+        textField.placeholder = "Genre ID"
         textField.layer.borderColor = CGColor(red: 220/255, green: 220/255, blue: 222/255, alpha: 1)
         textField.layer.cornerRadius = 8
         textField.backgroundColor = UIColor(cgColor: CGColor(red: 239/255, green: 239/255, blue: 243/255, alpha: 1))
@@ -75,6 +80,7 @@ class CreateView: UIView {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
         textField.layer.borderWidth = 1
+        textField.placeholder = "Enabled"
         textField.layer.borderColor = CGColor(red: 220/255, green: 220/255, blue: 222/255, alpha: 1)
         textField.layer.cornerRadius = 8
         textField.backgroundColor = UIColor(cgColor: CGColor(red: 239/255, green: 239/255, blue: 243/255, alpha: 1))

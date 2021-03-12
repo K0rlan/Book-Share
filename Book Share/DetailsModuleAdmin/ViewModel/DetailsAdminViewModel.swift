@@ -8,20 +8,24 @@
 import Foundation
 import Moya
 import Griffon_ios_spm
+import FirebaseFirestore
 
 protocol DetailsAdminViewModelProtocol {
     var updateViewData: ((DetailsData)->())? { get set }
+    var updateRoles: ((RolesViewData)->())? { get set }
     func startFetch()
 }
 
 class DetailsAdminViewModel: DetailsViewModelProtocol{
     var updateViewData: ((DetailsData) -> ())?
+    var updateRoles: ((RolesViewData)->())? 
     let bookID: Int
     let provider = MoyaProvider<APIService>()
     let provide = MoyaProvider<APIImage>()
     
     init(bookID: Int) {
         updateViewData?(.initial)
+        updateRoles?(.initial)
         self.bookID = bookID
     }
     

@@ -46,12 +46,6 @@ class ModelBuilder: Builder {
         return view
     }
     
-    static func createBookDetailsAdmin(id: Int) -> UIViewController {
-        let view = DetailsAdminController()
-        let viewModel = DetailsAdminViewModel(bookID: id)
-        view.detailsViewModel = viewModel
-        return view
-    }
     
     static func createEdit(id: Int) -> UIViewController {
         let view = EditViewController()

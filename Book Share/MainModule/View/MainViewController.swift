@@ -23,14 +23,13 @@ class MainViewController: UIViewController {
         let button = UIButton()
         button.setImage(Constants.logout, for: .normal)
         button.addTarget(self, action: #selector(logoutButtonPressed), for: .touchUpInside)
-//        button.isHidden = true
+        //        button.isHidden = true
         return button
     }()
     
     lazy var addButton: UIButton = {
         let button = UIButton()
         button.setImage(Constants.add, for: .normal)
-//        button.isHidden = true
         return button
     }()
     
@@ -65,14 +64,14 @@ class MainViewController: UIViewController {
             authViaGriffon()
         }
         if Utils.getUserID() == ""{
-        if let arrayOfTabBarItems = self.tabBarController!.tabBar.items as AnyObject as? NSArray {
-            for i in 1..<arrayOfTabBarItems.count{
-                let item = arrayOfTabBarItems[i] as? UITabBarItem
-                item?.isEnabled = false
+            if let arrayOfTabBarItems = self.tabBarController!.tabBar.items as AnyObject as? NSArray {
+                for i in 1..<arrayOfTabBarItems.count{
+                    let item = arrayOfTabBarItems[i] as? UITabBarItem
+                    item?.isEnabled = false
+                }
+                logoutButton.isHidden = true
+                addButton.isHidden = true
             }
-            logoutButton.isHidden = true
-            addButton.isHidden = true
-        }
         }
     }
     
@@ -131,7 +130,23 @@ class MainViewController: UIViewController {
     }
     
     @objc func requestButtonPressed() {
-        print(#function)
+        let alert = UIAlertController(title: "Request for new book", message: "Enter title and author of book that you want to add", preferredStyle: .alert)
+        alert.addTextField { (textField:UITextField) in
+            textField.placeholder = "Enter title"
+        }
+        alert.addTextField { (textField:UITextField) in
+            textField.placeholder = "Enter author"
+        }
+        let action = UIAlertAction(title: "Submit", style: .default) { [weak self] (alertAction) in
+            let title = alert.textFields![0] as UITextField
+            let author = alert.textFields![1] as UITextField
+            self?.viewModel.requestForBook(title: title.text!, author: author.text!)
+        }
+        
+        alert.addAction(action)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        self.present(alert, animated: true, completion: nil)
     }
     
     private func setNavigationBar(){
@@ -160,9 +175,6 @@ extension MainViewController: BooksViewProtocol{
             addButton.addTarget(self, action: #selector(requestButtonPressed), for: .touchUpInside)
         }else {
             addButton.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
-//            view.window?.rootViewController = TabBarAdmin()
-//            view.window?.makeKeyAndVisible()
-
         }
     }
     
@@ -178,7 +190,7 @@ extension MainViewController: BooksViewProtocol{
     func getBooksID(id: Int) {
         self.bookID = id
         if Griffon.shared.idToken != nil{
-            let detailsVC = ModelBuilder.createBookDetailsAdmin(id: bookID)
+            let detailsVC = ModelBuilder.createBookDetails(id: bookID)
             self.navigationController?.pushViewController(detailsVC, animated: true)
         }else {
             authViaGriffon()

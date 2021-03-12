@@ -14,9 +14,6 @@ protocol CreateViewModelProtocol {
 }
 
 class CreateViewModel: CreateViewModelProtocol{
-    
-   
- 
     let provider = MoyaProvider<APIService>()
  
     

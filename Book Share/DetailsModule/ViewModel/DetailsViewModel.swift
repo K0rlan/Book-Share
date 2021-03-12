@@ -8,20 +8,41 @@
 import Foundation
 import Moya
 import Griffon_ios_spm
+import FirebaseFirestore
 
 protocol DetailsViewModelProtocol {
     var updateViewData: ((DetailsData)->())? { get set }
+    var updateRoles: ((RolesViewData)->())? { get set }
     func startFetch()
 }
 
 class DetailsViewModel: DetailsViewModelProtocol{
     var updateViewData: ((DetailsData) -> ())?
+    var updateRoles: ((RolesViewData)->())?
     let bookID: Int
     let provider = MoyaProvider<APIService>()
     let provide = MoyaProvider<APIImage>()
     init(bookID: Int) {
         updateViewData?(.initial)
+        updateRoles?(.initial)
         self.bookID = bookID
+    }
+    
+    func getBookID() -> Int {
+        return bookID
+    }
+    
+    func deleteBook(){
+        provider.request(.deleteBook(id: bookID)) { [weak self] (result) in
+            switch result{
+            case .success(let response):
+                    print(response)
+            case .failure(let error):
+                let requestError = (error as NSError)
+                print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
+                
+            }
+        }
     }
     
     func fetchImages(image: String?){
@@ -249,6 +270,20 @@ class DetailsViewModel: DetailsViewModelProtocol{
             }
         }
     }
-    
+    func getRole(){
+        let db = Firestore.firestore()
+        let userID = Utils.getUserID()
+        db.collection("roles").whereField("user_id", isEqualTo: userID).getDocuments() { [weak self] (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            } else {
+                for document in querySnapshot!.documents {
+                    self?.updateRoles?(.success(RolesViewData.Roles(dictionary: document.data())))
+                }
+               
+            }
+        }
+        
+    }
     
 }
