@@ -13,7 +13,6 @@ enum ViewData {
     case loading
     case successGenres([Genres])
     case successBooks([BooksData])
-    case successRent([RentsData])
     case failure(Error)
 
     struct BooksData: Decodable {
