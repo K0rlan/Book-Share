@@ -9,6 +9,8 @@ import UIKit
 
 protocol MoreViewProtocol {
     func getBooksID(id: Int)
+    func getRole(role: RolesViewData.Roles)
+    func setErrorAlert(error: Error)
 }
 
 class MoreView: UIView{
@@ -51,6 +53,12 @@ class MoreView: UIView{
         }
     }
     
+    var userRoles: RolesViewData = .initial{
+        didSet{
+            setNeedsLayout()
+        }
+    }
+    
     var filteredData: [Books] = []
     var books: [Books] = []
     var images = [BooksImages]()
@@ -84,11 +92,23 @@ class MoreView: UIView{
             activityIndicator.isHidden = true
             images = success
             tableView.reloadData()
-        case .failure:
-            tableView.isHidden = false
-            activityIndicator.isHidden = true
         case .successRent(let success):
             print(success)
+        case .failure(let error):
+            tableView.isHidden = false
+            activityIndicator.isHidden = true
+            delegate.setErrorAlert(error: error)
+        }
+        
+        switch userRoles {
+        case .success(let success):
+            delegate.getRole(role: success)
+        case .failure(let err):
+            delegate.setErrorAlert(error: err)
+        case .initial:
+            print("initial roles")
+        case .loading:
+            print("loading roles")
         }
     }
     
@@ -148,6 +168,7 @@ extension MoreView: UITableViewDelegate, UITableViewDataSource {
         cell.titleLabel.text = book.title
         cell.authorLabel.text = book.author
         cell.publishDateLabel.text = book.publish_date
+        cell.isbnLabel.text = book.isbn
         cell.selectionStyle = .none
         cell.contentView.isUserInteractionEnabled = true
         cell.bookImage.image = .none

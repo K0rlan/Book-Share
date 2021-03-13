@@ -144,18 +144,18 @@ final class MainViewModel: MainViewModelProtocol{
     }
     
     func insertIntoDBImages(books: ViewImages.BooksImages){
-            do {
-                try dbQueue.write { db in
-                    var books = BooksImages(
-                        id: books.id,
-                        image: books.image
-                    )
-                    try! books.insert(db)
-                }
-            } catch {
-                print("\(error)")
+        do {
+            try dbQueue.write { db in
+                var books = BooksImages(
+                    id: books.id,
+                    image: books.image
+                )
+                try! books.insert(db)
             }
-
+        } catch {
+            print("\(error)")
+        }
+        
     }
     
     func insertIntoDBBooks(books: [ViewData.BooksData]){
@@ -271,7 +271,7 @@ final class MainViewModel: MainViewModelProtocol{
                 for document in querySnapshot!.documents {
                     self?.updateRoles?(.success(RolesViewData.Roles(dictionary: document.data())))
                 }
-               
+                
             }
         }
         
@@ -327,16 +327,13 @@ final class MainViewModel: MainViewModelProtocol{
                 var booksPush = [Books]()
                 let draft = try BookRent.filterByUser(userId: Utils.getUserID()).fetchAll(db)
                 print(draft)
-                
                 for book in draft {
-                    
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
                     let date = dateFormatter.date(from: book.start_date)!
-//                    let calendar = Calendar.current
-//                    let addOneWeekToCurrentDate = calendar.date(byAdding: .weekOfYear, value: 1, to: date)
-//                    print("aaaa\(addOneWeekToCurrentDate)")
-                    if date < Date(){
+                    let calendar = Calendar.current
+                    let addOneWeekToCurrentDate = calendar.date(byAdding: .weekOfYear, value: 1, to: date)
+                    if addOneWeekToCurrentDate! < Date(){
                         let b = try Books.filterById(id: book.book_id).fetchAll(db)
                         booksPush.append(contentsOf: b)
                     }
@@ -352,7 +349,7 @@ final class MainViewModel: MainViewModelProtocol{
         }
     }
     
-  
+    
     
     func sendPush(book: [Books]){
         let userToken = Constants.userToken
@@ -366,25 +363,25 @@ final class MainViewModel: MainViewModelProtocol{
     }
     
     func sendPushNotification(payloadDict: [String: Any]) {
-       let url = URL(string: "https://fcm.googleapis.com/fcm/send")!
-       var request = URLRequest(url: url)
-       request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-       request.setValue("key=\(Constants.serverKey)", forHTTPHeaderField: "Authorization")
-       request.httpMethod = "POST"
-       request.httpBody = try? JSONSerialization.data(withJSONObject: payloadDict, options: [])
-       let task = URLSession.shared.dataTask(with: request) { data, response, error in
-          guard let data = data, error == nil else {
-            print(error ?? "")
-            return
-          }
-          if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {
-            print("statusCode should be 200, but is \(httpStatus.statusCode)")
-            print(response ?? "")
-          }
-          print("Notfication sent successfully.")
-          let responseString = String(data: data, encoding: .utf8)
-          print(responseString ?? "")
-       }
-       task.resume()
+        let url = URL(string: "https://fcm.googleapis.com/fcm/send")!
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("key=\(Constants.serverKey)", forHTTPHeaderField: "Authorization")
+        request.httpMethod = "POST"
+        request.httpBody = try? JSONSerialization.data(withJSONObject: payloadDict, options: [])
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                print(error ?? "")
+                return
+            }
+            if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {
+                print("statusCode should be 200, but is \(httpStatus.statusCode)")
+                print(response ?? "")
+            }
+            print("Notfication sent successfully.")
+            let responseString = String(data: data, encoding: .utf8)
+            print(responseString ?? "")
+        }
+        task.resume()
     }
 }
