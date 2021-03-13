@@ -408,4 +408,63 @@ class DetailsViewModel: DetailsViewModelProtocol{
         }
     }
     
+    func adminSendPush(){
+        do {
+            try dbQueue.read { [weak self] db in
+                var koko = [Books]()
+                let draft = try BookRent.filterByBookID(id: bookID).fetchAll(db)
+                let userId = draft.first?.user_id
+                self?.getUserFCM(userId: userId!)
+               
+            }
+        } catch {
+            print("\(error)")
+        }
+    }
+    
+    func getUserFCM(userId: String){
+        let db = Firestore.firestore()
+        db.collection("users_table").whereField("user_id", isEqualTo: userId).getDocuments() { [weak self] (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            } else {
+                for document in querySnapshot!.documents {
+                    let dict = TokenFirebase(dictionary: document.data())
+                    print(dict.fcm)
+                    self?.sendPush(fcm: dict.fcm)
+                }
+               
+            }
+        }
+    }
+    
+    func sendPush(fcm: String){
+        print("aaa\(fcm)")
+        let notifPayload: [String: Any] = ["to": fcm,"notification": ["title":"You have expired books.", "body":"You need to hand over expired books","badge":1,"sound":"default"]]
+        self.sendPushNotification(payloadDict: notifPayload)
+    }
+    
+    func sendPushNotification(payloadDict: [String: Any]) {
+       let url = URL(string: "https://fcm.googleapis.com/fcm/send")!
+       var request = URLRequest(url: url)
+       request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+       request.setValue("key=\(Constants.serverKey)", forHTTPHeaderField: "Authorization")
+       request.httpMethod = "POST"
+       request.httpBody = try? JSONSerialization.data(withJSONObject: payloadDict, options: [])
+       let task = URLSession.shared.dataTask(with: request) { data, response, error in
+          guard let data = data, error == nil else {
+            print(error ?? "")
+            return
+          }
+          if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {
+            print("statusCode should be 200, but is \(httpStatus.statusCode)")
+            print(response ?? "")
+          }
+          print("Notfication sent successfully.")
+          let responseString = String(data: data, encoding: .utf8)
+          print(responseString ?? "")
+       }
+       task.resume()
+    }
+    
 }

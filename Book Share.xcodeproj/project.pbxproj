@@ -13,6 +13,8 @@
 		E41E19D525FBCF7800F9EB5F /* CommentResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41E19D425FBCF7800F9EB5F /* CommentResponse.swift */; };
 		E41E19D825FBD4E500F9EB5F /* BooksComments.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41E19D725FBD4E500F9EB5F /* BooksComments.swift */; };
 		E41E19DD25FBDC1600F9EB5F /* CommentsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41E19DC25FBDC1600F9EB5F /* CommentsTableViewCell.swift */; };
+		E439E81E25FC846E00A8629C /* PushNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E439E81D25FC846E00A8629C /* PushNotificationManager.swift */; };
+		E439E82225FCBAB600A8629C /* TokenFirebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E439E82125FCBAB600A8629C /* TokenFirebase.swift */; };
 		E449395B25F7A03800A869A9 /* SearchByCodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E449395A25F7A03800A869A9 /* SearchByCodeViewModel.swift */; };
 		E449A56625F984FA00C45818 /* BooksImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = E449A56525F984FA00C45818 /* BooksImages.swift */; };
 		E45CD7E325F0C30200AB5FFE /* SearchByCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E45CD7E225F0C30200AB5FFE /* SearchByCodeController.swift */; };
@@ -84,6 +86,8 @@
 		E41E19D425FBCF7800F9EB5F /* CommentResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentResponse.swift; sourceTree = "<group>"; };
 		E41E19D725FBD4E500F9EB5F /* BooksComments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooksComments.swift; sourceTree = "<group>"; };
 		E41E19DC25FBDC1600F9EB5F /* CommentsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsTableViewCell.swift; sourceTree = "<group>"; };
+		E439E81D25FC846E00A8629C /* PushNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationManager.swift; sourceTree = "<group>"; };
+		E439E82125FCBAB600A8629C /* TokenFirebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenFirebase.swift; sourceTree = "<group>"; };
 		E449395A25F7A03800A869A9 /* SearchByCodeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchByCodeViewModel.swift; sourceTree = "<group>"; };
 		E449A56525F984FA00C45818 /* BooksImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooksImages.swift; sourceTree = "<group>"; };
 		E45CD7E225F0C30200AB5FFE /* SearchByCodeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchByCodeController.swift; sourceTree = "<group>"; };
@@ -236,6 +240,7 @@
 				E4D5912325F082910082D681 /* ModelBuilder.swift */,
 				E4FE117725FB4E98007FCBD4 /* TabBarAdmin.swift */,
 				E4D5912625F082A10082D681 /* TabBar.swift */,
+				E439E81D25FC846E00A8629C /* PushNotificationManager.swift */,
 				E496E48625F128FE00786C93 /* Utils.swift */,
 				E4D5911325F080610082D681 /* SupportingFIles */,
 				E4D590F625F07FE00082D681 /* Info.plist */,
@@ -375,6 +380,7 @@
 			isa = PBXGroup;
 			children = (
 				E4D5916925F084630082D681 /* DetailsData.swift */,
+				E439E82125FCBAB600A8629C /* TokenFirebase.swift */,
 				E41E19D425FBCF7800F9EB5F /* CommentResponse.swift */,
 			);
 			path = Model;
@@ -652,10 +658,12 @@
 				E472972425F5E35F004F45DE /* ViewImages.swift in Sources */,
 				E4D5912125F0827B0082D681 /* Constants.swift in Sources */,
 				E4D5912725F082A10082D681 /* TabBar.swift in Sources */,
+				E439E81E25FC846E00A8629C /* PushNotificationManager.swift in Sources */,
 				E4D5914125F083820082D681 /* MainViewModel.swift in Sources */,
 				E4D5916A25F084630082D681 /* DetailsData.swift in Sources */,
 				E4F866FE25FAB00100677506 /* EditViewController.swift in Sources */,
 				E48604C525F3A0B0002709AE /* Books.swift in Sources */,
+				E439E82225FCBAB600A8629C /* TokenFirebase.swift in Sources */,
 				E4FE117825FB4E98007FCBD4 /* TabBarAdmin.swift in Sources */,
 				E4D5915525F084010082D681 /* MoreViewModel.swift in Sources */,
 				E4D5917625F084970082D681 /* ReservedBooksTableViewCell.swift in Sources */,
