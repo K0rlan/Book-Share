@@ -124,7 +124,9 @@ extension MoreView: UISearchBarDelegate{
         filteredData = searchText.isEmpty ? books : books.filter({(books: Books) -> Bool in
             return books.title.range(of: searchText, options: .caseInsensitive) != nil || books.author.range(of: searchText, options: .caseInsensitive) != nil
         })
+       
         tableView.reloadData()
+        
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -160,7 +162,7 @@ extension MoreView: UITableViewDelegate, UITableViewDataSource {
         160
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let bookID = books[indexPath.row].id
+        let bookID = filteredData[indexPath.row].id
         delegate.getBooksID(id: bookID)
     }
     
