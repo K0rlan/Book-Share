@@ -18,8 +18,7 @@ class BooksCollectionViewCell: UICollectionViewCell {
     lazy var rentImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = Constants.back
-        imageView.alpha = 0
+        imageView.image = UIImage()
         return imageView
     }()
     
@@ -62,7 +61,6 @@ class BooksCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    
     private func setupViews() {
         
         [viewCell].forEach {

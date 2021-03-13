@@ -55,7 +55,7 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.startFetch()
-        viewModel.fetchRents()
+//        viewModel.fetchRents()
         self.view.backgroundColor = Constants.gray
         bookView.backgroundColor = Constants.gray
         bookView.delegateBooksViewProtocol = self
@@ -86,6 +86,10 @@ class MainViewController: UIViewController {
         }
         viewModel.updateRoles = { [weak self] viewData in
             self?.bookView.userRoles = viewData
+        }
+        
+        viewModel.updateRent = { [weak self] viewData in
+            self?.bookView.bookRent = viewData
         }
     }
     

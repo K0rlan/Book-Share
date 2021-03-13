@@ -69,12 +69,18 @@ class BooksView: UIView{
         }
     }
     
+    var bookRent: RentModel = .initial{
+        didSet{
+            setNeedsLayout()
+        }
+    }
+    
     var books = [ViewData.BooksData]()
     var genres = [Genres]()
     var keysArray = [String]()
     var delegateBooksViewProtocol: BooksViewProtocol!
     var images = [BooksImages]()
-    var rents = [ViewData.RentsData]()
+    var rents = [BookRent]()
     var arr = [ViewImages.BooksImages]()
     
     override init(frame: CGRect  = .zero) {
@@ -105,8 +111,8 @@ class BooksView: UIView{
             books = success
             tableView.reloadData()
             collectionView.reloadData()
-        case .successRent(let success):
-            rents = success
+//        case .successRent(let success):
+//            rents = success
         case .failure:
             activityIndicator.isHidden = true
         }
@@ -130,6 +136,18 @@ class BooksView: UIView{
         switch userRoles {
         case .success(let success):
             delegateBooksViewProtocol.getRole(role: success)
+        case .failure(let err):
+            print(err)
+        case .initial:
+            print("")
+        case .loading:
+            print("")
+        }
+        
+        switch bookRent {
+        case .success(let success):
+//            delegateBooksViewProtocol.getRole(role: success)
+            rents = success
         case .failure(let err):
             print(err)
         case .initial:

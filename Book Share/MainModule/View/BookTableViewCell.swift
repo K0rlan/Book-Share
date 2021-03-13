@@ -52,7 +52,7 @@ class BookTableViewCell: UITableViewCell {
     var id: Int!
     var images: [ViewImages.BooksImages] = []
     var delegate: BookTableViewCellDelegate!
-    var rents = [ViewData.RentsData]()
+    var rents = [BookRent]()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -63,7 +63,7 @@ class BookTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    public func updateCV(books: [ViewData.BooksData], id: Int, images: [ViewImages.BooksImages], rents: [ViewData.RentsData]){
+    public func updateCV(books: [ViewData.BooksData], id: Int, images: [ViewImages.BooksImages], rents: [BookRent]){
         self.books = books
         collectionView.reloadData()
         self.id = id
@@ -112,10 +112,22 @@ extension BookTableViewCell: UICollectionViewDelegate, UICollectionViewDataSourc
                 cell.bookImage.image = UIImage(data: image.image!)
             }
         }
+        if rentCheck(id: book.id) {
+            cell.rentImage.image = Constants.occupied
+        }else {
+            cell.rentImage.image = .none
+        }
         
         return cell
     }
     
+    
+    func rentCheck(id: Int) -> Bool {
+        if rents.contains(where: { $0.book_id == id }) {
+            return true
+        } 
+        return false
+    }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let bookID = books[indexPath.row].id

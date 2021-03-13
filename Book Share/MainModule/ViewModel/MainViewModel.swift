@@ -15,6 +15,7 @@ protocol MainViewModelProtocol {
     var updateViewData: ((ViewData)->())? { get set }
     var updateImages: ((ViewImages)->())? { get set }
     var updateRoles: ((RolesViewData)->())? { get set }
+    var updateRent: ((RentModel) ->())? { get set }
     func startFetch()
 }
 
@@ -22,6 +23,7 @@ final class MainViewModel: MainViewModelProtocol{
     var updateViewData: ((ViewData) -> ())?
     var updateImages: ((ViewImages)->())?
     var updateRoles: ((RolesViewData)->())?
+    var updateRent: ((RentModel) ->())?
     
     let provider = MoyaProvider<APIService>()
     var images = [ViewImages.BooksImages]()
@@ -31,6 +33,7 @@ final class MainViewModel: MainViewModelProtocol{
         updateViewData?(.initial)
         updateImages?(.initial)
         updateRoles?(.initial)
+        updateRent?(.initial)
     }
     
     func startFetch() {
@@ -39,8 +42,8 @@ final class MainViewModel: MainViewModelProtocol{
 //        updateRoles?(.loading)
         refreshTables()
         fetchBooks()
-//        fetchRents()
         fetchGenres()
+        fetchRents()
     }
     
     func fetchBooks(){
@@ -116,7 +119,6 @@ final class MainViewModel: MainViewModelProtocol{
             case .success(let response):
                 do {
                     let rentsResponse = try JSONDecoder().decode([ViewData.RentsData].self, from: response.data)
-                    self?.updateViewData?(.successRent(rentsResponse))
                     self?.insertIntoDBRents(rents: rentsResponse)
                 } catch let error {
                     print("Error in parsing: \(error)")
@@ -194,6 +196,17 @@ final class MainViewModel: MainViewModelProtocol{
                         end_date: rent.end_date
                     )
                     try! rents.insert(db)
+                }
+            } catch {
+                print("\(error)")
+            }
+        }
+        
+        DispatchQueue.main.async { [weak self] in
+            do {
+                try dbQueue.read { db in
+                    let draft = try BookRent.fetchAll(db)
+                    self?.updateRent?(.success(draft))
                 }
             } catch {
                 print("\(error)")
