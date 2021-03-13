@@ -18,17 +18,6 @@ class CreateViewController: UIViewController {
         return button
     }()
     
-//    lazy var textBox: UITextField = {
-//        let textField = UITextField()
-//        textField.borderStyle = .roundedRect
-//        textField.layer.borderWidth = 1
-//        textField.placeholder = "Genre ID"
-//        textField.layer.borderColor = CGColor(red: 220/255, green: 220/255, blue: 222/255, alpha: 1)
-//        textField.layer.cornerRadius = 8
-//        textField.backgroundColor = UIColor(cgColor: CGColor(red: 239/255, green: 239/255, blue: 243/255, alpha: 1))
-//        return textField
-//    }()
-    
     
     lazy var separatorView: UIView = {
         let view = UIView()
@@ -57,6 +46,10 @@ class CreateViewController: UIViewController {
         setupViews()
         updateView()
       
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
     }
     
     private func updateView(){
@@ -98,6 +91,7 @@ class CreateViewController: UIViewController {
         dropDown.topAnchor.constraint(equalTo: bookImage.bottomAnchor).isActive = true
         dropDown.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         dropDown.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
+        dropDown.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         createView.topAnchor.constraint(equalTo: dropDown.bottomAnchor).isActive = true
         createView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true

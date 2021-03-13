@@ -22,7 +22,9 @@ struct Constants {
     static let edit = UIImage(named: "edit")
     static let trash = UIImage(named: "trash")
     static let lamp = UIImage(named: "lamp")
-    
+    static let send = UIImage(named: "send")
+    static var userToken = String()
+    static let serverKey = "AAAA1dzGGJY:APA91bELBHAAK6JZrno0yq64yGZM_E-vTMikElL9oR5xWLnNMUrRgAWHUMgBA6hqpFZA4LJ0ldULFbE7apI9LDIQd8i1Jn1NJrgXa8X8Lm1Qhu50BGF6JPBhjDd3na0h7AtY8Dcx4Vzr"
     static let dark = UIColor(red: 44/255, green: 44/255, blue: 44/255, alpha: 1)
     
 //    static let gray = UIColor(red: 234/255, green: 234/255, blue: 234/255, alpha: 1)

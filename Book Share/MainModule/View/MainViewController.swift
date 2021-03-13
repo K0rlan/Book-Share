@@ -55,6 +55,7 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.startFetch()
+        viewModel.fetchRents()
         self.view.backgroundColor = Constants.gray
         bookView.backgroundColor = Constants.gray
         bookView.delegateBooksViewProtocol = self
@@ -212,10 +213,13 @@ extension MainViewController: SignInViewControllerDelegate {
         logoutButton.isHidden = false
         addButton.isHidden = false
         viewModel.getRole()
+        viewModel.getExpiredBooks()
+        viewModel.saveUserToken()
     }
     
     func successfullSignUp(_ ctrl: SignInViewController) {
         self.dismiss(animated: true)
+        viewModel.saveUserToken()
         if let arrayOfTabBarItems = self.tabBarController!.tabBar.items as AnyObject as? NSArray {
             for i in 1..<arrayOfTabBarItems.count{
                 let item = arrayOfTabBarItems[i] as? UITabBarItem
@@ -225,6 +229,7 @@ extension MainViewController: SignInViewControllerDelegate {
         logoutButton.isHidden = false
         addButton.isHidden = false
         viewModel.setRole()
+        viewModel.saveUserToken()
     }
 }
 

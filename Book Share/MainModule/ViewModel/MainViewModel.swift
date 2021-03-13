@@ -34,16 +34,17 @@ final class MainViewModel: MainViewModelProtocol{
     }
     
     func startFetch() {
-        updateViewData?(.loading)
-        updateImages?(.loading)
-        updateRoles?(.loading)
+//        updateViewData?(.loading)
+//        updateImages?(.loading)
+//        updateRoles?(.loading)
         refreshTables()
         fetchBooks()
-        fetchRents()
+//        fetchRents()
         fetchGenres()
     }
     
     func fetchBooks(){
+        
         provider.request(.getBooks) { [weak self] (result) in
             switch result{
             case .success(let response):
@@ -275,6 +276,19 @@ final class MainViewModel: MainViewModelProtocol{
         }
     }
     
+    func saveUserToken(){
+        let userID = Griffon.shared.getUserProfiles()!.id
+        let db = Firestore.firestore()
+        db.collection("users_table").addDocument(data: [
+            "user_id": userID,
+            "fcm_token": Constants.userToken
+        ]) { err in
+            if let err = err {
+                print("Error saving user data: \(err)")
+            }
+        }
+    }
+    
     func logout() {
         Griffon.shared.cleanKeyChain()
         Griffon.shared.signInModel = nil
@@ -293,4 +307,71 @@ final class MainViewModel: MainViewModelProtocol{
         }
     }
     
+    func getExpiredBooks(){
+        do {
+            try dbQueue.read { db in
+                var koko = [Books]()
+                let draft = try BookRent.filterByUser(userId: Utils.getUserID()).fetchAll(db)
+                print(draft)
+                
+                for book in draft {
+                    
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+                    let date = dateFormatter.date(from: book.start_date)!
+//                    let calendar = Calendar.current
+//                    let addOneWeekToCurrentDate = calendar.date(byAdding: .weekOfYear, value: 1, to: date)
+//                    print("aaaa\(addOneWeekToCurrentDate)")
+                    if date < Date(){
+                        let b = try Books.filterById(id: book.book_id).fetchAll(db)
+                        koko.append(contentsOf: b)
+                    }
+                    
+                }
+                if !koko.isEmpty{
+                    sendPush(book: koko)
+                }
+                
+                print("aaaa\(koko)")
+            }
+        } catch {
+            print("\(error)")
+        }
+    }
+    
+  
+    
+    func sendPush(book: [Books]){
+        let userToken = Constants.userToken
+        print(userToken)
+        var a = String()
+        for book in book {
+            a += "\n\(book.title)"
+        }
+        let notifPayload: [String: Any] = ["to": userToken,"notification": ["title":"You have expired books.", "body":"You need to hand over: \(a)","badge":1,"sound":"default"]]
+        self.sendPushNotification(payloadDict: notifPayload)
+    }
+    
+    func sendPushNotification(payloadDict: [String: Any]) {
+       let url = URL(string: "https://fcm.googleapis.com/fcm/send")!
+       var request = URLRequest(url: url)
+       request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+       request.setValue("key=\(Constants.serverKey)", forHTTPHeaderField: "Authorization")
+       request.httpMethod = "POST"
+       request.httpBody = try? JSONSerialization.data(withJSONObject: payloadDict, options: [])
+       let task = URLSession.shared.dataTask(with: request) { data, response, error in
+          guard let data = data, error == nil else {
+            print(error ?? "")
+            return
+          }
+          if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {
+            print("statusCode should be 200, but is \(httpStatus.statusCode)")
+            print(response ?? "")
+          }
+          print("Notfication sent successfully.")
+          let responseString = String(data: data, encoding: .utf8)
+          print(responseString ?? "")
+       }
+       task.resume()
+    }
 }
