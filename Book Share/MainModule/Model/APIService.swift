@@ -7,6 +7,7 @@
 
 import Foundation
 import Moya
+import UIKit
 
 enum APIService {
     case getBooks
@@ -25,6 +26,7 @@ enum APIService {
     case getComments
     case updateComment(id: Int, text: String)
     case deleteComment(id: Int)
+    case postImage(image: UIImage)
 }
 
 extension APIService: TargetType {
@@ -61,6 +63,8 @@ extension APIService: TargetType {
             return "api/comments/\(id)"
         case .updateComment(let id, let _):
             return "api/comments/\(id)"
+        case .postImage:
+            return "api/file-upload"
         }
     }
     
@@ -68,7 +72,7 @@ extension APIService: TargetType {
         switch self {
         case .getBooks, .getGenres, .getBook, .getRent, .getImage, .getUserBooks, .getComments:
             return .get
-        case .postBook, .postRent, .postComment:
+        case .postBook, .postRent, .postComment, .postImage:
             return .post
         case .deleteRent, .deleteBook, .deleteComment:
             return .delete
@@ -151,6 +155,13 @@ extension APIService: TargetType {
                 
             ]
             return .requestParameters(parameters: params, encoding: JSONEncoding.default)
+            
+        case .postImage(let image):
+            let imageData = image.jpegData(compressionQuality: 1.0)!
+            return .uploadMultipart([MultipartFormData(provider: .data(imageData),
+                                                       name: "image",
+                                                       fileName: "bookImage.jpg",
+                                                       mimeType: "image/jpg")])
         }
         
         

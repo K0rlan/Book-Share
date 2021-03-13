@@ -30,6 +30,7 @@ class MainViewController: UIViewController {
     lazy var addButton: UIButton = {
         let button = UIButton()
         button.setImage(Constants.add, for: .normal)
+        button.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
         return button
     }()
     
@@ -172,9 +173,10 @@ class MainViewController: UIViewController {
 extension MainViewController: BooksViewProtocol{
     func getRole(role: RolesViewData.Roles) {
         if role.role == "user"{
-            addButton.addTarget(self, action: #selector(requestButtonPressed), for: .touchUpInside)
+            addButton.isHidden = true
         }else {
-            addButton.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
+            addButton.isHidden = false
+
         }
     }
     
