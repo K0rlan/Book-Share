@@ -12,10 +12,9 @@ class MainViewController: UIViewController {
     
     lazy var appLabel: UILabel = {
         let label = UILabel()
-        label.text = "Dar Library"
+        label.text = "Book Share"
         label.textColor = Constants.dark
         label.font = .boldSystemFont(ofSize: 24)
-        
         return label
     }()
     
@@ -23,7 +22,6 @@ class MainViewController: UIViewController {
         let button = UIButton()
         button.setImage(Constants.logout, for: .normal)
         button.addTarget(self, action: #selector(logoutButtonPressed), for: .touchUpInside)
-        //        button.isHidden = true
         return button
     }()
     
@@ -55,26 +53,11 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.startFetch()
-//        viewModel.fetchRents()
-        self.view.backgroundColor = Constants.gray
-        bookView.backgroundColor = Constants.gray
+        setStyles()
         bookView.delegateBooksViewProtocol = self
-        setNavigationBar()
+        userAuth()
         updateView()
         setupViews()
-        if Utils.isExpDate() {
-            authViaGriffon()
-        }
-        if Utils.getUserID() == ""{
-            if let arrayOfTabBarItems = self.tabBarController!.tabBar.items as AnyObject as? NSArray {
-                for i in 1..<arrayOfTabBarItems.count{
-                    let item = arrayOfTabBarItems[i] as? UITabBarItem
-                    item?.isEnabled = false
-                }
-                logoutButton.isHidden = true
-                addButton.isHidden = true
-            }
-        }
     }
     
     private func updateView(){
@@ -90,6 +73,29 @@ class MainViewController: UIViewController {
         
         viewModel.updateRent = { [weak self] viewData in
             self?.bookView.bookRent = viewData
+        }
+    }
+    
+    private func setStyles(){
+        setNavigationBar()
+        addButton.isHidden = true
+        self.view.backgroundColor = Constants.gray
+        bookView.backgroundColor = Constants.gray
+    }
+    
+    private func userAuth(){
+        if Utils.isExpDate() {
+            authViaGriffon()
+        }
+        if Utils.getUserID() == ""{
+            if let arrayOfTabBarItems = self.tabBarController!.tabBar.items as AnyObject as? NSArray {
+                for i in 1..<arrayOfTabBarItems.count{
+                    let item = arrayOfTabBarItems[i] as? UITabBarItem
+                    item?.isEnabled = false
+                }
+                logoutButton.isHidden = true
+                addButton.isHidden = true
+            }
         }
     }
     
@@ -128,6 +134,8 @@ class MainViewController: UIViewController {
                 item?.isEnabled = false
             }
         }
+        logoutButton.isHidden = true
+        addButton.isHidden = true
     }
     
     @objc func addButtonPressed() {
@@ -135,25 +143,6 @@ class MainViewController: UIViewController {
         self.navigationController?.pushViewController(createVC, animated: true)
     }
     
-    @objc func requestButtonPressed() {
-        let alert = UIAlertController(title: "Request for new book", message: "Enter title and author of book that you want to add", preferredStyle: .alert)
-        alert.addTextField { (textField:UITextField) in
-            textField.placeholder = "Enter title"
-        }
-        alert.addTextField { (textField:UITextField) in
-            textField.placeholder = "Enter author"
-        }
-        let action = UIAlertAction(title: "Submit", style: .default) { [weak self] (alertAction) in
-            let title = alert.textFields![0] as UITextField
-            let author = alert.textFields![1] as UITextField
-            self?.viewModel.requestForBook(title: title.text!, author: author.text!)
-        }
-        
-        alert.addAction(action)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        
-        self.present(alert, animated: true, completion: nil)
-    }
     
     private func setNavigationBar(){
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
@@ -176,12 +165,15 @@ class MainViewController: UIViewController {
     
 }
 extension MainViewController: BooksViewProtocol{
+    func setErrorAlert(error: Error) {
+        let alertViewController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        alertViewController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        present(alertViewController, animated: true, completion: nil)
+    }
+    
     func getRole(role: RolesViewData.Roles) {
         if role.role == "user"{
             addButton.isHidden = true
-        }else {
-            addButton.isHidden = false
-
         }
     }
     

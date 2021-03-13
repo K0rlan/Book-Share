@@ -10,7 +10,6 @@ import UIKit
 
 protocol Builder {
     static func createMain() -> UIViewController
-    static func createProfile() -> UIViewController
     static func createReservedBooks() -> UIViewController
     static func createBookDetails(id: Int) -> UIViewController
     static func createMoreBooks(id: Int) -> UIViewController
@@ -27,10 +26,6 @@ class ModelBuilder: Builder {
     
     static func createMain() -> UIViewController {
         let view = MainViewController()
-        return view
-    }
-    static func createProfile() -> UIViewController {
-        let view = ProfileViewController()
         return view
     }
     

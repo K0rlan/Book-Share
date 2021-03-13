@@ -11,6 +11,7 @@ protocol BooksViewProtocol {
     func getBooksID(id: Int)
     func moreBooks(id: Int)
     func getRole(role: RolesViewData.Roles)
+    func setErrorAlert(error: Error)
 }
 
 class BooksView: UIView{
@@ -30,15 +31,12 @@ class BooksView: UIView{
     lazy var collectionView : UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .horizontal
-//        flowLayout.estimatedItemSize = CGSize(width: 120, height: 50)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.isScrollEnabled = true
         collectionView.register(FilterCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-        
         collectionView.delegate = self
         collectionView.dataSource = self
-        
         collectionView.backgroundColor = Constants.gray
         return collectionView
     }()
@@ -111,10 +109,9 @@ class BooksView: UIView{
             books = success
             tableView.reloadData()
             collectionView.reloadData()
-//        case .successRent(let success):
-//            rents = success
-        case .failure:
+        case .failure(let error):
             activityIndicator.isHidden = true
+            delegateBooksViewProtocol.setErrorAlert(error: error)
         }
         
         switch bookImage {
@@ -129,31 +126,31 @@ class BooksView: UIView{
             collectionView.isHidden = false
             tableView.isHidden = false
             activityIndicator.isHidden = true
-        case .failure:
+        case .failure(let error):
             activityIndicator.isHidden = true
+            delegateBooksViewProtocol.setErrorAlert(error: error)
         }
         
         switch userRoles {
         case .success(let success):
             delegateBooksViewProtocol.getRole(role: success)
         case .failure(let err):
-            print(err)
+            delegateBooksViewProtocol.setErrorAlert(error: err)
         case .initial:
-            print("")
+            print("initial roles")
         case .loading:
-            print("")
+            print("loading roles")
         }
         
         switch bookRent {
         case .success(let success):
-//            delegateBooksViewProtocol.getRole(role: success)
             rents = success
         case .failure(let err):
-            print(err)
+            delegateBooksViewProtocol.setErrorAlert(error: err)
         case .initial:
-            print("")
+            print("initial rents")
         case .loading:
-            print("")
+            print("loading rents")
         }
     }
     
@@ -163,7 +160,7 @@ class BooksView: UIView{
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
-        collectionView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        collectionView.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true
         collectionView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         collectionView.heightAnchor.constraint(equalToConstant: 50).isActive = true
@@ -201,7 +198,7 @@ extension BooksView: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        320
+        350
     }
     
     func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
@@ -237,7 +234,4 @@ extension BooksView: UICollectionViewDelegate, UICollectionViewDataSource, UICol
         let indexPath = NSIndexPath(row: indexPath.row, section: 0)
         tableView.scrollToRow(at: indexPath as IndexPath, at: .top, animated: true)
     }
-    
-    
-
 }

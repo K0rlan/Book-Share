@@ -37,25 +37,22 @@ final class MainViewModel: MainViewModelProtocol{
     }
     
     func startFetch() {
-//        updateViewData?(.loading)
-//        updateImages?(.loading)
-//        updateRoles?(.loading)
         refreshTables()
         fetchBooks()
-        fetchGenres()
         fetchRents()
     }
     
     func fetchBooks(){
-        
+        updateViewData?(.loading)
         provider.request(.getBooks) { [weak self] (result) in
             switch result{
             case .success(let response):
                 do {
                     let booksResponse = try JSONDecoder().decode([ViewData.BooksData].self, from: response.data)
                     self?.fetchImages(books: booksResponse)
-                    self?.insertIntoDBBooks(books: booksResponse)
                     self?.updateViewData?(.successBooks(booksResponse))
+                    self?.fetchGenres()
+                    self?.insertIntoDBBooks(books: booksResponse)
                 } catch let error {
                     print("Error in parsing: \(error)")
                     self?.updateViewData?(.failure(error))
@@ -89,6 +86,7 @@ final class MainViewModel: MainViewModelProtocol{
     }
     
     func fetchImages(books: [ViewData.BooksData]){
+        updateImages?(.loading)
         for book in books{
             if let img = book.image{
                 provide.request(.getImage(imageName: img)) { [weak self] (result) in
@@ -256,16 +254,19 @@ final class MainViewModel: MainViewModelProtocol{
                 }
             } catch {
                 print("\(error)")
+                self?.updateViewData?(.failure(error))
             }
         }
     }
     
     func getRole(){
+        updateRoles?(.loading)
         let db = Firestore.firestore()
         let userID = Utils.getUserID()
         db.collection("roles").whereField("user_id", isEqualTo: userID).getDocuments() { [weak self] (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
+                self?.updateRoles?(.failure(err))
             } else {
                 for document in querySnapshot!.documents {
                     self?.updateRoles?(.success(RolesViewData.Roles(dictionary: document.data())))
@@ -323,7 +324,7 @@ final class MainViewModel: MainViewModelProtocol{
     func getExpiredBooks(){
         do {
             try dbQueue.read { db in
-                var koko = [Books]()
+                var booksPush = [Books]()
                 let draft = try BookRent.filterByUser(userId: Utils.getUserID()).fetchAll(db)
                 print(draft)
                 
@@ -337,15 +338,14 @@ final class MainViewModel: MainViewModelProtocol{
 //                    print("aaaa\(addOneWeekToCurrentDate)")
                     if date < Date(){
                         let b = try Books.filterById(id: book.book_id).fetchAll(db)
-                        koko.append(contentsOf: b)
+                        booksPush.append(contentsOf: b)
                     }
                     
                 }
-                if !koko.isEmpty{
-                    sendPush(book: koko)
+                if !booksPush.isEmpty{
+                    sendPush(book: booksPush)
                 }
                 
-                print("aaaa\(koko)")
             }
         } catch {
             print("\(error)")
