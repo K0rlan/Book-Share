@@ -182,7 +182,7 @@ extension CreateViewController: UIPickerViewDelegate, UIPickerViewDataSource, UI
         self.selectedGenre = self.list[0]
         print(selectedGenre)
         self.view.endEditing(true)
-           return list[row]
+           return list[row] ?? list[0]
        }
 
        func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
@@ -190,7 +190,7 @@ extension CreateViewController: UIPickerViewDelegate, UIPickerViewDataSource, UI
 //           self.textBox.text = self.list[row]
 //           self.dropDown.isHidden = true
         self.selectedGenre = self.list[row]
-        createViewModel.getGenre(name: selectedGenre!)
+        createViewModel.getGenre(name: selectedGenre ?? list[1])
         print(selectedGenre)
        }
 

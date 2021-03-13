@@ -91,12 +91,14 @@ class CreateView: UIView {
     var imagePath: String!
     var date: String!
     var genre: Int!
-    
+    var genres = [Genres]()
     override init(frame: CGRect  = .zero) {
         super .init(frame: frame)
         setStyles()
         setupViews()
-        
+        let dateFormatter: DateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        date = dateFormatter.string(from: Date())
     }
     
     
@@ -110,6 +112,7 @@ class CreateView: UIView {
         switch genresData {
         case .success(let success):
             delegate.getGenres(genres: success)
+            genres = success
         case . successImage(let success):
             imagePath = success
         case .successGenre(let success):
@@ -132,6 +135,7 @@ class CreateView: UIView {
                             publish_date: date ?? "",
                             genre_id: Int(genre ?? 3) ,
                             enabled: true )
+        
         delegate.updateBook(book: book)
     }
     
