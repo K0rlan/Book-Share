@@ -24,4 +24,7 @@ extension Genres: Codable, FetchableRecord, MutablePersistableRecord {
         static let enabled = Column(CodingKeys.enabled)
     }
 
+    static func filterByName(name: String) -> QueryInterfaceRequest<Genres> {
+            return Genres.filter(Columns.title == name)
+    }
 }

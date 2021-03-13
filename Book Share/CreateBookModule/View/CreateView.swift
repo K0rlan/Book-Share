@@ -8,18 +8,14 @@
 import Foundation
 import UIKit
 
+
 protocol CreateViewProtocol {
     func updateBook(book: CreateBook)
+    func getGenres(genres: [Genres])
+//    func getImage(image: String)
 }
 
 class CreateView: UIView {
-    
-    lazy var bookImage: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = Constants.book
-        return imageView
-    }()
     
     lazy var titleTextField: UITextField = {
         let textField = UITextField()
@@ -43,6 +39,17 @@ class CreateView: UIView {
         return textField
     }()
     
+    lazy var datePicker: UIDatePicker = {
+        let datePicker = UIDatePicker()
+        datePicker.frame = CGRect(x: 10, y: 50, width: self.frame.width, height: 200)
+        datePicker.timeZone = NSTimeZone.local
+        datePicker.backgroundColor = UIColor.white
+        datePicker.addTarget(self, action: #selector(datePickerValueChanged), for: .valueChanged)
+        return datePicker
+    }()
+    
+    
+    
     lazy var authorTextField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
@@ -54,16 +61,7 @@ class CreateView: UIView {
         return textField
     }()
     
-    lazy var publishDateTextField: UITextField = {
-        let textField = UITextField()
-        textField.borderStyle = .roundedRect
-        textField.layer.borderWidth = 1
-        textField.placeholder = "Publish Date"
-        textField.layer.borderColor = CGColor(red: 220/255, green: 220/255, blue: 222/255, alpha: 1)
-        textField.layer.cornerRadius = 8
-        textField.backgroundColor = UIColor(cgColor: CGColor(red: 239/255, green: 239/255, blue: 243/255, alpha: 1))
-        return textField
-    }()
+    
     
     lazy var genreIdTextField: UITextField = {
         let textField = UITextField()
@@ -75,6 +73,8 @@ class CreateView: UIView {
         textField.backgroundColor = UIColor(cgColor: CGColor(red: 239/255, green: 239/255, blue: 243/255, alpha: 1))
         return textField
     }()
+    
+    
     
     lazy var enabledTextField: UITextField = {
         let textField = UITextField()
@@ -104,8 +104,18 @@ class CreateView: UIView {
         return button
     }()
 
-    
+   
     var delegate: CreateViewProtocol!
+    
+    var genresData: GenresResponse = .initial{
+        didSet{
+            setNeedsLayout()
+        }
+    }
+    
+    var imagePath: String!
+    var date: String!
+    var genre: Int!
     
     override init(frame: CGRect  = .zero) {
         super .init(frame: frame)
@@ -114,22 +124,51 @@ class CreateView: UIView {
         
     }
     
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        switch genresData {
+        case .success(let success):
+            delegate.getGenres(genres: success)
+        case . successImage(let success):
+            imagePath = success
+        case .successGenre(let success):
+            genre = success.id
+        case .failure(let err):
+            print(err)
+        case .initial:
+            print("")
+        case .loading:
+            print("")
+        }
+    }
+    
     
     @objc func editButtonPressed(sender: UIButton) {
         let book = CreateBook(isbn: isbnTextField.text ?? "",
                             title: titleTextField.text ?? "",
                             author: authorTextField.text ?? "",
-                            image: "nil",
-                            publish_date: publishDateTextField.text ?? "",
-                            genre_id: Int(genreIdTextField.text!) ,
+                            image: imagePath,
+                            publish_date: date ?? "",
+                            genre_id: Int(genre) ,
                             enabled: true )
         delegate.updateBook(book: book)
     }
     
-   
+    @objc func datePickerValueChanged(_ sender: UIDatePicker){
+        
+        let dateFormatter: DateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        let selectedDate: String = dateFormatter.string(from: sender.date)
+        print("Selected value \(selectedDate)")
+        self.date = selectedDate
+    }
+    
     
     private func setStyles(){
         self.backgroundColor = .white
@@ -145,17 +184,13 @@ class CreateView: UIView {
     
     
     private func setupViews(){
-        [bookImage, titleTextField, isbnTextField, authorTextField, publishDateTextField, genreIdTextField, enabledTextField, editButton].forEach {
+        [titleTextField, isbnTextField, authorTextField, genreIdTextField, enabledTextField, editButton, datePicker].forEach {
             self.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
-        bookImage.widthAnchor.constraint(equalToConstant: 105).isActive = true
-        bookImage.heightAnchor.constraint(equalToConstant: 160).isActive = true
-        bookImage.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true
-        bookImage.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         
-        titleTextField.topAnchor.constraint(equalTo: bookImage.bottomAnchor, constant: 20).isActive = true
+        titleTextField.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         titleTextField.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
         titleTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         titleTextField.heightAnchor.constraint(equalToConstant: 44).isActive = true
@@ -170,12 +205,12 @@ class CreateView: UIView {
         authorTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         authorTextField.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
-        publishDateTextField.topAnchor.constraint(equalTo: authorTextField.bottomAnchor, constant: 20).isActive = true
-        publishDateTextField.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
-        publishDateTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
-        publishDateTextField.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        datePicker.topAnchor.constraint(equalTo: authorTextField.bottomAnchor, constant: 20).isActive = true
+        datePicker.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
+        datePicker.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        datePicker.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
-        genreIdTextField.topAnchor.constraint(equalTo: publishDateTextField.bottomAnchor, constant: 20).isActive = true
+        genreIdTextField.topAnchor.constraint(equalTo: datePicker.bottomAnchor, constant: 20).isActive = true
         genreIdTextField.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
         genreIdTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         genreIdTextField.heightAnchor.constraint(equalToConstant: 44).isActive = true
@@ -188,6 +223,8 @@ class CreateView: UIView {
         editButton.topAnchor.constraint(equalTo: enabledTextField.bottomAnchor, constant: 20).isActive = true
         editButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
         editButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        
+       
       
        
     }

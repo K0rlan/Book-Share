@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E40A637525FC1EE40054BA66 /* GenresResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40A637425FC1EE40054BA66 /* GenresResponse.swift */; };
 		E40D308425F0DAC100BEB939 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40D308325F0DAC100BEB939 /* APIService.swift */; };
 		E41E19CA25FBA0F900F9EB5F /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = E41E19C925FBA0F900F9EB5F /* FirebaseMessaging */; };
 		E41E19D525FBCF7800F9EB5F /* CommentResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41E19D425FBCF7800F9EB5F /* CommentResponse.swift */; };
@@ -77,6 +78,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E40A637425FC1EE40054BA66 /* GenresResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenresResponse.swift; sourceTree = "<group>"; };
 		E40D308325F0DAC100BEB939 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		E41E19CD25FBA70800F9EB5F /* Book Share.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Book Share.entitlements"; sourceTree = "<group>"; };
 		E41E19D425FBCF7800F9EB5F /* CommentResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentResponse.swift; sourceTree = "<group>"; };
@@ -462,6 +464,7 @@
 			isa = PBXGroup;
 			children = (
 				E4F001A025FAD86C00532AB6 /* CreateBook.swift */,
+				E40A637425FC1EE40054BA66 /* GenresResponse.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -615,6 +618,7 @@
 				E4D5914B25F083B60082D681 /* BooksView.swift in Sources */,
 				E41E19D525FBCF7800F9EB5F /* CommentResponse.swift in Sources */,
 				E472972025F5A7EE004F45DE /* BookRent.swift in Sources */,
+				E40A637525FC1EE40054BA66 /* GenresResponse.swift in Sources */,
 				E4D590E925F07FDF0082D681 /* AppDelegate.swift in Sources */,
 				E472971C25F590AA004F45DE /* MoreModel.swift in Sources */,
 				E4F0019725FAD44A00532AB6 /* CreateViewController.swift in Sources */,

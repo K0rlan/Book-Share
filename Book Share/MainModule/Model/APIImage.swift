@@ -9,7 +9,6 @@ import Foundation
 import Moya
 
 enum APIImage {
-    
     case getImage(imageName: String)
     
 }
