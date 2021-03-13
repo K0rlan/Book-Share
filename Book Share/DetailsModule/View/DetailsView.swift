@@ -14,6 +14,7 @@ protocol DetailsViewProtocol {
     func getRole(role: RolesViewData.Roles)
     func deleteComment(id: Int)
     func updateComment(id: Int, text: String)
+    func isBookNotAvailable(flag: Bool)
 }
 
 class DetailsView: UIView {
@@ -244,6 +245,7 @@ class DetailsView: UIView {
             notAvailableLabel.isEnabled = false
         }else if status == BookStatus.notAvailable {
             bringSubviewToFront(notAvailableLabel)
+            delegate.isBookNotAvailable(flag: true)
             notAvailableLabel.isHidden = false
             notAvailableLabel.isEnabled = true
             reserveBookButton.isHidden = true

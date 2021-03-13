@@ -23,6 +23,14 @@ class DetailsViewController: UIViewController {
         return button
     }()
     
+    lazy var sendButton: UIButton = {
+        let button = UIButton()
+        button.setImage(Constants.send, for: .normal)
+        button.alpha = 0
+        button.addTarget(self, action: #selector(sendButtonPressed), for: .touchUpInside)
+        return button
+    }()
+    
     lazy var separatorViewForNavBar: UIView = {
         let view = UIView()
         return view
@@ -71,14 +79,21 @@ class DetailsViewController: UIViewController {
         self.navigationController?.pushViewController(editVC, animated: true)
     }
     
+    @objc func sendButtonPressed(){
+        detailsViewModel.adminSendPush()
+    }
+    
     private func setupViews(){
-        [trashButton, editButton, separatorView, detailsView].forEach {
+        [trashButton, editButton, sendButton, separatorView, detailsView].forEach {
             self.view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
         trashButton.widthAnchor.constraint(equalToConstant: 34).isActive = true
         trashButton.heightAnchor.constraint(equalToConstant: 34).isActive = true
+        
+        sendButton.widthAnchor.constraint(equalToConstant: 34).isActive = true
+        sendButton.heightAnchor.constraint(equalToConstant: 34).isActive = true
         
         editButton.widthAnchor.constraint(equalToConstant: 34).isActive = true
         editButton.heightAnchor.constraint(equalToConstant: 34).isActive = true
@@ -107,13 +122,17 @@ class DetailsViewController: UIViewController {
         self.navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
         
         navigationController?.navigationBar.tintColor = Constants.orange
-        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: trashButton), UIBarButtonItem(customView: separatorViewForNavBar),UIBarButtonItem(customView: editButton)]
+        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: trashButton), UIBarButtonItem(customView: separatorViewForNavBar),UIBarButtonItem(customView: editButton), UIBarButtonItem(customView: sendButton)]
     }
     
     
     
 }
 extension DetailsViewController: DetailsViewProtocol {
+    func isBookNotAvailable(flag: Bool) {
+        sendButton.alpha = 1
+    }
+    
     func deleteComment(id: Int) {
         detailsViewModel.deleteComment(id: id)
         detailsViewModel.getComments()
@@ -129,6 +148,7 @@ extension DetailsViewController: DetailsViewProtocol {
             print(role)
             trashButton.isHidden = true
             editButton.isHidden = true
+            sendButton.isHidden = true
         }
     }
     
