@@ -23,7 +23,8 @@ class DetailsViewModel: DetailsViewModelProtocol{
     var updateComments: ((CommentResponse)->())?
     let bookID: Int
     let provider = MoyaProvider<APIService>()
-    let provide = MoyaProvider<APIImage>()
+    let imageProvider = MoyaProvider<APIImage>()
+    
     init(bookID: Int) {
         updateViewData?(.initial)
         updateRoles?(.initial)
@@ -39,11 +40,16 @@ class DetailsViewModel: DetailsViewModelProtocol{
         provider.request(.deleteBook(id: bookID)) { [weak self] (result) in
             switch result{
             case .success(let response):
-                    print(response)
+                do {
+                    let jsonResponse = try JSONSerialization.jsonObject(with: response.data, options: .allowFragments)
+                } catch let error {
+                    print("Error in parsing: \(error)")
+                    self?.updateViewData?(.failure(error))
+                }
             case .failure(let error):
                 let requestError = (error as NSError)
                 print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
-                
+                self?.updateViewData?(.failure(error))
             }
         }
     }
@@ -52,18 +58,23 @@ class DetailsViewModel: DetailsViewModelProtocol{
         provider.request(.deleteComment(id: id)) { [weak self] (result) in
             switch result{
             case .success(let response):
-                    print(response)
+                do {
+                    let jsonResponse = try JSONSerialization.jsonObject(with: response.data, options: .allowFragments)
+                } catch let error {
+                    print("Error in parsing: \(error)")
+                    self?.updateComments?(.failure(error))
+                }
             case .failure(let error):
                 let requestError = (error as NSError)
                 print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
-                
+                self?.updateComments?(.failure(error))
             }
         }
     }
     
     func fetchImages(image: String?){
         if let img = image{
-            provide.request(.getImage(imageName: img)) { [weak self] (result) in
+            imageProvider.request(.getImage(imageName: img)) { [weak self] (result) in
                 switch result{
                 case .success(let response):
                     do {
@@ -84,13 +95,14 @@ class DetailsViewModel: DetailsViewModelProtocol{
     
     func startFetch() {
         getComments()
+        
+        updateViewData?(.loading)
         provider.request(.getBook(bookID: bookID)) { [weak self] (result) in
             switch result{
             case .success(let response):
                 do {
                     let bookResponse = try JSONDecoder().decode(DetailsData.Data.self, from: response.data)
                     self?.insertIntoDBBook(book: bookResponse)
-                    print(bookResponse)
                     self?.updateViewData?(.success(bookResponse))
                     self?.fetchImages(image: bookResponse.image)
                 } catch let error {
@@ -103,17 +115,17 @@ class DetailsViewModel: DetailsViewModelProtocol{
                 self?.updateViewData?(.failure(error))
             }
         }
-       
+        
     }
     
     func getComments() {
         refreshComments()
+        
         provider.request(.getComments) { [weak self] (result) in
             switch result{
             case .success(let response):
                 do {
                     let comments = try JSONDecoder().decode([CommentResponse.Data].self, from: response.data)
-//                    self?.updateComments?(.success(comments))
                     self?.insertIntoDBComments(comments: comments)
                 } catch let error {
                     print("Error in parsing: \(error)")
@@ -125,33 +137,31 @@ class DetailsViewModel: DetailsViewModelProtocol{
                 self?.updateViewData?(.failure(error))
             }
         }
-       
+        
     }
     
-    
+
     func getBookStatus() {
         DispatchQueue.main.async { [weak self] in
-        do {
-            try dbQueue.read { [weak self] db in
-                let bookIsTaken = try BookRent.filterByBookID(id: self!.bookID).fetchAll(db)
-                let bookIsTakenByThisUser = try BookRent.filterByUserID(userId: Griffon.shared.getUserProfiles()!.id, bookId: self!.bookID).fetchAll(db)
-                if !bookIsTakenByThisUser.isEmpty {
-                    self?.updateViewData?(.bookStatus(BookStatus.canReturnBook))
-                } else if !bookIsTaken.isEmpty, bookIsTakenByThisUser.isEmpty {
-                    self?.updateViewData?(.bookStatus(BookStatus.notAvailable))
-                } else {
-                    self?.updateViewData?(.bookStatus(BookStatus.available))
+            do {
+                try dbQueue.read { [weak self] db in
+                    let bookIsTaken = try BookRent.filterByBookID(id: self!.bookID).fetchAll(db)
+                    let bookIsTakenByThisUser = try BookRent.filterByUserID(userId: Griffon.shared.getUserProfiles()!.id, bookId: self!.bookID).fetchAll(db)
+                    if !bookIsTakenByThisUser.isEmpty {
+                        self?.updateViewData?(.bookStatus(BookStatus.canReturnBook))
+                    } else if !bookIsTaken.isEmpty, bookIsTakenByThisUser.isEmpty {
+                        self?.updateViewData?(.bookStatus(BookStatus.notAvailable))
+                    } else {
+                        self?.updateViewData?(.bookStatus(BookStatus.available))
+                    }
                 }
+            } catch {
+                print("\(error)")
             }
-        } catch {
-            print("\(error)")
-        }
         }
     }
     
     func addRent(){
-        let calendar = Calendar.current
-        let addTwoWeekToCurrentDate = calendar.date(byAdding: .weekOfYear, value: 2, to: Date())
         var book: BookDetails!
         do {
             try dbQueue.read { db in
@@ -169,7 +179,7 @@ class DetailsViewModel: DetailsViewModelProtocol{
                     if let jsonResponse = try JSONSerialization.jsonObject(with: response.data, options: []) as? [String: Any]{
                         print(jsonResponse)
                     }
-
+                    
                 } catch let error {
                     print("Error in parsing: \(error)")
                     self?.updateViewData?(.failure(error))
@@ -225,9 +235,7 @@ class DetailsViewModel: DetailsViewModelProtocol{
             switch result{
             case .success(let response):
                 do {
-                    if let jsonResponse = try JSONSerialization.jsonObject(with: response.data, options: []) as? [String: String]{
-                        print(jsonResponse)
-                    }
+                    let jsonResponse = try JSONSerialization.jsonObject(with: response.data, options: .allowFragments)
                     
                 } catch let error {
                     print("Error in parsing: \(error)")
@@ -344,10 +352,16 @@ class DetailsViewModel: DetailsViewModelProtocol{
         provider.request(.updateRent(id: id, enabled: enabled)) { [weak self] (result) in
             switch result{
             case .success(let response):
-                print(response)
+                do {
+                    let jsonResponse = try JSONSerialization.jsonObject(with: response.data, options: .allowFragments)
+                } catch let error {
+                    print("Error in parsing: \(error)")
+                    self?.updateViewData?(.failure(error))
+                }
             case .failure(let error):
                 let requestError = (error as NSError)
                 print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
+                self?.updateViewData?(.failure(error))
                 
             }
         }
@@ -358,11 +372,12 @@ class DetailsViewModel: DetailsViewModelProtocol{
         db.collection("roles").whereField("user_id", isEqualTo: userID).getDocuments() { [weak self] (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
+                self?.updateRoles?(.failure(err))
             } else {
                 for document in querySnapshot!.documents {
                     self?.updateRoles?(.success(RolesViewData.Roles(dictionary: document.data())))
                 }
-               
+                
             }
         }
         
@@ -378,10 +393,16 @@ class DetailsViewModel: DetailsViewModelProtocol{
         provider.request(.updateComment(id: id, text: text)) { [weak self] (result) in
             switch result{
             case .success(let response):
-                print(response)
+                do {
+                    let jsonResponse = try JSONSerialization.jsonObject(with: response.data, options: .allowFragments)
+                } catch let error {
+                    print("Error in parsing: \(error)")
+                    self?.updateComments?(.failure(error))
+                }
             case .failure(let error):
                 let requestError = (error as NSError)
                 print("Request Error message: \(error.localizedDescription), code: \(requestError.code)")
+                self?.updateComments?(.failure(error))
                 
             }
         }
@@ -395,7 +416,7 @@ class DetailsViewModel: DetailsViewModelProtocol{
                     if let jsonResponse = try JSONSerialization.jsonObject(with: response.data, options: []) as? [String: Any]{
                         print(jsonResponse)
                     }
-
+                    
                 } catch let error {
                     print("Error in parsing: \(error)")
                     self?.updateViewData?(.failure(error))
@@ -411,11 +432,10 @@ class DetailsViewModel: DetailsViewModelProtocol{
     func adminSendPush(){
         do {
             try dbQueue.read { [weak self] db in
-                var koko = [Books]()
                 let draft = try BookRent.filterByBookID(id: bookID).fetchAll(db)
                 let userId = draft.first?.user_id
                 self?.getUserFCM(userId: userId!)
-               
+                
             }
         } catch {
             print("\(error)")
@@ -433,38 +453,37 @@ class DetailsViewModel: DetailsViewModelProtocol{
                     print(dict.fcm)
                     self?.sendPush(fcm: dict.fcm)
                 }
-               
+                
             }
         }
     }
     
     func sendPush(fcm: String){
-        print("aaa\(fcm)")
         let notifPayload: [String: Any] = ["to": fcm,"notification": ["title":"You have expired books.", "body":"You need to hand over expired books","badge":1,"sound":"default"]]
         self.sendPushNotification(payloadDict: notifPayload)
     }
     
     func sendPushNotification(payloadDict: [String: Any]) {
-       let url = URL(string: "https://fcm.googleapis.com/fcm/send")!
-       var request = URLRequest(url: url)
-       request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-       request.setValue("key=\(Constants.serverKey)", forHTTPHeaderField: "Authorization")
-       request.httpMethod = "POST"
-       request.httpBody = try? JSONSerialization.data(withJSONObject: payloadDict, options: [])
-       let task = URLSession.shared.dataTask(with: request) { data, response, error in
-          guard let data = data, error == nil else {
-            print(error ?? "")
-            return
-          }
-          if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {
-            print("statusCode should be 200, but is \(httpStatus.statusCode)")
-            print(response ?? "")
-          }
-          print("Notfication sent successfully.")
-          let responseString = String(data: data, encoding: .utf8)
-          print(responseString ?? "")
-       }
-       task.resume()
+        let url = URL(string: "https://fcm.googleapis.com/fcm/send")!
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("key=\(Constants.serverKey)", forHTTPHeaderField: "Authorization")
+        request.httpMethod = "POST"
+        request.httpBody = try? JSONSerialization.data(withJSONObject: payloadDict, options: [])
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                print(error ?? "")
+                return
+            }
+            if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {
+                print("statusCode should be 200, but is \(httpStatus.statusCode)")
+                print(response ?? "")
+            }
+            print("Notfication sent successfully.")
+            let responseString = String(data: data, encoding: .utf8)
+            print(responseString ?? "")
+        }
+        task.resume()
     }
     
 }

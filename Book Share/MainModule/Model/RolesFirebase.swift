@@ -15,7 +15,7 @@ enum RolesViewData {
     
     struct Roles {
         let  userID: String
-        let  role: String
+        let  role: String?
         
         init(dictionary: [String: Any]) {
             self.userID = dictionary["user_id"] as? String ?? ""

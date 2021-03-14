@@ -42,7 +42,6 @@ class DetailsViewController: UIViewController {
     }()
     
     lazy var detailsView = DetailsView()
-    
     var detailsViewModel: DetailsViewModel!
     
     override func viewDidLoad() {
@@ -122,7 +121,7 @@ class DetailsViewController: UIViewController {
         self.navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
         
         navigationController?.navigationBar.tintColor = Constants.orange
-        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: trashButton), UIBarButtonItem(customView: separatorViewForNavBar),UIBarButtonItem(customView: editButton), UIBarButtonItem(customView: sendButton)]
+        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: trashButton),UIBarButtonItem(customView: editButton), UIBarButtonItem(customView: sendButton)]
     }
     
     
@@ -166,9 +165,7 @@ extension DetailsViewController: DetailsViewProtocol {
         }
         
         alert.addAction(action)
-        
         self.present(alert, animated: true, completion: nil)
-        
        
     }
     

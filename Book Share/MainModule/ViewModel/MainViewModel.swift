@@ -28,7 +28,7 @@ final class MainViewModel: MainViewModelProtocol{
     let provider = MoyaProvider<APIService>()
     var images = [ViewImages.BooksImages]()
     
-    let provide = MoyaProvider<APIImage>()
+    let imageProvider = MoyaProvider<APIImage>()
     init() {
         updateViewData?(.initial)
         updateImages?(.initial)
@@ -89,7 +89,7 @@ final class MainViewModel: MainViewModelProtocol{
         updateImages?(.loading)
         for book in books{
             if let img = book.image{
-                provide.request(.getImage(imageName: img)) { [weak self] (result) in
+                imageProvider.request(.getImage(imageName: img)) { [weak self] (result) in
                     switch result{
                     case .success(let response):
                         do {

@@ -27,4 +27,8 @@ extension Genres: Codable, FetchableRecord, MutablePersistableRecord {
     static func filterByName(name: String) -> QueryInterfaceRequest<Genres> {
             return Genres.filter(Columns.title == name)
     }
+    
+    static func filterByID(id: Int) -> QueryInterfaceRequest<Genres> {
+            return Genres.filter(Columns.id == id)
+    }
 }

@@ -20,7 +20,6 @@ final class MoreViewModel: MoreViewModelProtocol{
     var updateViewData: ((MoreModel) -> ())?
     var updateRoles: ((RolesViewData)->())?
     var bookID: Int
-    let provide = MoyaProvider<APIImage>()
     
     var images = [BooksImages]()
     
