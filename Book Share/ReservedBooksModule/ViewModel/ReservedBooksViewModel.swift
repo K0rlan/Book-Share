@@ -12,20 +12,19 @@ import FirebaseFirestore
 import GRDB
 protocol ReservedBooksViewModelProtocol {
     var updateViewData: ((ReservedBooksViewData)->())? { get set }
-    
+    var updateRoles: ((RolesViewData)->())? { get set }
     func startFetch()
 }
 
 final class ReservedBooksViewModel: ReservedBooksViewModelProtocol{
+    var updateRoles: ((RolesViewData)->())?
     var updateViewData: ((ReservedBooksViewData) -> ())?
   
     let provider = MoyaProvider<APIService>()
-    let provide = MoyaProvider<APIImage>()
-    
     
     init() {
         updateViewData?(.initial)
-       
+        updateRoles?(.initial)
     }
     
     var images = [BooksImages]()
@@ -53,6 +52,7 @@ final class ReservedBooksViewModel: ReservedBooksViewModelProtocol{
         
     }
     
+    
     func fetchImages(books: [ReservedBooksViewData.RentsData]){
         DispatchQueue.main.async { [weak self] in
             for book in books{
@@ -63,9 +63,10 @@ final class ReservedBooksViewModel: ReservedBooksViewModelProtocol{
                         self?.updateViewData?(.successImage(self!.images))
                     }
                 } catch {
-                    print("\(error)")
+                    self?.updateViewData?(.failure(error))
                 }
             }
         }
     }
+    
 }

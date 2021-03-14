@@ -8,7 +8,8 @@
 import UIKit
 
 protocol ReservedBooksViewProtocol {
-    func getRole(role: RolesViewData.Roles)
+    func setErrorAlert(error: Error)
+    func getBooksID(id: Int)
 }
 
 
@@ -18,13 +19,22 @@ class ReservedBooksView: UIView {
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.backgroundColor = Constants.elements
         tableView.tintColor = .blue
-        tableView.showsVerticalScrollIndicator = false
         tableView.register(ReservedBooksTableViewCell.self, forCellReuseIdentifier: "reservedBooks")
         tableView.layer.cornerRadius = 14
-        tableView.allowsSelection = false
+        tableView.backgroundColor = Constants.gray
+        tableView.showsVerticalScrollIndicator = false
+        tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         return tableView
+    }()
+    
+    lazy var defaultLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Choose books"
+        label.font = .boldSystemFont(ofSize: 18)
+        label.textColor = .gray
+        label.isHidden = true
+        return label
     }()
     
     let activityIndicator: UIActivityIndicatorView = {
@@ -39,7 +49,7 @@ class ReservedBooksView: UIView {
         didSet{
             setNeedsLayout()
         }
-    }
+    }   
     
     var books: [ReservedBooksViewData.RentsData] = []
     var images = [BooksImages]()
@@ -52,7 +62,6 @@ class ReservedBooksView: UIView {
         setupViews()
         
     }
-    
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -72,32 +81,38 @@ class ReservedBooksView: UIView {
             tableView.isHidden = false
             activityIndicator.isHidden = true
             books = success
-            print("asd\(success)")
+            if books.isEmpty {
+                tableView.isHidden = true
+                defaultLabel.isHidden = false
+            }
             tableView.reloadData()
         case .successImage(let success):
             images = success
             tableView.reloadData()
-        case .failure:
+        case .failure(let error):
             tableView.isHidden = false
             activityIndicator.isHidden = true
-        
+            delegate.setErrorAlert(error: error)
         }
-        
+           
     }
     
     private func setupViews(){
-        [tableView, activityIndicator].forEach {
+        [tableView, activityIndicator, defaultLabel].forEach {
             self.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
-        tableView.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        tableView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
         
         activityIndicator.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         activityIndicator.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        
+        defaultLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        defaultLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         
     }
     
@@ -112,18 +127,29 @@ extension ReservedBooksView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reservedBooks", for: indexPath) as! ReservedBooksTableViewCell
         let book = books[indexPath.row].book!
-        print(books)
         cell.backgroundColor = Constants.elements
-//        cell.bookImage.image = images[]
         for image in images {
             if book.id == image.id {
                 cell.bookImage.image = UIImage(data: image.image!)
             }
         }
+        cell.backgroundColor = Constants.gray
         cell.titleLabel.text = book.title
         cell.authorLabel.text = book.author
         cell.publishDateLabel.text = book.publish_date
+        cell.isbnLabel.text = book.isbn
+        cell.selectionStyle = .none
+        cell.contentView.isUserInteractionEnabled = true
         return cell
         
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        160
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let bookID = books[indexPath.row].book!.id
+        delegate.getBooksID(id: bookID)
     }
 }

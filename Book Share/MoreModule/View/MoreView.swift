@@ -80,9 +80,11 @@ class MoreView: UIView{
         case .initial:
             tableView.isHidden = true
             activityIndicator.isHidden = false
+            tableView.reloadData()
         case .loading:
             tableView.isHidden = true
             activityIndicator.isHidden = false
+            tableView.reloadData()
         case .successBooks(let success):
             books = success
             filteredData = books
@@ -91,6 +93,7 @@ class MoreView: UIView{
             tableView.isHidden = false
             activityIndicator.isHidden = true
             images = success
+            print(images)
             tableView.reloadData()
         case .successRent(let success):
             print(success)
@@ -102,8 +105,10 @@ class MoreView: UIView{
         
         switch userRoles {
         case .success(let success):
+            tableView.reloadData()
             delegate.getRole(role: success)
         case .failure(let err):
+            tableView.reloadData()
             delegate.setErrorAlert(error: err)
         case .initial:
             print("initial roles")

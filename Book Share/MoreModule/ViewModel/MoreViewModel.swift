@@ -31,7 +31,7 @@ final class MoreViewModel: MoreViewModelProtocol{
     
     func startFetch() {
         updateViewData?(.loading)
-        DispatchQueue.main.async{ [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2){ [weak self] in
             do {
                 try dbQueue.read { db in
                     if self?.bookID == 0{

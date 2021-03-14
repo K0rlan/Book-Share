@@ -33,7 +33,6 @@ class MoreViewController: UIViewController {
         return view
     }()
     
-    
     var moreView = MoreView()
 
     var moreViewModel: MoreViewModel!
