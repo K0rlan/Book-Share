@@ -12,7 +12,7 @@ class CreateViewController: UIViewController {
     
     lazy var bookImage: UIButton = {
         let button = UIButton()
-        button.setImage(Constants.book, for: .normal)
+        button.setImage(Constants.photo, for: .normal)
         button.contentMode = .scaleToFill
         button.addTarget(self, action: #selector(bookImagePressed), for: .touchUpInside)
         return button
@@ -37,15 +37,15 @@ class CreateViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = Constants.gray
-        pickerController.delegate = self
+        
         createViewModel.getGenres()
+        pickerController.delegate = self
         dropDown.dataSource = self
         dropDown.delegate = self
         setNavigationBar()
         createView.delegate = self
         setupViews()
         updateView()
-      
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -79,19 +79,15 @@ class CreateViewController: UIViewController {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
-        bookImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30).isActive = true
-        bookImage.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        bookImage.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        bookImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        bookImage.widthAnchor.constraint(equalToConstant: 120).isActive = true
+        bookImage.heightAnchor.constraint(equalToConstant: 120).isActive = true
         bookImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-       
-//        textBox.topAnchor.constraint(equalTo: bookImage.bottomAnchor, constant: 20).isActive = true
-//        textBox.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
-//        textBox.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         
         dropDown.topAnchor.constraint(equalTo: bookImage.bottomAnchor).isActive = true
         dropDown.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         dropDown.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
-        dropDown.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        dropDown.heightAnchor.constraint(equalToConstant: 100).isActive = true
         
         createView.topAnchor.constraint(equalTo: dropDown.bottomAnchor).isActive = true
         createView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
@@ -161,6 +157,7 @@ extension CreateViewController: UIImagePickerControllerDelegate & UINavigationCo
         image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage
         if let theImage = image {
             bookImage.setImage(theImage, for: .normal)
+            createView.newImage()
             createViewModel.uploadImage(image: theImage)
             self.image = theImage
         }
@@ -180,27 +177,15 @@ extension CreateViewController: UIPickerViewDelegate, UIPickerViewDataSource, UI
 
        func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         self.selectedGenre = self.list[0]
-        print(selectedGenre)
         self.view.endEditing(true)
            return list[row] ?? list[0]
        }
 
        func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 
-//           self.textBox.text = self.list[row]
-//           self.dropDown.isHidden = true
         self.selectedGenre = self.list[row]
         createViewModel.getGenre(name: selectedGenre ?? list[1])
-        print(selectedGenre)
+      
        }
 
-//       func textFieldDidBeginEditing(_ textField: UITextField) {
-//
-//           if textField == self.textBox {
-//               self.dropDown.isHidden = false
-//               //if you don't want the users to se the keyboard type:
-//
-//               textField.endEditing(true)
-//           }
-//       }
 }

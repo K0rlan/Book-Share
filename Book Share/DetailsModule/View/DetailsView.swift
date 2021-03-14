@@ -135,7 +135,7 @@ class DetailsView: UIView {
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
-        
+        tableView.backgroundColor = Constants.gray
         tableView.showsVerticalScrollIndicator = false
         tableView.register(CommentsTableViewCell.self, forCellReuseIdentifier: "comments")
         tableView.layer.cornerRadius = 14
@@ -173,7 +173,7 @@ class DetailsView: UIView {
     
     override init(frame: CGRect  = .zero) {
         super .init(frame: frame)
-        setStyles()
+        tableView.backgroundColor = Constants.gray
         setupViews()
         
     }
@@ -182,17 +182,6 @@ class DetailsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setStyles(){
-        self.backgroundColor = .white
-        self.layer.cornerRadius = 8
-        self.layer.borderWidth = 1
-        self.layer.borderColor = UIColor.white.cgColor
-        self.layer.shadowColor = UIColor.black.cgColor
-        self.layer.shadowOffset = CGSize(width: 3, height: -4)
-        self.layer.shadowRadius = 2
-        self.layer.shadowOpacity = 0.1
-        
-    }
     
     @objc func reserveBookButtonPressed(sender: UIButton){
         delegate?.addRentButtonPressed()
@@ -218,14 +207,18 @@ class DetailsView: UIView {
         switch bookData {
         case .initial:
             activityIndicator.isHidden = false
+            tableView.isHidden = true
         case .loading:
             activityIndicator.isHidden = false
+            tableView.isHidden = true
         case .success(let success):
             self.update(viewData: success)
+            tableView.isHidden = false
             activityIndicator.isHidden = true
         case .successImage(let success):
             self.updateImage(image: success)
             self.isHidden = false
+            tableView.isHidden = false
             activityIndicator.isHidden = true
         case .bookStatus(let status):
             self.isHidden = false
@@ -280,6 +273,7 @@ class DetailsView: UIView {
         switch commentsData {
         case .success(let success):
             comments = success
+            tableView.isHidden = false
             tableView.reloadData()
             print(success)
         case .failure(let err):
@@ -362,7 +356,7 @@ class DetailsView: UIView {
         
         activityIndicator.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         activityIndicator.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-        activityIndicator.bringSubviewToFront(self)
+        
         
     }
     
@@ -375,7 +369,8 @@ extension DetailsView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "comments", for: indexPath) as! CommentsTableViewCell
         cell.delegate = self
-        
+        cell.backgroundColor = Constants.gray
+        cell.userNameLabel.backgroundColor = Constants.gray
         cell.userNameLabel.text = comments[indexPath.row].user_name
         cell.commentTextField.text = comments[indexPath.row].text
         cell.contentView.isUserInteractionEnabled = false

@@ -126,18 +126,18 @@ extension ReservedBooksView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reservedBooks", for: indexPath) as! ReservedBooksTableViewCell
-        let book = books[indexPath.row].book!
+        let book = books[indexPath.row].book
         cell.backgroundColor = Constants.elements
         for image in images {
-            if book.id == image.id {
+            if book?.id == image.id {
                 cell.bookImage.image = UIImage(data: image.image!)
             }
         }
         cell.backgroundColor = Constants.gray
-        cell.titleLabel.text = book.title
-        cell.authorLabel.text = book.author
-        cell.publishDateLabel.text = book.publish_date
-        cell.isbnLabel.text = book.isbn
+        cell.titleLabel.text = book?.title
+        cell.authorLabel.text = book?.author
+        cell.publishDateLabel.text = book?.publish_date
+        cell.isbnLabel.text = book?.isbn
         cell.selectionStyle = .none
         cell.contentView.isUserInteractionEnabled = true
         return cell

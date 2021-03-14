@@ -134,6 +134,7 @@ extension APIService: TargetType {
                 "isbn" : book.isbn,
                 "title" : book.title,
                 "author" : book.author,
+                "image" : book.image,
                 "publish_date" : book.publish_date,
                 "enabled" : book.enabled,
                 "genre_id" : book.genre_id ?? nil,

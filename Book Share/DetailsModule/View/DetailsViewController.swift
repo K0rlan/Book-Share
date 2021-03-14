@@ -80,6 +80,9 @@ class DetailsViewController: UIViewController {
     
     @objc func sendButtonPressed(){
         detailsViewModel.adminSendPush()
+        let alertViewController = UIAlertController(title: "Success", message: "Push notification successfully send", preferredStyle: .alert)
+        alertViewController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        present(alertViewController, animated: true, completion: nil)
     }
     
     private func setupViews(){

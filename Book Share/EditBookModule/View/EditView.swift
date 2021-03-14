@@ -9,23 +9,20 @@ import UIKit
 
 protocol EditViewProtocol {
     func updateBook(book: EditBook)
+    func getGenres(genres: [Genres])
+    func showElements()
 }
 
 class EditView: UIView {
-    
-    lazy var bookImage: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }()
     
     lazy var titleTextField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
         textField.layer.borderWidth = 1
-        textField.layer.borderColor = CGColor(red: 220/255, green: 220/255, blue: 222/255, alpha: 1)
+        textField.layer.borderColor = Constants.gray?.cgColor
         textField.layer.cornerRadius = 8
-        textField.backgroundColor = UIColor(cgColor: CGColor(red: 239/255, green: 239/255, blue: 243/255, alpha: 1))
+        textField.placeholder = "Title"
+        textField.backgroundColor = .white
         return textField
     }()
     
@@ -33,51 +30,40 @@ class EditView: UIView {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
         textField.layer.borderWidth = 1
-        textField.layer.borderColor = CGColor(red: 220/255, green: 220/255, blue: 222/255, alpha: 1)
+        textField.placeholder = "ISBN"
+        textField.layer.borderColor = Constants.gray?.cgColor
         textField.layer.cornerRadius = 8
-        textField.backgroundColor = UIColor(cgColor: CGColor(red: 239/255, green: 239/255, blue: 243/255, alpha: 1))
+        textField.backgroundColor = .white
         return textField
+    }()
+    
+    lazy var datePicker: UIDatePicker = {
+        let datePicker = UIDatePicker()
+        datePicker.frame = CGRect(x: 10, y: 50, width: self.frame.width, height: 200)
+        datePicker.timeZone = NSTimeZone.local
+        datePicker.addTarget(self, action: #selector(datePickerValueChanged), for: .valueChanged)
+        return datePicker
+    }()
+    
+    let activityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.color = .gray
+        activityIndicator.startAnimating()
+        activityIndicator.hidesWhenStopped = true
+        return activityIndicator
     }()
     
     lazy var authorTextField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
         textField.layer.borderWidth = 1
-        textField.layer.borderColor = CGColor(red: 220/255, green: 220/255, blue: 222/255, alpha: 1)
+        textField.placeholder = "Author"
+        textField.layer.borderColor = Constants.gray?.cgColor
         textField.layer.cornerRadius = 8
-        textField.backgroundColor = UIColor(cgColor: CGColor(red: 239/255, green: 239/255, blue: 243/255, alpha: 1))
+        textField.backgroundColor = .white
         return textField
     }()
     
-    lazy var publishDateTextField: UITextField = {
-        let textField = UITextField()
-        textField.borderStyle = .roundedRect
-        textField.layer.borderWidth = 1
-        textField.layer.borderColor = CGColor(red: 220/255, green: 220/255, blue: 222/255, alpha: 1)
-        textField.layer.cornerRadius = 8
-        textField.backgroundColor = UIColor(cgColor: CGColor(red: 239/255, green: 239/255, blue: 243/255, alpha: 1))
-        return textField
-    }()
-    
-    lazy var genreIdTextField: UITextField = {
-        let textField = UITextField()
-        textField.borderStyle = .roundedRect
-        textField.layer.borderWidth = 1
-        textField.layer.borderColor = CGColor(red: 220/255, green: 220/255, blue: 222/255, alpha: 1)
-        textField.layer.cornerRadius = 8
-        textField.backgroundColor = UIColor(cgColor: CGColor(red: 239/255, green: 239/255, blue: 243/255, alpha: 1))
-        return textField
-    }()
-    
-    lazy var enabledTextField: UITextField = {
-        let textField = UITextField()
-        textField.borderStyle = .roundedRect
-        textField.layer.borderWidth = 1
-        textField.layer.borderColor = CGColor(red: 220/255, green: 220/255, blue: 222/255, alpha: 1)
-        textField.layer.cornerRadius = 8
-        textField.backgroundColor = UIColor(cgColor: CGColor(red: 239/255, green: 239/255, blue: 243/255, alpha: 1))
-        return textField
-    }()
     
     lazy var editButton: UIButton = {
         let button = UIButton()
@@ -90,51 +76,66 @@ class EditView: UIView {
         button.layer.shadowOffset = CGSize(width: 3, height: 4)
         button.layer.shadowRadius = 2
         button.layer.shadowOpacity = 0.1
-        button.setTitle("Update", for: .normal)
+        button.setTitle("Create", for: .normal)
         button.addTarget(self, action: #selector(editButtonPressed), for: .touchUpInside)
         button.setTitleColor(.white, for: .normal)
         return button
     }()
     
-    var bookData: DetailsData = .initial{
+    
+    var delegate: EditViewProtocol!
+    
+    var genresData: GenresResponse = .initial{
         didSet{
             setNeedsLayout()
         }
     }
     
-    let activityIndicator: UIActivityIndicatorView = {
-        let activityIndicator = UIActivityIndicatorView(style: .large)
-        activityIndicator.color = .gray
-        activityIndicator.startAnimating()
-        activityIndicator.hidesWhenStopped = true
-        return activityIndicator
-    }()
+    var imagePath: String!
+    var date: String!
+    var genre: Int!
+    var genres = [Genres]()
     
-    var delegate: EditViewProtocol!
+    var bookData: DetailsData = .initial{
+            didSet{
+                setNeedsLayout()
+            }
+        }
     
     override init(frame: CGRect  = .zero) {
         super .init(frame: frame)
-        setStyles()
         setupViews()
         
+        let dateFormatter: DateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        date = dateFormatter.string(from: Date())
     }
+    
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc func editButtonPressed(sender: UIButton) {
-        let book = EditBook(isbn: isbnTextField.text ?? "",
-                            title: titleTextField.text ?? "",
-                            author: authorTextField.text ?? "",
-                            publish_date: publishDateTextField.text ?? "",
-                            genre_id: Int(genreIdTextField.text!) ,
-                            enabled: Bool(enabledTextField.text!) )
-        delegate.updateBook(book: book)
-    }
-    
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        switch genresData {
+        case .success(let success):
+            delegate.getGenres(genres: success)
+            genres = success
+        case .successImage(let success):
+            imagePath = success
+            editButton.isHidden = false
+            self.activityIndicator.isHidden = true
+        case .successGenre(let success):
+            genre = success.id
+        case .failure(let err):
+            print(err)
+        case .initial:
+            print("")
+        case .loading:
+            print("")
+        }
         
         switch bookData {
         case .initial:
@@ -144,11 +145,11 @@ class EditView: UIView {
             self.isHidden = true
             activityIndicator.isHidden = false
         case .success(let success):
-            self.isHidden = true
+            self.isHidden = false
             self.update(viewData: success)
+            delegate.showElements()
             activityIndicator.isHidden = true
         case .successImage(let success):
-            self.updateImage(image: success)
             self.isHidden = false
             activityIndicator.isHidden = true
         case .bookStatus:
@@ -157,46 +158,59 @@ class EditView: UIView {
             activityIndicator.isHidden = true
         }
     }
-    
-    private func setStyles(){
-        self.backgroundColor = .white
-        self.layer.cornerRadius = 8
-        self.layer.borderWidth = 1
-        self.layer.borderColor = UIColor.white.cgColor
-        self.layer.shadowColor = UIColor.black.cgColor
-        self.layer.shadowOffset = CGSize(width: 3, height: -4)
-        self.layer.shadowRadius = 2
-        self.layer.shadowOpacity = 0.1
-    }
-    
     private func update(viewData: DetailsData.Data?){
-        guard let data = viewData  else { return }
-        titleTextField.text = data.title
-        authorTextField.text = data.author
-        publishDateTextField.text = data.publish_date
-        isbnTextField.text = data.isbn
-        genreIdTextField.text = String(data.genre_id!)
-        enabledTextField.text = String(data.enabled)
-        
+            guard let data = viewData  else { return }
+            titleTextField.text = data.title
+            authorTextField.text = data.author
+            let dateFormatter = DateFormatter()
+            
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+            let date = dateFormatter.date(from:data.publish_date)!
+            datePicker.date = date
+            isbnTextField.text = data.isbn
+            
     }
-    private func updateImage(image: UIImage){
-        bookImage.image = image
-        bookImage.alpha = 1
+    
+   
+
+    
+    @objc func editButtonPressed(sender: UIButton) {
+        guard let img = imagePath else {
+            return
+        }
+        print(img)
+        let book = EditBook(isbn: isbnTextField.text ?? "",
+                              title: titleTextField.text ?? "",
+                              author: authorTextField.text ?? "",
+                              image: img,
+                              publish_date: date ?? "",
+                              genre_id: Int(genre ?? 4) ,
+                              enabled: true )
+        
+        delegate.updateBook(book: book)
+    }
+    
+    @objc func datePickerValueChanged(_ sender: UIDatePicker){
+        let dateFormatter: DateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        let selectedDate: String = dateFormatter.string(from: sender.date)
+        self.date = selectedDate
+    }
+    
+    public func newImage(){
+        editButton.isHidden = true
+        activityIndicator.isHidden = false
     }
     
     
     private func setupViews(){
-        [bookImage, titleTextField, isbnTextField, authorTextField, publishDateTextField, genreIdTextField, enabledTextField, editButton, activityIndicator].forEach {
+        [titleTextField, isbnTextField, authorTextField, editButton, datePicker, activityIndicator].forEach {
             self.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
-        bookImage.widthAnchor.constraint(equalToConstant: 105).isActive = true
-        bookImage.heightAnchor.constraint(equalToConstant: 160).isActive = true
-        bookImage.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true
-        bookImage.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         
-        titleTextField.topAnchor.constraint(equalTo: bookImage.bottomAnchor, constant: 20).isActive = true
+        titleTextField.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         titleTextField.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
         titleTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         titleTextField.heightAnchor.constraint(equalToConstant: 44).isActive = true
@@ -211,26 +225,16 @@ class EditView: UIView {
         authorTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         authorTextField.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
-        publishDateTextField.topAnchor.constraint(equalTo: authorTextField.bottomAnchor, constant: 20).isActive = true
-        publishDateTextField.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
-        publishDateTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
-        publishDateTextField.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        datePicker.topAnchor.constraint(equalTo: authorTextField.bottomAnchor, constant: 20).isActive = true
+        datePicker.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
+        datePicker.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        datePicker.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
-        genreIdTextField.topAnchor.constraint(equalTo: publishDateTextField.bottomAnchor, constant: 20).isActive = true
-        genreIdTextField.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
-        genreIdTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
-        genreIdTextField.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        editButton.topAnchor.constraint(equalTo: datePicker.bottomAnchor, constant: 20).isActive = true
+        editButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        editButton.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         
-        enabledTextField.topAnchor.constraint(equalTo: genreIdTextField.bottomAnchor, constant: 20).isActive = true
-        enabledTextField.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
-        enabledTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
-        enabledTextField.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        
-        editButton.topAnchor.constraint(equalTo: enabledTextField.bottomAnchor, constant: 20).isActive = true
-        editButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
-        editButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
-      
-        activityIndicator.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        activityIndicator.topAnchor.constraint(equalTo: datePicker.bottomAnchor, constant: 20).isActive = true
         activityIndicator.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         
     }

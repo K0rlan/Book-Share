@@ -18,6 +18,7 @@ class CommentsTableViewCell: UITableViewCell {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 18)
         label.textColor = Constants.orange
+        label.backgroundColor = Constants.gray
         return label
     }()
     
@@ -25,6 +26,7 @@ class CommentsTableViewCell: UITableViewCell {
         let textField = UITextView()
         textField.font = .boldSystemFont(ofSize: 16)
         textField.textColor = Constants.dark
+        textField.backgroundColor = Constants.gray
         textField.isUserInteractionEnabled = false
         return textField
     }()
