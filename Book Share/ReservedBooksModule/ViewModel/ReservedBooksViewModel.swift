@@ -59,7 +59,6 @@ final class ReservedBooksViewModel: ReservedBooksViewModelProtocol{
                 do {
                     try dbQueue.read { db in
                         let draft = try BooksImages.filterById(id: book.book!.id).fetchAll(db)
-                        print(draft)
                         self?.images.append(contentsOf: draft)
                         self?.updateViewData?(.successImage(self!.images))
                     }

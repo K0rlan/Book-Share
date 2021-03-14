@@ -128,6 +128,13 @@ class DetailsViewController: UIViewController {
     
 }
 extension DetailsViewController: DetailsViewProtocol {
+    
+    func setErrorAlert(error: Error) {
+        let alertViewController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        alertViewController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        present(alertViewController, animated: true, completion: nil)
+    }
+    
     func isBookNotAvailable(flag: Bool) {
         sendButton.alpha = 1
     }

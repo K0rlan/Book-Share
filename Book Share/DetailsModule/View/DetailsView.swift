@@ -15,6 +15,7 @@ protocol DetailsViewProtocol {
     func deleteComment(id: Int)
     func updateComment(id: Int, text: String)
     func isBookNotAvailable(flag: Bool)
+    func setErrorAlert(error: Error)
 }
 
 class DetailsView: UIView {
@@ -258,8 +259,9 @@ class DetailsView: UIView {
                 
             }
             
-        case .failure(_):
+        case .failure(let error):
             activityIndicator.isHidden = true
+            delegate.setErrorAlert(error: error)
         }
         
         switch userRoles {
@@ -268,7 +270,7 @@ class DetailsView: UIView {
             role = success
             print(success)
         case .failure(let err):
-            print(err)
+            delegate.setErrorAlert(error: err)
         case .initial:
             activityIndicator.isHidden = false
         case .loading:
@@ -281,7 +283,7 @@ class DetailsView: UIView {
             tableView.reloadData()
             print(success)
         case .failure(let err):
-            print(err)
+            delegate.setErrorAlert(error: err)
         case .initial:
             tableView.reloadData()
         case .loading:
