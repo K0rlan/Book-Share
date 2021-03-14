@@ -9,6 +9,8 @@ import UIKit
 
 protocol MoreViewProtocol {
     func getBooksID(id: Int)
+    func getRole(role: RolesViewData.Roles)
+    func setErrorAlert(error: Error)
 }
 
 class MoreView: UIView{
@@ -51,6 +53,12 @@ class MoreView: UIView{
         }
     }
     
+    var userRoles: RolesViewData = .initial{
+        didSet{
+            setNeedsLayout()
+        }
+    }
+    
     var filteredData: [Books] = []
     var books: [Books] = []
     var images = [BooksImages]()
@@ -72,9 +80,11 @@ class MoreView: UIView{
         case .initial:
             tableView.isHidden = true
             activityIndicator.isHidden = false
+            tableView.reloadData()
         case .loading:
             tableView.isHidden = true
             activityIndicator.isHidden = false
+            tableView.reloadData()
         case .successBooks(let success):
             books = success
             filteredData = books
@@ -83,12 +93,27 @@ class MoreView: UIView{
             tableView.isHidden = false
             activityIndicator.isHidden = true
             images = success
+            print(images)
             tableView.reloadData()
-        case .failure:
-            tableView.isHidden = false
-            activityIndicator.isHidden = true
         case .successRent(let success):
             print(success)
+        case .failure(let error):
+            tableView.isHidden = false
+            activityIndicator.isHidden = true
+            delegate.setErrorAlert(error: error)
+        }
+        
+        switch userRoles {
+        case .success(let success):
+            tableView.reloadData()
+            delegate.getRole(role: success)
+        case .failure(let err):
+            tableView.reloadData()
+            delegate.setErrorAlert(error: err)
+        case .initial:
+            print("initial roles")
+        case .loading:
+            print("loading roles")
         }
     }
     
@@ -148,6 +173,7 @@ extension MoreView: UITableViewDelegate, UITableViewDataSource {
         cell.titleLabel.text = book.title
         cell.authorLabel.text = book.author
         cell.publishDateLabel.text = book.publish_date
+        cell.isbnLabel.text = book.isbn
         cell.selectionStyle = .none
         cell.contentView.isUserInteractionEnabled = true
         cell.bookImage.image = .none

@@ -10,7 +10,7 @@ import Griffon_ios_spm
 class ReservedBooksViewController: UIViewController {
     lazy var appLabel: UILabel = {
         let label = UILabel()
-        label.text = "Dar Library"
+        label.text = "Reserved Books"
         label.textColor = Constants.dark
         label.font = .boldSystemFont(ofSize: 24)
         return label
@@ -37,14 +37,15 @@ class ReservedBooksViewController: UIViewController {
         self.view.backgroundColor = Constants.gray
         setNavigationBar()
         reservedBooksViewModel.startFetch()
+        
         updateView()
         setupViews()
-
+        reservedBooksView.delegate = self
         if Utils.isExpDate(){
             authViaGriffon()
         }
     }
-    
+
     private func authViaGriffon(){
         let vc = SignInViewController()
         vc.delegate = self
@@ -55,7 +56,7 @@ class ReservedBooksViewController: UIViewController {
         reservedBooksViewModel.updateViewData = { [weak self] reservedBooksData in
             self?.reservedBooksView.reservedBooksData = reservedBooksData
         }
-       
+        
     }
     
     private func setupViews(){
@@ -64,7 +65,7 @@ class ReservedBooksViewController: UIViewController {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
-        appLabel.widthAnchor.constraint(equalToConstant: 164).isActive = true
+        appLabel.widthAnchor.constraint(equalToConstant: 264).isActive = true
         appLabel.heightAnchor.constraint(equalToConstant: 34).isActive = true
         
         separatorViewForNavBar.widthAnchor.constraint(equalToConstant: 7).isActive = true
@@ -84,9 +85,7 @@ class ReservedBooksViewController: UIViewController {
         navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.backgroundColor = Constants.gray
         navigationController?.navigationBar.barTintColor = .orange
-        
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: appLabel)
-        
     }
 
     
@@ -99,5 +98,18 @@ extension ReservedBooksViewController: SignInViewControllerDelegate {
     
     func successfullSignUp(_ ctrl: SignInViewController) {
         self.dismiss(animated: true)
+    }
+}
+extension ReservedBooksViewController: ReservedBooksViewProtocol {
+    func setErrorAlert(error: Error) {
+        let alertViewController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        alertViewController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        present(alertViewController, animated: true, completion: nil)
+    }
+    
+    
+    func getBooksID(id: Int) {
+        let detailsVC = ModelBuilder.createBookDetails(id: id)
+        self.navigationController?.pushViewController(detailsVC, animated: true)
     }
 }

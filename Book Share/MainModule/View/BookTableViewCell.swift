@@ -12,14 +12,12 @@ protocol BookTableViewCellDelegate{
     func moreBooks(id: Int)
 }
 
-
 class BookTableViewCell: UITableViewCell {
     
     lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 22)
         label.textColor = Constants.dark
-        //        label.text = "All Books"
         return label
     }()
     

@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 enum CommentResponse {
     case initial
     case loading

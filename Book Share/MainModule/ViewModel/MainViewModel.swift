@@ -28,7 +28,7 @@ final class MainViewModel: MainViewModelProtocol{
     let provider = MoyaProvider<APIService>()
     var images = [ViewImages.BooksImages]()
     
-    let provide = MoyaProvider<APIImage>()
+    let imageProvider = MoyaProvider<APIImage>()
     init() {
         updateViewData?(.initial)
         updateImages?(.initial)
@@ -37,25 +37,22 @@ final class MainViewModel: MainViewModelProtocol{
     }
     
     func startFetch() {
-//        updateViewData?(.loading)
-//        updateImages?(.loading)
-//        updateRoles?(.loading)
         refreshTables()
         fetchBooks()
-        fetchGenres()
         fetchRents()
     }
     
     func fetchBooks(){
-        
+        updateViewData?(.loading)
         provider.request(.getBooks) { [weak self] (result) in
             switch result{
             case .success(let response):
                 do {
                     let booksResponse = try JSONDecoder().decode([ViewData.BooksData].self, from: response.data)
                     self?.fetchImages(books: booksResponse)
-                    self?.insertIntoDBBooks(books: booksResponse)
                     self?.updateViewData?(.successBooks(booksResponse))
+                    self?.fetchGenres()
+                    self?.insertIntoDBBooks(books: booksResponse)
                 } catch let error {
                     print("Error in parsing: \(error)")
                     self?.updateViewData?(.failure(error))
@@ -89,9 +86,10 @@ final class MainViewModel: MainViewModelProtocol{
     }
     
     func fetchImages(books: [ViewData.BooksData]){
+        updateImages?(.loading)
         for book in books{
             if let img = book.image{
-                provide.request(.getImage(imageName: img)) { [weak self] (result) in
+                imageProvider.request(.getImage(imageName: img)) { [weak self] (result) in
                     switch result{
                     case .success(let response):
                         do {
@@ -146,18 +144,18 @@ final class MainViewModel: MainViewModelProtocol{
     }
     
     func insertIntoDBImages(books: ViewImages.BooksImages){
-            do {
-                try dbQueue.write { db in
-                    var books = BooksImages(
-                        id: books.id,
-                        image: books.image
-                    )
-                    try! books.insert(db)
-                }
-            } catch {
-                print("\(error)")
+        do {
+            try dbQueue.write { db in
+                var books = BooksImages(
+                    id: books.id,
+                    image: books.image
+                )
+                try! books.insert(db)
             }
-
+        } catch {
+            print("\(error)")
+        }
+        
     }
     
     func insertIntoDBBooks(books: [ViewData.BooksData]){
@@ -256,21 +254,24 @@ final class MainViewModel: MainViewModelProtocol{
                 }
             } catch {
                 print("\(error)")
+                self?.updateViewData?(.failure(error))
             }
         }
     }
     
     func getRole(){
+        updateRoles?(.loading)
         let db = Firestore.firestore()
         let userID = Utils.getUserID()
         db.collection("roles").whereField("user_id", isEqualTo: userID).getDocuments() { [weak self] (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
+                self?.updateRoles?(.failure(err))
             } else {
                 for document in querySnapshot!.documents {
                     self?.updateRoles?(.success(RolesViewData.Roles(dictionary: document.data())))
                 }
-               
+                
             }
         }
         
@@ -323,36 +324,32 @@ final class MainViewModel: MainViewModelProtocol{
     func getExpiredBooks(){
         do {
             try dbQueue.read { db in
-                var koko = [Books]()
+                var booksPush = [Books]()
                 let draft = try BookRent.filterByUser(userId: Utils.getUserID()).fetchAll(db)
                 print(draft)
-                
                 for book in draft {
-                    
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
                     let date = dateFormatter.date(from: book.start_date)!
-//                    let calendar = Calendar.current
-//                    let addOneWeekToCurrentDate = calendar.date(byAdding: .weekOfYear, value: 1, to: date)
-//                    print("aaaa\(addOneWeekToCurrentDate)")
-                    if date < Date(){
+                    let calendar = Calendar.current
+                    let addOneWeekToCurrentDate = calendar.date(byAdding: .weekOfYear, value: 1, to: date)
+                    if addOneWeekToCurrentDate! < Date(){
                         let b = try Books.filterById(id: book.book_id).fetchAll(db)
-                        koko.append(contentsOf: b)
+                        booksPush.append(contentsOf: b)
                     }
                     
                 }
-                if !koko.isEmpty{
-                    sendPush(book: koko)
+                if !booksPush.isEmpty{
+                    sendPush(book: booksPush)
                 }
                 
-                print("aaaa\(koko)")
             }
         } catch {
             print("\(error)")
         }
     }
     
-  
+    
     
     func sendPush(book: [Books]){
         let userToken = Constants.userToken
@@ -366,25 +363,25 @@ final class MainViewModel: MainViewModelProtocol{
     }
     
     func sendPushNotification(payloadDict: [String: Any]) {
-       let url = URL(string: "https://fcm.googleapis.com/fcm/send")!
-       var request = URLRequest(url: url)
-       request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-       request.setValue("key=\(Constants.serverKey)", forHTTPHeaderField: "Authorization")
-       request.httpMethod = "POST"
-       request.httpBody = try? JSONSerialization.data(withJSONObject: payloadDict, options: [])
-       let task = URLSession.shared.dataTask(with: request) { data, response, error in
-          guard let data = data, error == nil else {
-            print(error ?? "")
-            return
-          }
-          if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {
-            print("statusCode should be 200, but is \(httpStatus.statusCode)")
-            print(response ?? "")
-          }
-          print("Notfication sent successfully.")
-          let responseString = String(data: data, encoding: .utf8)
-          print(responseString ?? "")
-       }
-       task.resume()
+        let url = URL(string: "https://fcm.googleapis.com/fcm/send")!
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("key=\(Constants.serverKey)", forHTTPHeaderField: "Authorization")
+        request.httpMethod = "POST"
+        request.httpBody = try? JSONSerialization.data(withJSONObject: payloadDict, options: [])
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                print(error ?? "")
+                return
+            }
+            if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {
+                print("statusCode should be 200, but is \(httpStatus.statusCode)")
+                print(response ?? "")
+            }
+            print("Notfication sent successfully.")
+            let responseString = String(data: data, encoding: .utf8)
+            print(responseString ?? "")
+        }
+        task.resume()
     }
 }

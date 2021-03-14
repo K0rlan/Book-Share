@@ -37,7 +37,7 @@ class MoreTableViewCell: UITableViewCell {
         return label
     }()
     
-    lazy var genreLabel: UILabel = {
+    lazy var isbnLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
         label.textColor = Constants.dark
@@ -73,7 +73,7 @@ class MoreTableViewCell: UITableViewCell {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
-        [bookImage, authorLabel, publishDateLabel, genreLabel, titleLabel].forEach {
+        [bookImage, authorLabel, publishDateLabel, isbnLabel, titleLabel].forEach {
             viewCell.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -92,13 +92,13 @@ class MoreTableViewCell: UITableViewCell {
         titleLabel.topAnchor.constraint(equalTo: viewCell.topAnchor, constant: 20).isActive = true
         titleLabel.leadingAnchor.constraint(equalTo: bookImage.trailingAnchor, constant: 10).isActive = true
        
-        authorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5).isActive = true
+        authorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10).isActive = true
         authorLabel.leadingAnchor.constraint(equalTo: bookImage.trailingAnchor, constant: 10).isActive = true
        
-        genreLabel.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 5).isActive = true
-        genreLabel.leadingAnchor.constraint(equalTo: bookImage.trailingAnchor, constant: 10).isActive = true
+        isbnLabel.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 10).isActive = true
+        isbnLabel.leadingAnchor.constraint(equalTo: bookImage.trailingAnchor, constant: 10).isActive = true
        
-        publishDateLabel.topAnchor.constraint(equalTo: genreLabel.bottomAnchor, constant: 5).isActive = true
+        publishDateLabel.topAnchor.constraint(equalTo: isbnLabel.bottomAnchor, constant: 5).isActive = true
         publishDateLabel.leadingAnchor.constraint(equalTo: bookImage.trailingAnchor, constant: 10).isActive = true
         publishDateLabel.bottomAnchor.constraint(equalTo: viewCell.bottomAnchor, constant: -10).isActive = true
     }

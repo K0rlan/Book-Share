@@ -15,6 +15,7 @@ protocol DetailsViewProtocol {
     func deleteComment(id: Int)
     func updateComment(id: Int, text: String)
     func isBookNotAvailable(flag: Bool)
+    func setErrorAlert(error: Error)
 }
 
 class DetailsView: UIView {
@@ -29,6 +30,8 @@ class DetailsView: UIView {
         imageView.layer.shadowOffset = CGSize(width: 2, height: 2)
         imageView.layer.shadowRadius = 2
         imageView.layer.shadowOpacity = 0.1
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.masksToBounds = true
         imageView.alpha = 0
         return imageView
     }()
@@ -53,15 +56,20 @@ class DetailsView: UIView {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
         label.textColor = Constants.dark
+        label.numberOfLines = 0
         return label
     }()
     
-    lazy var genreLabel: UILabel = {
+    lazy var commentsLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 16)
+        label.font = .boldSystemFont(ofSize: 18)
         label.textColor = Constants.dark
+        label.numberOfLines = 0
+        label.alpha = 0
+        label.text = "Comments:"
         return label
     }()
+    
     
     lazy var reserveBookButton: UIButton = {
         let button = UIButton()
@@ -98,6 +106,13 @@ class DetailsView: UIView {
         return label
     }()
     
+    lazy var separatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = Constants.gray
+        view.alpha = 0
+        return view
+    }()
+    
     lazy var returnBookButton: UIButton = {
         let button = UIButton()
         button.alpha = 0
@@ -115,15 +130,6 @@ class DetailsView: UIView {
         return button
     }()
     
-    lazy var descriptionLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 16)
-        label.text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also"
-        label.textColor = Constants.dark
-        label.alpha = 0
-        label.numberOfLines = 0
-        return label
-    }()
     
     lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -163,11 +169,11 @@ class DetailsView: UIView {
     }
     var delegate: DetailsViewProtocol!
     var comments = [BooksComments]()
-    var role: RolesViewData.Roles!
+    var role: RolesViewData.Roles?
     
     override init(frame: CGRect  = .zero) {
         super .init(frame: frame)
-        setStyles()
+        tableView.backgroundColor = Constants.gray
         setupViews()
         
     }
@@ -176,17 +182,6 @@ class DetailsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setStyles(){
-        self.backgroundColor = .white
-        self.layer.cornerRadius = 8
-        self.layer.borderWidth = 1
-        self.layer.borderColor = UIColor.white.cgColor
-        self.layer.shadowColor = UIColor.black.cgColor
-        self.layer.shadowOffset = CGSize(width: 3, height: -4)
-        self.layer.shadowRadius = 2
-        self.layer.shadowOpacity = 0.1
-        
-    }
     
     @objc func reserveBookButtonPressed(sender: UIButton){
         delegate?.addRentButtonPressed()
@@ -211,50 +206,55 @@ class DetailsView: UIView {
         
         switch bookData {
         case .initial:
-            self.isHidden = true
             activityIndicator.isHidden = false
+            tableView.isHidden = true
         case .loading:
-            self.isHidden = true
             activityIndicator.isHidden = false
+            tableView.isHidden = true
         case .success(let success):
-            self.isHidden = true
             self.update(viewData: success)
+            tableView.isHidden = false
             activityIndicator.isHidden = true
         case .successImage(let success):
             self.updateImage(image: success)
             self.isHidden = false
+            tableView.isHidden = false
             activityIndicator.isHidden = true
         case .bookStatus(let status):
-            activityIndicator.isHidden = true
             self.isHidden = false
-        if status == BookStatus.available {
-            bringSubviewToFront(reserveBookButton)
-            reserveBookButton.isHidden = false
-            reserveBookButton.isEnabled = true
-            returnBookButton.isHidden = true
-            notAvailableLabel.isHidden = true
-            returnBookButton.isEnabled = false
-            notAvailableLabel.isEnabled = false
-        } else if status == BookStatus.canReturnBook {
-            bringSubviewToFront(returnBookButton)
-            returnBookButton.isHidden = false
-            returnBookButton.isEnabled = true
-            reserveBookButton.isHidden = true
-            notAvailableLabel.isHidden = true
-            reserveBookButton.isEnabled = false
-            notAvailableLabel.isEnabled = false
-        }else if status == BookStatus.notAvailable {
-            bringSubviewToFront(notAvailableLabel)
-            delegate.isBookNotAvailable(flag: true)
-            notAvailableLabel.isHidden = false
-            notAvailableLabel.isEnabled = true
-            reserveBookButton.isHidden = true
-            returnBookButton.isHidden = true
-            returnBookButton.isEnabled = false
-            reserveBookButton.isEnabled = false
-        }
-        case .failure:
+            if status == BookStatus.available {
+                bringSubviewToFront(reserveBookButton)
+                reserveBookButton.isHidden = false
+                reserveBookButton.isEnabled = true
+                returnBookButton.isHidden = true
+                notAvailableLabel.isHidden = true
+                returnBookButton.isEnabled = false
+                notAvailableLabel.isEnabled = false
+                
+            } else if status == BookStatus.canReturnBook {
+                bringSubviewToFront(returnBookButton)
+                returnBookButton.isHidden = false
+                returnBookButton.isEnabled = true
+                reserveBookButton.isHidden = true
+                notAvailableLabel.isHidden = true
+                reserveBookButton.isEnabled = false
+                notAvailableLabel.isEnabled = false
+                
+            }else if status == BookStatus.notAvailable {
+                bringSubviewToFront(notAvailableLabel)
+                delegate.isBookNotAvailable(flag: true)
+                notAvailableLabel.isHidden = false
+                notAvailableLabel.isEnabled = true
+                reserveBookButton.isHidden = true
+                returnBookButton.isHidden = true
+                returnBookButton.isEnabled = false
+                reserveBookButton.isEnabled = false
+                
+            }
+            
+        case .failure(let error):
             activityIndicator.isHidden = true
+            delegate.setErrorAlert(error: error)
         }
         
         switch userRoles {
@@ -263,38 +263,39 @@ class DetailsView: UIView {
             role = success
             print(success)
         case .failure(let err):
-            print(err)
+            delegate.setErrorAlert(error: err)
         case .initial:
-            print("")
+            activityIndicator.isHidden = false
         case .loading:
-            print("")
+            activityIndicator.isHidden = false
         }
-    
+        
         switch commentsData {
         case .success(let success):
             comments = success
+            tableView.isHidden = false
             tableView.reloadData()
             print(success)
         case .failure(let err):
-            print(err)
+            delegate.setErrorAlert(error: err)
         case .initial:
-            print("")
             tableView.reloadData()
         case .loading:
-            print("")
             tableView.reloadData()
         }
     }
     
     private func update(viewData: DetailsData.Data?){
         guard let data = viewData  else { return }
+        activityIndicator.isHidden = true
         titleLabel.text = data.title
         authorLabel.text = data.author
         publishDateLabel.text = data.publish_date
         notAvailableLabel.alpha = 1
         returnBookButton.alpha = 1
         reserveBookButton.alpha = 1
-        descriptionLabel.alpha = 1
+        commentsLabel.alpha = 1
+        separatorView.alpha = 1
         
     }
     private func updateImage(image: UIImage){
@@ -303,7 +304,7 @@ class DetailsView: UIView {
     }
     
     private func setupViews() {
-        [bookImage, authorLabel, publishDateLabel, genreLabel, titleLabel, activityIndicator, descriptionLabel, reserveBookButton, returnBookButton, notAvailableLabel, tableView].forEach {
+        [bookImage, authorLabel, publishDateLabel, titleLabel, activityIndicator, reserveBookButton, returnBookButton, notAvailableLabel, tableView, commentsLabel, separatorView].forEach {
             self.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -315,15 +316,15 @@ class DetailsView: UIView {
         
         titleLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true
         titleLabel.leadingAnchor.constraint(equalTo: bookImage.trailingAnchor, constant: 20).isActive = true
+        titleLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 10).isActive = true
         
         authorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10).isActive = true
         authorLabel.leadingAnchor.constraint(equalTo: bookImage.trailingAnchor, constant: 20).isActive = true
+        authorLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 10).isActive = true
         
-        genreLabel.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 5).isActive = true
-        genreLabel.leadingAnchor.constraint(equalTo: bookImage.trailingAnchor, constant: 20).isActive = true
-        
-        publishDateLabel.topAnchor.constraint(equalTo: genreLabel.bottomAnchor, constant: 5).isActive = true
+        publishDateLabel.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 10).isActive = true
         publishDateLabel.leadingAnchor.constraint(equalTo: bookImage.trailingAnchor, constant: 20).isActive = true
+        publishDateLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 10).isActive = true
         
         reserveBookButton.topAnchor.constraint(equalTo: publishDateLabel.bottomAnchor, constant: 10).isActive = true
         reserveBookButton.leadingAnchor.constraint(equalTo: bookImage.trailingAnchor, constant: 20).isActive = true
@@ -338,18 +339,25 @@ class DetailsView: UIView {
         notAvailableLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         notAvailableLabel.heightAnchor.constraint(equalToConstant: 35).isActive = true
         
-        descriptionLabel.topAnchor.constraint(equalTo: bookImage.bottomAnchor, constant: 50).isActive = true
-        descriptionLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
-        descriptionLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        commentsLabel.topAnchor.constraint(equalTo: bookImage.bottomAnchor, constant: 20).isActive = true
+        commentsLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
+        commentsLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        commentsLabel.heightAnchor.constraint(equalToConstant: 35).isActive = true
         
-        tableView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 20).isActive = true
+        separatorView.topAnchor.constraint(equalTo: commentsLabel.bottomAnchor, constant: 5).isActive = true
+        separatorView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
+        separatorView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
+        tableView.topAnchor.constraint(equalTo: separatorView.bottomAnchor, constant: 20).isActive = true
         tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
         tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -20).isActive = true
         
         activityIndicator.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         activityIndicator.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-
+        
+        
     }
     
 }
@@ -357,27 +365,28 @@ extension DetailsView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return comments.count
     }
-   
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "comments", for: indexPath) as! CommentsTableViewCell
         cell.delegate = self
         cell.backgroundColor = Constants.gray
+        cell.userNameLabel.backgroundColor = Constants.gray
         cell.userNameLabel.text = comments[indexPath.row].user_name
         cell.commentTextField.text = comments[indexPath.row].text
         cell.contentView.isUserInteractionEnabled = false
         cell.selectionStyle = .none
         cell.getId(id: comments[indexPath.row].id)
-        if role.role == "admin" {
+        if role?.role == "admin" {
             cell.admin()
         }
         return cell
     }
-   
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        130
+        120
     }
     
-
+    
 }
 extension DetailsView: CommentsTableViewCellProtocol {
     func deleteButtonPressed(id: Int) {

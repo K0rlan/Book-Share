@@ -11,22 +11,22 @@ import UIKit
 
 enum APIService {
     case getBooks
+    case getBook(bookID: Int)
+    case postBook(book: CreateBook)
+    case updateBook(id: Int, book: EditBook)
+    case deleteBook(id: Int)
     case getGenres
     case getRent
-    case getBook(bookID: Int)
-    case getImage(imageName: String)
-    case getUserBooks(userID: String)
-    case postBook(book: CreateBook)
     case postRent(rent: ViewData.RentData)
     case deleteRent(rentId: Int)
     case updateRent(id: Int, enabled: Bool)
-    case updateBook(id: Int, book: EditBook)
-    case deleteBook(id: Int)
+    case getUserBooks(userID: String)
+    case getImage(imageName: String)
+    case postImage(image: UIImage)
     case postComment(comment: CommentResponse.CreateData)
     case getComments
     case updateComment(id: Int, text: String)
     case deleteComment(id: Int)
-    case postImage(image: UIImage)
 }
 
 extension APIService: TargetType {
@@ -134,6 +134,7 @@ extension APIService: TargetType {
                 "isbn" : book.isbn,
                 "title" : book.title,
                 "author" : book.author,
+                "image" : book.image,
                 "publish_date" : book.publish_date,
                 "enabled" : book.enabled,
                 "genre_id" : book.genre_id ?? nil,

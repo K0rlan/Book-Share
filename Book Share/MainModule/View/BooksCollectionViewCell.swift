@@ -47,7 +47,6 @@ class BooksCollectionViewCell: UICollectionViewCell {
         view.layer.shadowOffset = CGSize(width: 3, height: 4)
         view.layer.shadowRadius = 2
         view.layer.shadowOpacity = 0.3
-//        view.layer.masksToBounds = true
         view.clipsToBounds = true
         return view
     }()
@@ -82,12 +81,11 @@ class BooksCollectionViewCell: UICollectionViewCell {
         bookImage.leadingAnchor.constraint(equalTo: viewCell.leadingAnchor).isActive = true
         bookImage.trailingAnchor.constraint(equalTo: viewCell.trailingAnchor).isActive = true
         bookImage.heightAnchor.constraint(equalToConstant: 220).isActive = true
-//        bookImage.widthAnchor.constraint(equalToConstant: 100).isActive = true
         
-        rentImage.topAnchor.constraint(equalTo: viewCell.topAnchor, constant: 190).isActive = true
-        rentImage.trailingAnchor.constraint(equalTo: viewCell.trailingAnchor).isActive = true
-        rentImage.heightAnchor.constraint(equalToConstant: 32).isActive = true
-        rentImage.widthAnchor.constraint(equalToConstant: 32).isActive = true
+        rentImage.topAnchor.constraint(equalTo: viewCell.topAnchor, constant: 5).isActive = true
+        rentImage.leadingAnchor.constraint(equalTo: viewCell.leadingAnchor).isActive = true
+        rentImage.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        rentImage.widthAnchor.constraint(equalToConstant: 90).isActive = true
         rentImage.bringSubviewToFront(viewCell)
         
         titleLabel.topAnchor.constraint(equalTo: bookImage.bottomAnchor, constant: 5).isActive = true

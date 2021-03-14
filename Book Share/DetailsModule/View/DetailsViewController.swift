@@ -42,7 +42,6 @@ class DetailsViewController: UIViewController {
     }()
     
     lazy var detailsView = DetailsView()
-    
     var detailsViewModel: DetailsViewModel!
     
     override func viewDidLoad() {
@@ -81,6 +80,9 @@ class DetailsViewController: UIViewController {
     
     @objc func sendButtonPressed(){
         detailsViewModel.adminSendPush()
+        let alertViewController = UIAlertController(title: "Success", message: "Push notification successfully send", preferredStyle: .alert)
+        alertViewController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        present(alertViewController, animated: true, completion: nil)
     }
     
     private func setupViews(){
@@ -122,13 +124,20 @@ class DetailsViewController: UIViewController {
         self.navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
         
         navigationController?.navigationBar.tintColor = Constants.orange
-        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: trashButton), UIBarButtonItem(customView: separatorViewForNavBar),UIBarButtonItem(customView: editButton), UIBarButtonItem(customView: sendButton)]
+        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: trashButton),UIBarButtonItem(customView: editButton), UIBarButtonItem(customView: sendButton)]
     }
     
     
     
 }
 extension DetailsViewController: DetailsViewProtocol {
+    
+    func setErrorAlert(error: Error) {
+        let alertViewController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        alertViewController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        present(alertViewController, animated: true, completion: nil)
+    }
+    
     func isBookNotAvailable(flag: Bool) {
         sendButton.alpha = 1
     }
@@ -166,9 +175,7 @@ extension DetailsViewController: DetailsViewProtocol {
         }
         
         alert.addAction(action)
-        
         self.present(alert, animated: true, completion: nil)
-        
        
     }
     
