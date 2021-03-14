@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Griffon_ios_spm
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -13,12 +14,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        window = UIWindow(frame: windowScene.coordinateSpace.bounds)
+        window?.windowScene = windowScene
+        let home = TabBar()
+        window?.rootViewController = home
+        window?.makeKeyAndVisible()
     }
 
+    private func setGriffonConfig() {
+        let griffon = Griffon.shared
+        let config = GriffonConfigurations(clientId: "bba272c2-6a07-4bd1-9bc9-aab174a90a51",
+                                           brand: "c481873c-ae55-48bb-ada9-aec89c5b76e2",
+                                           bucket: "2881a298-4951-4a6e-855d-ff4184349fdd",
+                                           clientSecret: "EWBh1XuiJjSCu9uG0Jmq4xGkOdLKFKg5nURpDq0IBKmqHcP3WsyaSjRXa-dOfLoy", url: "https://griffon.dar-dev.zone/api/v1")
+        griffon.config = config
+        NetworkManager.instance.config = config
+    }
+    
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.
